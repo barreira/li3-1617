@@ -1,7 +1,7 @@
 LI3
 ==
 
-Trabalho prático da U.C. de Laboratórios de Informática III (2016/17)
+Projeto da U.C. de Laboratórios de Informática III (2016/17)
 
 Mestrado Integrado em Eng. Informática - 2º ano - Universidade do Minho
 
