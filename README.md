@@ -7,4 +7,4 @@ Mestrado Integrado em Eng. Informática - 2º ano - Universidade do Minho
 
 * Ana Paula Carvalho (@aplealcarvalho)
 * João Pires Barreira (@jpiresbarreira)
-* Joana Arantes (@)
+* Joana Arantes (@joanaarantes)
