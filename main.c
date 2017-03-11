@@ -16,7 +16,7 @@ int parsePage(xmlDocPtr doc, xmlNodePtr cur) {
 	return res;
 }
 
-int parseDoc(char *docname, char* tag) {
+int parseDoc(char *docname, char *tag) {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 
@@ -40,15 +40,12 @@ int parseDoc(char *docname, char* tag) {
 		return -1;
 	}
 
-	cur = cur->xmlChildrenNode;
 	int contador = 0;
 
-	while (cur != NULL) {
+	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) tag))) {
 			contador += parsePage(doc, cur);
 		}
-
-		cur = cur->next;
 	}
 
 	xmlFreeDoc(doc);
@@ -57,19 +54,24 @@ int parseDoc(char *docname, char* tag) {
 
 
 int main(int argc, char **argv) {
-	char *docname;
-
-	if (argc != 2) {
-		printf("Utilização: %s nome_do_documento\n", argv[0]);
+	
+	if (argc < 2) {
+		printf("Utilização: %s nome_do_documento1 [nome_do_documento2, ...]\n", argv[0]);
 		return -1;
 	}
 
-	docname = argv[1];
-	int res = parseDoc(docname, "page");
+	int i, num, res = 0;
 
-	if (res != -1) {
-		printf("Title #: %d\n", res);
+	for (i = 1; i < argc; i++) {
+		num = parseDoc(argv[i], "page");
+
+		if (num == -1)
+			return -1;
+
+		res += num;
 	}
+
+	printf("Title #: %d\n", res);
 
 	return 0;
 }
