@@ -13,8 +13,8 @@
 #define C_ID    10
 #define C_NAME  15
 
-#define LEFTBAL 1;
-#define RIGHTBAL 2;
+#define LEFTBAL  1
+#define RIGHTBAL 2
 
 struct article {
 	char* title;
@@ -111,7 +111,7 @@ PAGE initStructs(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, c
 	p->a = malloc(sizeof(struct article));
 	p->r[0] = malloc(sizeof(struct revision));
 	p->c[0] = malloc(sizeof(struct contribution));
-	p->appears = malloc(BACKUPS * sizeof(int));
+	//p->appears = malloc(BACKUPS * sizeof(int));
 	p->height = 0;
 	p->left = NULL;
 	p->right = NULL;
@@ -127,13 +127,13 @@ PAGE initStructs(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, c
 
 // Inserts
 
-REVISION getRevision(PAGE p) {
+char* getRevisionId(PAGE p) {
 	int i = 0;
 
 	while (p->r[i] != NULL) i++;
 
 	i--;
-	return p->r[i];
+	return p->r[i]->id;
 }
 
 int getLastRevison(PAGE p) {
@@ -167,26 +167,26 @@ PAGE insertPage(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, ch
 	} 
 	else {
 		if (p->a->id == a_id) { /* tem de ser strcmp */
-			int rev = getRevision(p)->id;
+			int rev = getRevisionId(p);
 			
 			if (rev == r_id) p->appears[backup-1] = 1;
 			
 			else {
-				int lr = getLastRevison(PAGE p);
+				int lr = getLastRevison(p);
 				p->r[lr] = insertRevision(p, r_id, timestamp, text);
 				p->c[lr] = insertContribution(p, c_id, name);
 			}
 		}
-		else if (p->a->id > a_id) p->left = insertPage(p->left, title, a_id, text, r_id, timestamp, c_id, name);
-		else if (p->a->id < a_id) p->right = insertPage(p->right, title, a_id, text, r_id, timestamp, c_id, name);
+		else if (p->a->id > a_id) p->left = insertPage(p->left, title, a_id, text, r_id, timestamp, c_id, name, backup);
+		else if (p->a->id < a_id) p->right = insertPage(p->right, title, a_id, text, r_id, timestamp, c_id, name, backup);
 
 		if (p->a->id > a_id || p->a->id < a_id) {
-			hl = heightAvl(p->left);
-			hr = heightAvl(p->right);
+			int hl = heightAvl(p->left);
+			int hr = heightAvl(p->right);
 
 			p->height = maior(hl, hr) + 1;
 
-			bal = hl - hr;
+			int bal = hl - hr;
 
 			if (bal > 1) bal = RIGHTBAL;
 			if (bal < -1) bal = LEFTBAL;
@@ -194,7 +194,7 @@ PAGE insertPage(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, ch
 			switch (bal) {
 				case RIGHTBAL:
 					if (a_id < p->left->a->id) return rotateRight(p);
-					else if (a_id > p->left->a->id) {
+					if (a_id > p->left->a->id) {
 						p->left = rotateLeft(p->left);
 						return rotateRight(p);
 					}
@@ -202,7 +202,7 @@ PAGE insertPage(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, ch
 
 				case LEFTBAL:
 					if (a_id > p->right->a->id) return rotateLeft(p);
-					else if (a_id < p->right->a->id) {
+					if (a_id < p->right->a->id) {
 						p->right = rotateRight(p->right);
 						return rotateLeft(p);
 					}
