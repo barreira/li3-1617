@@ -3,210 +3,176 @@
 
 #include "avl.h"
 
-#define BACKUPS 3
+#define SIZE_A_ID       5
+#define SIZE_R_ID       10
+#define SIZE_TIMESTAMP  20
+#define SIZE_TEXT       1024
+#define SIZE_TITLE      30
+#define SIZE_C_ID       10
+#define SIZE_NAME       15
 
-#define A_TITLE 30
-#define A_ID    5
-#define R_TEXT  1024
-#define R_ID    10
-#define R_TIME  20
-#define C_ID    10
-#define C_NAME  15
 
-#define LEFTBAL  1
-#define RIGHTBAL 2
-
-struct article {
-	char* title;
-	char* id;
-};
-
-struct revision {
-	char* id;
-	char* timestamp;
-	char* text;
-};
+// Definição das estruturas
 
 struct contribution {
 	char* id;
 	char* name;
 };
 
+struct revision {
+	char* id;
+	char* timestamp;
+	char* title;
+	char* text;
+	CONTRIBUTION c;
+};
+
 struct page {
-	ARTICLE a;
-	REVISION* r;     // array de revisões
-	CONTRIBUTION* c; // array de contribuições
-	int appears[BACKUPS];
+	char* article_id;
+	REVISION* rev;
 	int height;
 	struct page *left, *right;
 };
 
-struct avl {
-	int total;
-	PAGE page;
-};
+// Funções auxiliares
 
-// Funções auxilares
-
-int maior(int a, int b) {
+int greater(int a, int b) {
 	return (a > b) ? a : b;
 }
 
-int heightAvl(PAGE p) {
-	if (p == NULL) return 0;
-	return p->height;
+int getHeight(PAGE p) {
+	return (p) ? p->height : 0;
 }
 
-PAGE updateHeight(PAGE a, PAGE b) {
-	a->height = maior(heightAvl(a->left), heightAvl(a->right)) + 1;
-	b->height = maior(heightAvl(b->left), heightAvl(b->right)) + 1;
+int getNumRevisions(PAGE p) {
+	int i;
+	for (i = 0; p->rev[i]; i++);
+	return i;
+}
+
+PAGE updateHeight(PAGE a, PAGE b){
+	a->height = greater(getHeight(a->left), getHeight(a->right)) + 1;
+	b->height = greater(getHeight(b->left), getHeight(b->right)) + 1;
 	return b;
 }
 
 PAGE rotateRight(PAGE p) {
-	PAGE aux;
-	aux = p->left;
-	p->left = aux->right;
-	aux->right = p;
-	aux = updateHeight(p, aux);
-	return aux;	
+	PAGE tmp;
+
+	tmp = p->left;
+	p->left = tmp->right;
+	tmp->right = p;
+	tmp = updateHeight(p, tmp);
+
+	return tmp;
 }
 
 PAGE rotateLeft(PAGE p) {
-	PAGE aux;
-	aux = p->right;
-	p->right = aux->left;
-	aux->left = p;
-	aux = updateHeight(p, aux);
-	return aux;
+	PAGE tmp;
+
+	tmp = p->right;
+	p->right = tmp->left;
+	tmp->left = p;
+	tmp = updateHeight(p, tmp);
+
+	return tmp;
 }
 
-// Inits
-
-ARTICLE initArticle() {
-	return NULL;
-}
-
-REVISION initRevision() {
-	return NULL;
-}
-
-CONTRIBUTION initContribution() {
-	return NULL;
-}
+// Inicialização das estruturas
 
 PAGE initPage() {
 	return NULL;
 }
 
-AVL initAvl() {
-	AVL a = malloc(sizeof(struct avl));
-	a->page = initPage();
-	a->total = 0;
-	return a;
-}
+// Inserções nas estruturas
 
-PAGE initStructs(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, char* text, char* c_id, char* name, int backup) {
-	p = malloc(sizeof(struct page));
-	p->a = malloc(sizeof(struct article));
-	p->r[0] = malloc(sizeof(struct revision));
-	p->c[0] = malloc(sizeof(struct contribution));
-	//p->appears = malloc(BACKUPS * sizeof(int));
-	p->height = 0;
-	p->left = NULL;
-	p->right = NULL;
-	p->a->title = malloc(A_TITLE * sizeof(char));
-	p->a->id = malloc(A_ID * sizeof(char));
-	p->r[0]->id = malloc(R_ID * sizeof(char));
-	p->r[0]->timestamp = malloc(R_TIME * sizeof(char));
-	p->r[0]->text = malloc(R_TEXT * sizeof(char));
-	p->c[0]->id = malloc(C_ID * sizeof(char));
-	p->c[0]->name = malloc(C_NAME * sizeof(char));	
-	return p;
-}
+PAGE insertPage(PAGE p, char* a_id, char* r_id, char* timestamp, char* title, char* text, char* c_id, char* name) {
+	if (!p) {
+		p = malloc(sizeof(struct page));
+		p->article_id = malloc(SIZE_A_ID);
+		p->rev[0] = malloc(sizeof(struct revision)); /* é necessária esta linha? */
+		p->rev[0]->id = malloc(SIZE_R_ID);
+		p->rev[0]->timestamp = malloc(SIZE_TIMESTAMP);
+		p->rev[0]->title = malloc(SIZE_TITLE);
+		p->rev[0]->text = malloc(SIZE_TEXT);
+		p->rev[0]->c = malloc(sizeof(struct contribution)); /* é necessária esta linha? */
+		p->rev[0]->c->id = malloc(SIZE_C_ID);
+		p->rev[0]->c->name = malloc(SIZE_NAME);
+		p->height = 0;
+		p->left = NULL;
+		p->right = NULL;
 
-// Inserts
+		strcpy(p->article_id, a_id);
+		strcpy(p->rev[0]->id, r_id);
+		strcpy(p->rev[0]->timestamp, timestamp);
+		strcpy(p->rev[0]->title, title);
+		strcpy(p->rev[0]->text, text);
+		strcpy(p->rev[0]->c->id, c_id);
+		strcpy(p->rev[0]->c->name, name);
+	}
 
-char* getRevisionId(PAGE p) {
-	int i = 0;
-
-	while (p->r[i] != NULL) i++;
-
-	i--;
-	return p->r[i]->id;
-}
-
-int getLastRevison(PAGE p) {
-	int i;
-
-	while (p->r[i] != NULL) i++;
-
-	return i;
-}
-
-REVISION insertRevision(PAGE p, char* id, char* timestamp, char* text) {
-
-	return ;
-}
-
-CONTRIBUTION insertContribution(PAGE p, char* id, char* name) {
-
-	return ;
-}
-
-PAGE insertPage(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, char* text, char* c_id, char* name, int backup) {
-	if (p == NULL) {
-		p = initStructs(p, title, a_id, r_id, timestamp, text, c_id, name, backup);
-		strcpy(p->a->title, title);
-		strcpy(p->a->id, a_id);
-		strcpy(p->r[0]->id, r_id);
-		strcpy(p->r[0]->timestamp, timestamp);
-		strcpy(p->r[0]->text, text);
-		strcpy(p->c[0]->id, c_id);
-		strcpy(p->c[0]->name, name);
-	} 
 	else {
-		if (p->a->id == a_id) { /* tem de ser strcmp */
-			int rev = getRevisionId(p);
-			
-			if (rev == r_id) p->appears[backup-1] = 1;
-			
-			else {
-				int lr = getLastRevison(p);
-				p->r[lr] = insertRevision(p, r_id, timestamp, text);
-				p->c[lr] = insertContribution(p, c_id, name);
-			}
+		int cmp = strcmp(p->article_id, a_id);
+
+		if (cmp > 0) {
+			p->left = insertPage(p->left, a_id, r_id, timestamp, title, text, c_id, name);
 		}
-		else if (p->a->id > a_id) p->left = insertPage(p->left, title, a_id, text, r_id, timestamp, c_id, name, backup);
-		else if (p->a->id < a_id) p->right = insertPage(p->right, title, a_id, text, r_id, timestamp, c_id, name, backup);
 
-		if (p->a->id > a_id || p->a->id < a_id) {
-			int hl = heightAvl(p->left);
-			int hr = heightAvl(p->right);
+		else if (cmp < 0) {
+			p->right = insertPage(p->right, a_id, r_id, timestamp, title, text, c_id, name);
+		}
 
-			p->height = maior(hl, hr) + 1;
+		else {
+			int nr = getNumRevisions(p);
+			nr++;
+			p->rev[nr] = malloc(sizeof(struct revision)); /* é necessária esta linha? */
+			p->rev[nr]->id = malloc(SIZE_R_ID);
+			p->rev[nr]->timestamp = malloc(SIZE_TIMESTAMP);
+			p->rev[nr]->title = malloc(SIZE_TITLE);
+			p->rev[nr]->text = malloc(SIZE_TEXT);
+			p->rev[nr]->c = malloc(sizeof(struct contribution)); /* é necessária esta linha? */
+			p->rev[nr]->c->id = malloc(SIZE_C_ID);
+			p->rev[nr]->c->name = malloc(SIZE_NAME);
 
-			int bal = hl - hr;
+			strcpy(p->rev[nr]->id, r_id);
+			strcpy(p->rev[nr]->timestamp, timestamp);
+			strcpy(p->rev[nr]->title, title);
+			strcpy(p->rev[nr]->text, text);
+			strcpy(p->rev[nr]->c->id, c_id);
+			strcpy(p->rev[nr]->c->name, name);
+		}
+		
+		if (cmp) {
+			int hl = getHeight(p->left);
+			int hr = getHeight(p->right);
+			p->height = greater(hl, hr) + 1;
 
-			if (bal > 1) bal = RIGHTBAL;
-			if (bal < -1) bal = LEFTBAL;
+			int bal = hl-hr;
 
-			switch (bal) {
-				case RIGHTBAL:
-					if (a_id < p->left->a->id) return rotateRight(p);
-					if (a_id > p->left->a->id) {
-						p->left = rotateLeft(p->left);
-						return rotateRight(p);
-					}
-					break;
+			if (bal > 1) { /* right bal */
+				int lcmp = strcmp(a_id, p->left->article_id);
 
-				case LEFTBAL:
-					if (a_id > p->right->a->id) return rotateLeft(p);
-					if (a_id < p->right->a->id) {
-						p->right = rotateRight(p->right);
-						return rotateLeft(p);
-					}
-					break;
+				if (lcmp < 0) {
+					return rotateRight(p);
+				}
+				
+				else if (lcmp > 0) {
+					p->left = rotateLeft(p->left);
+					return rotateRight(p);
+				}
+			}
+
+			else if (bal < -1) { /* left bal */
+				int rcmp = strcmp(a_id, p->right->article_id);
+
+				if (rcmp > 0) {
+					return rotateLeft(p);
+				}
+
+				else if (rcmp < 0) {
+					p->right = rotateRight(p->right);
+					return rotateLeft(p);
+				}
 			}
 		}
 	}
@@ -214,12 +180,43 @@ PAGE insertPage(PAGE p, char* title, char* a_id, char* r_id, char* timestamp, ch
 	return p;
 }
 
-AVL insertAvl(AVL a, char* title, char* a_id, char* r_id, char* timestamp, char* text, char* c_id, char* name, int backup) {
-	if (a == NULL) a = initAvl();
+AVL insert(AVL a, char* a_id, char* r_id, char* timestamp, char* title, char* text, char* c_id, char* name) {
+	if (!a) {
+		a = initAvl();
+	}
 
-	a->page = insertPage(a->page, title, a_id, r_id, timestamp, text, c_id, name, backup);
+	a->page = insertPage(a->page, a_id, r_id, timestamp, title, text, c_id, name);
 	(a->total)++;
 
 	return a;
-} 
+}
 
+// Testar existência de uma page numa AVL
+
+int existsPage(PAGE p, char* a_id) {
+	int res = 0;
+	int cmp = strcmp(p->article_id, a_id);
+
+	if (cmp == 0) {
+		return 1;
+	}
+	else if (cmp > 0 && p->left) {
+		res = existsPage(p->left, a_id);
+	}
+	else if (p->right) {
+		res = existsPage(p->right, a_id);
+	}
+
+	return res;
+}
+
+int exists(AVL a, char* a_id) {
+	int res = existsPage(a->page, a_id);
+	return res;
+}
+
+// Total de pages numa AVL
+
+int totalPages(AVL a) {
+	return (a) ? a->total : 0;
+}

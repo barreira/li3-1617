@@ -3,23 +3,21 @@
 
 // Estruturas
 
-typedef struct article *ARTICLE;
-typedef struct revision *REVISION;
 typedef struct contribution *CONTRIBUTION;
+typedef struct revision *REVISION;
 typedef struct page *PAGE;
-typedef struct avl *AVL;
 
-// Init das estruturas
+// Funções de inicialização das estruturas
 
-ARTICLE initArticle();
-REVISION initRevision();
-CONTRIBUTION initContribution();
 PAGE initPage();
-AVL initAvl();
 
-// Insert
+// Funções de inserção nas estruturas
 
-AVL insertAvl(AVL, char*, char*, char*, char*, char*, char*, char*, int);
-PAGE insertPage(PAGE, char*, char*, char*, char*, char*, char*, char*, int);
+AVL insert(AVL, char*, char*, char*, char*, char*, char*, char*);
+
+// Outras funções
+
+int exists(AVL, char*);
+int totalPages(AVL);
 
 #endif
