@@ -1,7 +1,8 @@
 CC = gcc
-CFLAGS = -Wall -g `pkg-config --cflags libxml-2.0` `pkg-config --cflags glib-2.0`
-LIBS = `pkg-config --libs libxml-2.0` `pkg-config --libs glib-2.0`
-program:	
-	$(CC) $(CFLAGS) program.c -o program $(LIBS)
+CFLAGS= -Wall -g `pkg-config --cflags libxml-2.0`
+OBJS=$(patsubst %.c, %.o, $(wildcard *.c))
+LIBS = `pkg-config --libs libxml-2.0`
+all: $(OBJS)
+	    $(CC) $(CFLAGS) -o program $(OBJS) $(LIBS)
 clean:
-	rm program *.o
+	    rm program *.o
