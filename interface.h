@@ -4,6 +4,7 @@
 // TCD_istruct = avl; TAD_istruct = AVL
 // typedef struct TCD_istruct *TAD_istruct;
 
+typedef struct node *NODE;
 typedef struct avl *AVL;
 
 AVL init();
