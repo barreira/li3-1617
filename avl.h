@@ -1,6 +1,8 @@
 #ifndef AVL_H
 #define AVL_H
 
+#include "interface.h"
+
 // Estruturas
 
 typedef struct contribution *CONTRIBUTION;
@@ -13,11 +15,11 @@ PAGE initPage();
 
 // Funções de inserção nas estruturas
 
-AVL insert(AVL, char*, char*, char*, char*, char*, char*, char*);
+AVL insert(AVL a, char* a_id, char* r_id, char* timestamp, char* title, char* text, char* c_id, char* name);
 
 // Outras funções
 
-int exists(AVL, char*);
-int totalPages(AVL);
+int exists(AVL a, char* a_id);
+int totalPages(AVL a);
 
 #endif

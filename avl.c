@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "interface.h"
 #include "avl.h"
 
 #define SIZE_A_ID       5
@@ -182,7 +183,7 @@ PAGE insertPage(PAGE p, char* a_id, char* r_id, char* timestamp, char* title, ch
 
 AVL insert(AVL a, char* a_id, char* r_id, char* timestamp, char* title, char* text, char* c_id, char* name) {
 	if (!a) {
-		a = initAvl();
+		a = init();
 	}
 
 	a->page = insertPage(a->page, a_id, r_id, timestamp, title, text, c_id, name);
@@ -218,5 +219,9 @@ int exists(AVL a, char* a_id) {
 // Total de pages numa AVL
 
 int totalPages(AVL a) {
-	return (a) ? a->total : 0;
+	if (a) {
+		return a->total;
+	}
+
+	return 0;
 }

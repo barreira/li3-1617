@@ -1,6 +1,8 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "interface.h"
+#include "xmlparser.h"
 #include "avl.h"
 
 struct avl {
@@ -9,17 +11,24 @@ struct avl {
 };
 
 AVL init() {
-	AVL a = malloc(sizeof(struct avl));
+	AVL a = malloc(sizeof(struct avl)); /* é necessária esta linha? */
 	a->page = initPage();
 	a->total = 0;
 	return a;
 }
 
-/*
-AVL load(AVL qs, int nsnaps, char* snaps_paths[]) {
 
+AVL load(AVL qs, int nsnaps, char* snaps_paths[]) {
+	int i;
+
+	for (i = 0; i < nsnaps; i++) {
+		loadFile(qs, snaps_paths[i]);
+	}
+
+	return qs;
 }
 
+/*
 AVL clean(AVL qs) {
 
 }
