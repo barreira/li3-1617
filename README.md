@@ -8,3 +8,4 @@ Grupo 52:
 * Ana Paula Carvalho (@aplealcarvalho)
 * João Pires Barreira (@jpiresbarreira)
 * Joana Arantes (@joanaarantes)
+* Miguel Cunha (@miguelcunha12)
