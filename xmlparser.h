@@ -5,7 +5,7 @@
 
 #include "interface.h"
 
-void parsePage(AVL a, xmlDocPtr doc, xmlNodePtr cur);
-void loadFile(AVL a, char* file);
+void parsePage(TAD_istruct a, xmlDocPtr doc, xmlNodePtr cur);
+void loadFile(TAD_istruct a, char* file);
 
 #endif

@@ -6,16 +6,16 @@
 
 #define SIZE_KEY 10
 
-struct node {
+struct node { /* o typedef do .h provavelmente deveria estar aqui */
 	char* key;
 	void* info;
 	int height;
 	struct node *left, *right;
 };
 
-struct avl {
+struct TCD_istruct {
 	int total;
-	NODE root;
+	Node root;
 };
 
 // Funções auxiliares
@@ -24,18 +24,18 @@ int greater(int x, int y) {
 	return (x > y) ? x : y;
 }
 
-int getHeight(NODE n) {
+int getHeight(Node n) {
 	return (n) ? n->height : 0;
 }
 
-NODE updateHeight(NODE x, NODE y) {
+Node updateHeight(Node x, Node y) {
 	x->height = greater(getHeight(x->left), getHeight(x->right)) + 1;
 	y->height = greater(getHeight(y->left), getHeight(y->right)) + 1;
 	return y;
 }
 
-NODE rotateRight(NODE n) {
-	NODE tmp;
+Node rotateRight(Node n) {
+	Node tmp;
 
 	tmp = n->left;
 	n->left = tmp->right;
@@ -45,8 +45,8 @@ NODE rotateRight(NODE n) {
 	return tmp;
 }
 
-NODE rotateLeft(NODE n) {
-	NODE tmp;
+Node rotateLeft(Node n) {
+	Node tmp;
 
 	tmp = n->right;
 	n->right = tmp->left;
@@ -58,13 +58,13 @@ NODE rotateLeft(NODE n) {
 
 // Inicialização das estruturas
 
-NODE initNode() {
+Node initNode() {
 	return NULL;
 }
 
 // Inserções nas estruturas
 
-NODE insertNode(NODE n, char* k, void* i) {
+Node insertNode(Node n, char* k, void* i) {
 	if (!n) {
 		n = malloc(sizeof(struct node));
 		n->key = malloc(sizeof(char) * SIZE_KEY);
@@ -128,7 +128,7 @@ NODE insertNode(NODE n, char* k, void* i) {
 	return n;
 }
 
-AVL insert(AVL a, char* k, void* i) {
+TAD_istruct insert(TAD_istruct a, char* k, void* i) {
 	if (!a) {
 		a = init();
 	}
@@ -139,9 +139,9 @@ AVL insert(AVL a, char* k, void* i) {
 	return a;
 }
 
-// Testar existência de uma page numa AVL
+// Testar existência de uma page numa TAD_istruct
 
-int existsNode(NODE n, char* k) {
+int existsNode(Node n, char* k) {
 	int res = 0;
 	int cmp = strcmp(n->key, k);
 
@@ -158,29 +158,29 @@ int existsNode(NODE n, char* k) {
 	return res;
 }
 
-int exists(AVL a, char* k) {
+int exists(TAD_istruct a, char* k) {
 	int res = existsNode(a->root, k);
 	return res;
 }
 
-// Total de pages numa AVL
+// Total de pages numa TAD_istruct
 
-int totalNodes(AVL a) {
+int totalNodes(TAD_istruct a) {
 	return (a) ? a->total : 0;
 }
 
 
 // Funções originais da interface
 
-AVL init() {
-	AVL a = malloc(sizeof(struct avl));
+TAD_istruct init() {
+	TAD_istruct a = malloc(sizeof(struct TCD_istruct));
 	a->root = initNode();
 	a->total = 0;
 	return a;
 }
 
 /*
-AVL load(AVL qs, int nsnaps, char* snaps_paths[]) {
+TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]) {
 	int i;
 
 	for (i = 0; i < nsnaps; i++) {
@@ -191,18 +191,18 @@ AVL load(AVL qs, int nsnaps, char* snaps_paths[]) {
 }*/
 
 /*
-AVL clean(AVL qs) {
+TAD_istruct clean(TAD_istruct qs) {
 
 }
 
-long all_articles(AVL qs);
-long unique_articles(AVL qs);
-long all_revisions(AVL qs);
-long* top_10_contributors(AVL qs);
-char* contributor_name(long contributor_id, AVL qs);
-long* top_20_largest_articles(AVL qs);
-char* article_title(long article_id, AVL qs);
-long* top_N_articles_with_more_words(int n, AVL qs);
-char** titles_with_prefix(char* prefix, AVL qs);
-char* article_timestamp(long article_id, long revison_id, AVL qs);
+long all_articles(TAD_istruct qs);
+long unique_articles(TAD_istruct qs);
+long all_revisions(TAD_istruct qs);
+long* top_10_contributors(TAD_istruct qs);
+char* contributor_name(long contributor_id, TAD_istruct qs);
+long* top_20_largest_articles(TAD_istruct qs);
+char* article_title(long article_id, TAD_istruct qs);
+long* top_N_articles_with_more_words(int n, TAD_istruct qs);
+char** titles_with_prefix(char* prefix, TAD_istruct qs);
+char* article_timestamp(long article_id, long revison_id, TAD_istruct qs);
 */

@@ -4,7 +4,7 @@
 #include "xmlparser.h"
 #include "interface.h"
 
-void parsePage(AVL a, xmlDocPtr doc, xmlNodePtr cur) {
+void parsePage(TAD_istruct a, xmlDocPtr doc, xmlNodePtr cur) {
 
 	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "title"))) {
@@ -26,7 +26,7 @@ void parsePage(AVL a, xmlDocPtr doc, xmlNodePtr cur) {
 	//insert(a, a_id, r_id, timestamp, title, text, c_id, name);
 }
 
-void loadFile(AVL a, char* file) {
+void loadFile(TAD_istruct a, char* file) {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 
