@@ -90,7 +90,7 @@ Node insertNode(Node n, char* k, void* i) {
 			n->info = i;
 		}
 		
-		if (cmp) {
+		if (cmp) { /* balancear */
 			int hl = getHeight(n->left);
 			int hr = getHeight(n->right);
 			n->height = greater(hl, hr) + 1;
@@ -163,12 +163,19 @@ int exists(TAD_istruct a, char* k) {
 	return res;
 }
 
-// Total de pages numa TAD_istruct
-
 int totalNodes(TAD_istruct a) {
 	return (a) ? a->total : 0;
 }
 
+void freeNode(Node n) {
+	if (n) {
+		freeNode(n->right);
+		freeNode(n->left);
+		free(n->key);
+		/* free info? */
+		free(n);
+	}
+}
 
 // Funções originais da interface
 
@@ -190,11 +197,17 @@ TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]) {
 	return qs;
 }*/
 
-/*
-TAD_istruct clean(TAD_istruct qs) {
 
+TAD_istruct clean(TAD_istruct qs) {
+	if (qs) {
+		freeNode(qs->root);
+		free(qs);
+	}
+
+	return NULL;
 }
 
+/*
 long all_articles(TAD_istruct qs);
 long unique_articles(TAD_istruct qs);
 long all_revisions(TAD_istruct qs);

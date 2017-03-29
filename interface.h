@@ -20,4 +20,9 @@ char* article_timestamp(long article_id, long revison_id, TAD_istruct qs);
 
 TAD_istruct clean(TAD_istruct qs);
 
+/* Outras funções */
+
+TAD_istruct insert(TAD_istruct a, char* k, void* i);
+int exists(TAD_istruct a, char* k);
+
 #endif
