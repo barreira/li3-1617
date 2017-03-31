@@ -1,18 +1,20 @@
 #include <stdlib.h>
 
 #include "articles.h"
+#include "avl.h"
 
 #define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de artigo)
 
 struct article_set {
-	TAD_istruct aset[NUMSIZE]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
+	AVL aset[NUMSIZE]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
 };
 
 struct revision {
 	char* id;
 	char* timestamp;
 	char* title;
-	char* text;
+	int textsize;
+	int wc;
 };
 
 struct article {
@@ -26,18 +28,19 @@ ARTICLE_SET initArticleSet() {
 	ARTICLE_SET as = malloc(sizeof(struct article_set));
 
 	for (i = 0; i < NUMSIZE; i++) {
-		as->aset[i] = init();
+		as->aset[i] = initAvl();
 	}
 
 	return as;
 }
 
 REVISION initRevision() {
-	REVISION r = malloc(sizeof(struct revision));
+	REVISION r = malloc(sizeof(struct revision)); // já não é preciso
 	r->id = NULL;
 	r->timestamp = NULL;
 	r->title = NULL;
-	r->text = NULL;
+	r->textsize = 0;
+	r->wc = 0;
 	return r;
 }
 
@@ -45,6 +48,7 @@ ARTICLE initArticle() {
 	ARTICLE a = malloc(sizeof(struct article));
 	a->id = NULL;
 	a->revisions[0] = initRevision();
+	//a->revisions = malloc(sizeof(struct revision) * SIZE); // + realloc (ou estrutura dinamica)
 	a->occurrences = 0;
 	return a;
 }
@@ -53,7 +57,8 @@ REVISION freeRevision(REVISION r) {
 	free(r->id);
 	free(r->timestamp);
 	free(r->title);
-	free(r->text);
+	free(&(r->textsize));
+	free(&(r->wc));
 	return NULL;
 }
 
@@ -73,7 +78,7 @@ void freeArticleSet(ARTICLE_SET as) {
 
 	if (as) {
 		for (i = 0; i < NUMSIZE; i++) {
-			as->aset[i] = clean(as->aset[i]);
+			as->aset[i] = freeAvl(as->aset[i]);
 		}
 
 		free(as);
@@ -94,6 +99,6 @@ int existsArticle(ARTICLE_SET as, ARTICLE a) {
 
 // Getters e Setters
 
-TAD_istruct getArticleSubset(ARTICLE_SET as, int pos) {
+AVL getArticleSubset(ARTICLE_SET as, int pos) {
 	return as->aset[pos];
 }

@@ -1,11 +1,12 @@
 #include <stdlib.h>
 
 #include "contributors.h"
+#include "avl.h"
 
 #define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de contribuidor)
 
 struct contributor_set {
-	TAD_istruct cset[NUMSIZE]; // Array de AVLs (primeira para todos os contribuidores cujo id começa por "0", segunda para os que começam por "1", etc)
+	AVL cset[NUMSIZE]; // Array de AVLs (primeira para todos os contribuidores cujo id começa por "0", segunda para os que começam por "1", etc)
 };
 
 struct contributor {
@@ -19,7 +20,7 @@ CONTRIBUTOR_SET initContributorSet() {
 	CONTRIBUTOR_SET cs = malloc(sizeof(struct contributor_set));
 
 	for (i = 0; i < NUMSIZE; i++) {
-		cs->cset[i] = init();
+		cs->cset[i] = initAvl();
 	}
 
 	return cs;
@@ -45,7 +46,7 @@ void freeContributorSet(CONTRIBUTOR_SET cs) {
 
 	if (cs) {
 		for (i = 0; i < NUMSIZE; i++) {
-			cs->cset[i] = clean(cs->cset[i]);
+			cs->cset[i] = freeAvl(cs->cset[i]);
 		}
 
 		free(cs);
@@ -66,6 +67,6 @@ int existsContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 
 // Getters e Setters
 
-TAD_istruct getContributorSubset(CONTRIBUTOR_SET cs, int pos) {
+AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos) {
 	return cs->cset[pos];
 }

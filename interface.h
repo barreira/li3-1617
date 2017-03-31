@@ -1,7 +1,6 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-typedef struct node *Node; /* isto provavelmente não deveria aparece aqui (apenas no .c) */
 typedef struct TCD_istruct *TAD_istruct;
 
 TAD_istruct init();
@@ -19,10 +18,5 @@ char** titles_with_prefix(char* prefix, TAD_istruct qs);
 char* article_timestamp(long article_id, long revison_id, TAD_istruct qs);
 
 TAD_istruct clean(TAD_istruct qs);
-
-/* Outras funções */
-
-TAD_istruct insert(TAD_istruct a, char* k, void* i);
-int exists(TAD_istruct a, char* k);
 
 #endif
