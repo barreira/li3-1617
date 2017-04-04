@@ -1,4 +1,4 @@
-#LI3
+# LI3
 
 Projeto da U.C. de Laboratórios de Informática III (2016/17)
 
