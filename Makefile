@@ -7,20 +7,23 @@ LIBS = `pkg-config --libs libxml-2.0`
 all : $(OBJS)
 	$(CC) $(OBJS) -o $(OUT) $(CFLAGS) $(LIBS)
 
-program.o : program.c interface.h
-	$(CC) $(CFLAGS) -c program.c $(LIBS)
+program.o : interface.o
+	$(CC) $(CFLAGS) program.c -o program $(LIBS) interface.o
 
-interface.o : interface.c articles.h contributors.h interface.h
-	$(CC) $(CFLAGS) -c interface.c $(LIBS)
+interface.o : contributors.o articles.o
+	$(CC) $(CFLAGS) interface.c -o interface $(LIBS) interface.o contributors.o articles.o
 
-avl.o : avl.c avl.h
-	$(CC) $(CFLAGS) -c avl.c $(LIBS)
+xmlparser.o : interface.o avl.o contributors.o articles.o
+	$(CC) $(CFLAGS) interface.c -o interface $(LIBS) xmlparser.o interface.o avl.o contributors.o articles.o
 
-articles.o : articles.c avl.h articles.h
-	$(CC) $(CFLAGS) -c articles.c $(LIBS)
+avl.o :
+	$(CC) $(CFLAGS) avl.c -o avl $(LIBS)
 
-contributors.o : contributors.c avl.h contributors.h
-	$(CC) $(CFLAGS) -c contributors.c $(LIBS)
+articles.o : avl.o
+	$(CC) $(CFLAGS) articles.c -o articles $(LIBS) articles.o avl.o
+
+contributors.o : avl.o
+	$(CC) $(CFLAGS) contributors.c -o contributors $(LIBS) contributors.o avl.o
 
 clean:
 	rm -f *.o $(OUT)
