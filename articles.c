@@ -4,7 +4,7 @@
 #include "avl.h"
 
 #define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de artigo)
-#define NUMREVS 5
+#define DEFAULT_REVCOUNT 5
 
 struct article_set {
 	AVL aset[NUMSIZE]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
@@ -20,6 +20,8 @@ struct revision {
 
 struct article {
 	char* id;
+	int revcount;
+	int revcapacity;
 	REVISION* revisions;
 	int occurrences;
 };
@@ -48,8 +50,10 @@ REVISION initRevision() {
 ARTICLE initArticle() {
 	ARTICLE a = malloc(sizeof(struct article));
 	a->id = NULL;
-	a->revisions[0] = initRevision();
-	a->revisions = malloc(sizeof(struct revision) * NUMREVS); // + realloc (ou estrutura dinamica)
+	a->revcount = 0;
+	a->revcapacity = DEFAULT_REVCOUNT;
+	a->revisions = calloc(sizeof(struct revision) * DEFAULT_REVCOUNT); // inicializa + coloca a NULL
+	// a->revisions[0] = initRevision(); // inicializa o primeiro
 	a->occurrences = 0;
 	return a;
 }

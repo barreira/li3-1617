@@ -68,7 +68,7 @@ AVL initAvl() {
 
 // Inserções nas estruturas
 
-Node insertNode(Node n, char* k, void* i) {
+Node insertNode(Node n, char* k, void* i, void (*f)(void *acc, const void *new_value)) {
 	if (!n) {
 		n = malloc(sizeof(struct node));
 		n->key = k;
@@ -89,10 +89,32 @@ Node insertNode(Node n, char* k, void* i) {
 			n->right = insertNode(n->right, k, i);
 		}
 
-		else {
-			f();
+		else { /* A função f, passada como parâmetro, trata dos casos em que já haja um nodo com o id na árvore */
+			f(n, i);
 		}
 		
+		/*
+		void functionC(Node n, void* info) {
+			(n->info->revisions)++;
+
+			freeContributor(info);
+		}
+
+		void functionA(Node n, void* info) {
+			int cap = n->info->revcapacity;
+			int nr = n->info->revcount;
+
+			if (nr == cap) {
+				realloc(n->info->revisions, sizeof(struct revision) * cap * 2);
+				n->info->capacity *= 2;
+			}
+
+			n->info->revisions[nr] = info->revisions[0];
+			(n->info->revcount)++;
+			
+			freeArticle(info);
+		}*/
+
 		if (cmp) { /* balancear */
 			int hl = getHeight(n->left);
 			int hr = getHeight(n->right);
