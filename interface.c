@@ -12,12 +12,12 @@ struct TCD_istruct {
 };
 
 TAD_istruct init() {
-	TAD_istruct s;
+	TAD_istruct s = malloc(sizeof(struct TCD_istruct));
 
 	s->aset = initArticleSet();
 	s->cset = initContributorSet();
 
-	return a;
+	return s;
 }
 
 TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]) {
