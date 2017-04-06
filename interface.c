@@ -4,22 +4,22 @@
 #include "interface.h"
 #include "articles.h"
 #include "contributors.h"
-// #include "xmlparser.h"
+//#include "xmlparser.h"
 
 struct TCD_istruct {
-	ARTICLE_SET as;
-	CONTRIBUTOR_SET cs;
+	ARTICLE_SET aset;
+	CONTRIBUTOR_SET cset;
 };
 
-/*
 TAD_istruct init() {
-	TAD_istruct a = malloc(sizeof(struct TCD_istruct));
-	a->root = initNode();
-	a->total = 0;
-	return a;
-} */
+	TAD_istruct s;
 
-/*
+	s->aset = initArticleSet();
+	s->cset = initContributorSet();
+
+	return a;
+}
+
 TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]) {
 	int i;
 
@@ -28,7 +28,7 @@ TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]) {
 	}
 
 	return qs;
-}*/
+}
 
 /*
 TAD_istruct clean(TAD_istruct qs) {

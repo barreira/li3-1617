@@ -89,8 +89,8 @@ Node insertNode(Node n, char* k, void* i) {
 			n->right = insertNode(n->right, k, i);
 		}
 
-		else { 
-			n->info = i;
+		else {
+			f();
 		}
 		
 		if (cmp) { /* balancear */
@@ -131,12 +131,12 @@ Node insertNode(Node n, char* k, void* i) {
 	return n;
 }
 
-AVL insert(AVL a, char* k, void* i) {
+AVL insert(AVL a, char* k, void* i, void (*f)(void *acc, const void *new_value)) {
 	if (!a) {
 		a = initAvl();
 	}
 
-	a->root = insertNode(a->root, k, i);
+	a->root = insertNode(a->root, k, i, f);
 	(a->total)++;
 
 	return a;
