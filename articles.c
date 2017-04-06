@@ -4,7 +4,7 @@
 #include "avl.h"
 
 #define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de artigo)
-#define DEFAULT_REVCOUNT 5
+#define DEFAULT_REVCOUNT 5 // média de revisões por arigo (confirmar)
 
 struct article_set {
 	AVL aset[NUMSIZE]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
@@ -106,4 +106,8 @@ int existsArticle(ARTICLE_SET as, ARTICLE a) {
 
 AVL getArticleSubset(ARTICLE_SET as, int pos) {
 	return as->aset[pos];
+}
+
+unsigned int getRevisionSize() {
+	return (sizeof(struct revision));
 }
