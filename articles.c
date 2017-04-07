@@ -11,19 +11,19 @@ struct article_set {
 };
 
 struct revision {
-	char* id;
-	char* timestamp;
-	char* title;
+	char* id; //
+	char* timestamp; //
+	char* title; //
 	int textsize;
 	int wc;
 };
 
 struct article {
-	char* id;
-	int revcount;
-	int revcapacity;
-	REVISION* revisions;
-	int occurrences;
+	char* id; //
+	int revcount; //
+	int revcapacity; //
+	REVISION* revisions; //
+	int occurrences; //
 };
 
 ARTICLE_SET initArticleSet() {
@@ -64,6 +64,7 @@ REVISION freeRevision(REVISION r) {
 	free(r->title);
 	free(&(r->textsize));
 	free(&(r->wc));
+	// r = NULL; + return r
 	return NULL;
 }
 
@@ -90,9 +91,26 @@ void freeArticleSet(ARTICLE_SET as) {
 	}
 }
 
+void duplicateArticle(Node n, void* info) {
+			int cap = n->info->revcapacity;
+			int nr = n->info->revcount;
+		
+			if (nr == cap) {
+				int size = getRevisionSize(); // size da struct revision
+				realloc(n->info->revisions, size * cap * 2);
+				n->info->capacity *= 2;
+			}
+		
+			n->info->revisions[nr] = info->revisions[0];
+			(n->info->revcount)++;
+			(n->info->occurrences)++;
+			
+			freeArticle(info);
+}
+
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
 	int pos = atoi(&(a->id[0]));
-	as->aset[pos] = insert(as->aset[pos], a->id, a);
+	as->aset[pos] = insert(as->aset[pos], a->id, a, duplicateArticle);
 	return as;	
 }
 
@@ -100,6 +118,10 @@ int existsArticle(ARTICLE_SET as, ARTICLE a) {
 	int pos = atoi(&(a->id[0]));
 	int res = exists(as->aset[pos], a->id);
 	return res;
+}
+
+ARTICLE insertRevision(ARTICLE a, REVISION r) {
+
 }
 
 // Getters e Setters
@@ -110,4 +132,28 @@ AVL getArticleSubset(ARTICLE_SET as, int pos) {
 
 unsigned int getRevisionSize() {
 	return (sizeof(struct revision));
+}
+
+void setArticleID(ARTICLE a, char* id) {
+	strcpy(a->id, id);
+}
+
+void setRevisionID(REVISION r, char* id) {
+	strcpy(r->id, id);
+}
+
+void setTimestamp(REVISION r, char* t) {
+	strcpy(r->timestamp, t);
+}
+
+void setTitle(REVISION r, char* t) {
+	strcpy(r->title, t);
+}
+
+void setTextSize(REVISION r, int ts) {
+	r->textsize = ts;
+}
+
+void setWordCount(REVISION r, int wc) {
+	r->wc = wc;
 }

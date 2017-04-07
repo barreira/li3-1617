@@ -92,29 +92,7 @@ Node insertNode(Node n, char* k, void* i, void (*f)(Node n, void* i)) {
 		else { /* A função f, passada como parâmetro, trata dos casos em que já haja um nodo com o id na árvore */
 			f(n, i);
 		}
-		/*
-		void functionC(Node n, void* info) {
-			(n->info->revisions)++;
-			freeContributor(info);
-		}
 		
-		void functionA(Node n, void* info) {
-			int cap = n->info->revcapacity;
-			int nr = n->info->revcount;
-		
-			if (nr == cap) {
-				int size = getRevisionSize(); // size da struct revision
-				realloc(n->info->revisions, size * cap * 2);
-				n->info->capacity *= 2;
-			}
-		
-			n->info->revisions[nr] = info->revisions[0];
-			(n->info->revcount)++;
-			(n->info->occurrences)++;
-			
-			freeArticle(info);
-		}*/
-
 		if (cmp) { /* balancear */
 			int hl = getHeight(n->left);
 			int hr = getHeight(n->right);

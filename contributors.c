@@ -10,9 +10,9 @@ struct contributor_set {
 };
 
 struct contributor {
-	char* id;
-	char* name;
-	int revisions;
+	char* id; //
+	char* username; //
+	int revisions; //
 };
 
 CONTRIBUTOR_SET initContributorSet() {
@@ -29,14 +29,14 @@ CONTRIBUTOR_SET initContributorSet() {
 CONTRIBUTOR initContributor() {
 	CONTRIBUTOR c = malloc(sizeof(struct contributor));
 	c->id = NULL;
-	c->name = NULL;
+	c->username = NULL;
 	c->revisions = 0;
 	return c;
 }
 
 void freeContributor(CONTRIBUTOR c) {
 	free(c->id);
-	free(c->name);
+	free(c->username);
 	free(&(c->revisions));
 	free(c);
 }
@@ -53,9 +53,14 @@ void freeContributorSet(CONTRIBUTOR_SET cs) {
 	}
 }
 
+void duplicateContributor(Node n, void* info) {
+	(n->info->revisions)++;
+	freeContributor(info);
+}
+
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	int pos = atoi(&(c->id[0]));
-	cs->cset[pos] = insert(cs->cset[pos], c->id, c);
+	cs->cset[pos] = insert(cs->cset[pos], c->id, c, duplicateContributor);
 	return cs;
 }
 
@@ -69,4 +74,20 @@ int existsContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 
 AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos) {
 	return cs->cset[pos];
+}
+
+void setContributorID(CONTRIBUTOR c, char* id) {
+	strcpy(c->id, id);
+}
+
+void setUsername(CONTRIBUTOR c, char* u) {
+	strcpy(c->username, u);
+}
+
+char *getContributorID(CONTRIBUTOR c) {
+	return c->id;
+}
+
+char *getUsername(CONTRIBUTOR c) {
+	return c->username;
 }

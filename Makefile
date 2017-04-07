@@ -4,26 +4,23 @@ OUT = program
 OBJS = $(patsubst %.c, %.o, $(wildcard *.c))
 LIBS = `pkg-config --libs libxml-2.0`
 
-all : $(OBJS)
-	$(CC) $(OBJS) -o $(OUT) $(CFLAGS) $(LIBS)
-
-program.o : interface.o
+program : interface
 	$(CC) $(CFLAGS) program.c -o program $(LIBS) interface.o
 
-interface.o : contributors.o articles.o
-	$(CC) $(CFLAGS) interface.c -o interface $(LIBS) interface.o contributors.o articles.o
+interface : contributors articles
+	$(CC) $(CFLAGS) -c interface.c $(LIBS) contributors.o articles.o
 
-xmlparser.o : interface.o avl.o contributors.o articles.o
-	$(CC) $(CFLAGS) interface.c -o interface $(LIBS) xmlparser.o interface.o avl.o contributors.o articles.o
+xmlparser : interface avl contributors articles
+	$(CC) $(CFLAGS) -c xmlparser.c $(LIBS) interface.o avl.o contributors.o articles.o
 
-avl.o :
-	$(CC) $(CFLAGS) avl.c -o avl $(LIBS)
+avl :
+	$(CC) $(CFLAGS) -c avl.c $(LIBS)
 
-articles.o : avl.o
-	$(CC) $(CFLAGS) articles.c -o articles $(LIBS) articles.o avl.o
+articles : avl
+	$(CC) $(CFLAGS) -c articles.c $(LIBS) avl.o
 
-contributors.o : avl.o
-	$(CC) $(CFLAGS) contributors.c -o contributors $(LIBS) contributors.o avl.o
+contributors : avl
+	$(CC) $(CFLAGS) -c contributors.c $(LIBS) avl.o
 
 clean:
 	rm -f *.o $(OUT)
