@@ -4,7 +4,7 @@
 #include "interface.h"
 #include "articles.h"
 #include "contributors.h"
-//#include "xmlparser.h"
+#include "xmlparser.h"
 
 struct TCD_istruct {
 	ARTICLE_SET aset;
@@ -24,7 +24,7 @@ TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]) {
 	int i;
 
 	for (i = 0; i < nsnaps; i++) {
-		loadFile(qs, snaps_paths[i]);
+		qs = parseFile(qs, snaps_paths[i]);
 	}
 
 	return qs;

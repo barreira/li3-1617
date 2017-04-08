@@ -5,6 +5,8 @@
 
 #define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de contribuidor)
 
+/* Estruturas */
+
 struct contributor_set {
 	AVL cset[NUMSIZE]; // Array de AVLs (primeira para todos os contribuidores cujo id começa por "0", segunda para os que começam por "1", etc)
 };
@@ -14,6 +16,8 @@ struct contributor {
 	char* username; //
 	int revisions; //
 };
+
+/* Inits */
 
 CONTRIBUTOR_SET initContributorSet() {
 	int i;
@@ -34,28 +38,34 @@ CONTRIBUTOR initContributor() {
 	return c;
 }
 
-void freeContributor(CONTRIBUTOR c) {
+/* Frees */
+
+CONTRIBUTOR freeContributor(CONTRIBUTOR c) {
 	free(c->id);
 	free(c->username);
 	free(&(c->revisions));
 	free(c);
+	c = NULL;
+	return c;
 }
 
-void freeContributorSet(CONTRIBUTOR_SET cs) {
+CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs) {
 	int i;
 
-	if (cs) {
-		for (i = 0; i < NUMSIZE; i++) {
-			cs->cset[i] = freeAvl(cs->cset[i]);
-		}
-
-		free(cs);
+	for (i = 0; i < NUMSIZE; i++) {
+		cs->cset[i] = freeAvl(cs->cset[i]);
 	}
+
+	free(cs);
+	cs = NULL;
+	return cs;
 }
+
+/* Inserts */
 
 void duplicateContributor(Node n, void* info) {
 	(n->info->revisions)++;
-	freeContributor(info);
+	info = freeContributor(info);
 }
 
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
@@ -64,30 +74,38 @@ CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	return cs;
 }
 
+/* Teste de existência */
+
 int existsContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	int pos = atoi(&(c->id[0]));
 	int res = exists(cs->cset[pos], c->id);
 	return res;
 }
 
-// Getters e Setters
+/* Getters e Setters */
 
 AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos) {
 	return cs->cset[pos];
 }
 
-void setContributorID(CONTRIBUTOR c, char* id) {
+CONTRIBUTOR setContributorID(CONTRIBUTOR c, char* id) {
 	strcpy(c->id, id);
+	return c;
 }
 
-void setUsername(CONTRIBUTOR c, char* u) {
+CONTRIBUTOR setUsername(CONTRIBUTOR c, char* u) {
 	strcpy(c->username, u);
+	return c;
 }
 
-char *getContributorID(CONTRIBUTOR c) {
-	return c->id;
+char* getContributorID(CONTRIBUTOR c) {
+	char* aux = malloc(sizeof(c->id)); // é assim?
+	strcpy(aux, c->id);
+	return aux;
 }
 
-char *getUsername(CONTRIBUTOR c) {
-	return c->username;
+char* getUsername(CONTRIBUTOR c) {
+	char* aux = malloc(sizeof(c->username)); // é assim?
+	strcpy(aux, c->username);
+	return aux;
 }

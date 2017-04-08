@@ -15,7 +15,7 @@ struct avl {
 	Node root;	
 };
 
-// Funções auxiliares
+/* Funções auxiliares */
 
 int greater(int x, int y) {
 	return (x > y) ? x : y;
@@ -30,6 +30,8 @@ Node updateHeight(Node x, Node y) {
 	y->height = greater(getHeight(y->left), getHeight(y->right)) + 1;
 	return y;
 }
+
+/* Rotações */
 
 Node rotateRight(Node n) {
 	Node tmp;
@@ -53,7 +55,7 @@ Node rotateLeft(Node n) {
 	return tmp;
 }
 
-// Inicialização das estruturas
+/* Inits */
 
 Node initNode() {
 	return NULL;
@@ -66,7 +68,7 @@ AVL initAvl() {
 	return a;	
 }
 
-// Inserções nas estruturas
+/* Inserts */
 
 Node insertNode(Node n, char* k, void* i, void (*f)(Node n, void* i)) {
 	if (!n) {
@@ -142,7 +144,7 @@ AVL insert(AVL a, char* k, void* i, void (*f)(Node n, void* i)) {
 	return a;
 }
 
-// Testar existência de uma page numa AVL
+/* Teste de existência */
 
 int existsNode(Node n, char* k) {
 	int res = 0;
@@ -166,25 +168,28 @@ int exists(AVL a, char* k) {
 	return res;
 }
 
-int totalNodes(AVL a) {
-	return (a) ? a->total : 0;
-}
+/* Frees */
 
-void freeNode(Node n) {
-	if (n) {
-		freeNode(n->right);
-		freeNode(n->left);
-		free(n->key);
-		/* free info? */
-		free(n);
-	}
+Node freeNode(Node n) {
+	n->right = freeNode(n->right);
+	n->left = freeNode(n->left);
+	free(n->key);
+	// free info?
+	free(n);
+	n = NULL;
+	return n;
 }
 
 AVL freeAvl(AVL a) {
-	if (a) {
-		freeNode(a->root);
-		free(a);
-	}
+	a->root = freeNode(a->root);
+	free(&(a->total));
+	free(a);
+	a = NULL;
+	return a;
+}
 
-	return NULL;
+/* Outras funções */
+
+int totalNodes(AVL a) {
+	return (a) ? a->total : 0;
 }

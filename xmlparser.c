@@ -80,7 +80,7 @@ void parsePage(TAD_istruct s, ARTICLE a, REVISION r, CONTRIBUTOR c, xmlDocPtr do
 	}	
 }
 
-static void loadFile(TAD_istruct s, char* file) {
+static void parseFile(TAD_istruct s, char* file) {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 

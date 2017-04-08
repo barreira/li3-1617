@@ -6,25 +6,29 @@
 #define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de artigo)
 #define DEFAULT_REVCOUNT 5 // média de revisões por arigo (confirmar)
 
+/* Estruturas */
+
 struct article_set {
 	AVL aset[NUMSIZE]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
 };
 
 struct revision {
-	char* id; //
-	char* timestamp; //
-	char* title; //
+	char* id;
+	char* timestamp;
+	char* title;
 	int textsize;
 	int wc;
 };
 
 struct article {
-	char* id; //
-	int revcount; //
-	int revcapacity; //
-	REVISION* revisions; //
-	int occurrences; //
+	char* id;
+	int revcount;
+	int revcapacity;
+	REVISION* revisions;
+	int occurrences;
 };
+
+/* Inits */
 
 ARTICLE_SET initArticleSet() {
 	int i;
@@ -52,11 +56,12 @@ ARTICLE initArticle() {
 	a->id = NULL;
 	a->revcount = 0;
 	a->revcapacity = DEFAULT_REVCOUNT;
-	a->revisions = calloc(sizeof(struct revision) * DEFAULT_REVCOUNT); // inicializa + coloca a NULL
-	// a->revisions[0] = initRevision(); // inicializa o primeiro
+	a->revisions = malloc(sizeof(struct revision) * DEFAULT_REVCOUNT);
 	a->occurrences = 0;
 	return a;
 }
+
+/* Frees */
 
 REVISION freeRevision(REVISION r) {
 	free(r->id);
@@ -64,32 +69,40 @@ REVISION freeRevision(REVISION r) {
 	free(r->title);
 	free(&(r->textsize));
 	free(&(r->wc));
-	// r = NULL; + return r
-	return NULL;
+	free(r);
+	r = NULL;
+	return r;
 }
 
-void freeArticle(ARTICLE a) {
+ARTICLE freeArticle(ARTICLE a) {
 	int i;
-	free(a->id);
 
-	for (i = 0; a->revisions[i] != NULL; i++) {
-		a->revisions[i] = freeRevision(a->revisions[i]);
+	for (i = 0; i < a->revcount; i++) {
+		a->revisions[i] = free(a->revisions[i]);
 	}	
 
+	free(a->id);
+	free(&(a->revcount));
+	free(&(a->revcapacity));
 	free(&(a->occurrences));
+	free(a);
+	a = NULL;
+	return a;
 }
 
-void freeArticleSet(ARTICLE_SET as) {
+ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
 	int i;
 
-	if (as) {
-		for (i = 0; i < NUMSIZE; i++) {
-			as->aset[i] = freeAvl(as->aset[i]);
-		}
-
-		free(as);
+	for (i = 0; i < NUMSIZE; i++) {
+		as->aset[i] = freeAvl(as->aset[i]);
 	}
+
+	free(as);
+	as = NULL;
+	return as;
 }
+
+/* Inserts */
 
 void duplicateArticle(Node n, void* info) {
 			int cap = n->info->revcapacity;
@@ -105,7 +118,7 @@ void duplicateArticle(Node n, void* info) {
 			(n->info->revcount)++;
 			(n->info->occurrences)++;
 			
-			freeArticle(info);
+			info = freeArticle(info);
 }
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
@@ -114,17 +127,19 @@ ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
 	return as;	
 }
 
+ARTICLE insertRevision(ARTICLE a, REVISION r) {
+
+}
+
+/* Teste de existência */
+
 int existsArticle(ARTICLE_SET as, ARTICLE a) {
 	int pos = atoi(&(a->id[0]));
 	int res = exists(as->aset[pos], a->id);
 	return res;
 }
 
-ARTICLE insertRevision(ARTICLE a, REVISION r) {
-
-}
-
-// Getters e Setters
+/* Getters e Setters */
 
 AVL getArticleSubset(ARTICLE_SET as, int pos) {
 	return as->aset[pos];
