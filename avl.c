@@ -197,3 +197,7 @@ int totalNodes(AVL a) {
 void incrementCounters(Node n, void (*inc)(void* info)) {
 	inc(n->info);
 }
+
+void* getInfo(Node n) {
+	return n->info;
+}

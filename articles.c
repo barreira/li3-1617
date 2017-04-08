@@ -106,19 +106,23 @@ ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
 /* Inserts */
 
 void duplicate(Node n, void* dup) { // Falta corrigir esta função
-	int cap = n->info->revcapacity;
-	int nr = n->info->revcount;
+	ARTICLE tmp = getInfo(n);
+	int cap = tmp->revcapacity;
+	int nr = tmp->revcount;
 
 	if (nr == cap) {
-		realloc(n->info->revisions, sizeof(struct revision) * cap * 2);
-		n->info->capacity *= 2;
+		realloc(tmp->revisions, sizeof(struct revision) * cap * 2);
+		tmp->capacity *= 2;
 	}
 
-	n->info->revisions[nr] = ((ARTICLE) dup)->revisions[0];
-	(n->info->revcount)++;
-	(n->info->occurrences)++;
+	tmp->revisions[nr] = ((ARTICLE) dup)->revisions[0];
+	(tmp->revcount)++;
+	(tmp->occurrences)++;
 	
+	// set info = temp
+
 	dup = freeArticle(dup);
+	tmp = free(tmp);
 }
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
