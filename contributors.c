@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "contributors.h"
 #include "avl.h"
@@ -63,14 +64,18 @@ CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs) {
 
 /* Inserts */
 
-void duplicateContributor(Node n, void* info) {
-	(n->info->revisions)++;
-	info = freeContributor(info);
+void increment(void* info) {
+	((CONTRIBUTOR) info)->revisions += 1;
+}
+
+void duplicate(Node n, void* dup) {
+	incrementCounters(n, increment);
+	dup = freeContributor(dup);
 }
 
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	int pos = atoi(&(c->id[0]));
-	cs->cset[pos] = insert(cs->cset[pos], c->id, c, duplicateContributor);
+	cs->cset[pos] = insert(cs->cset[pos], c->id, c, duplicate);
 	return cs;
 }
 

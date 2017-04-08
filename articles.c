@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "articles.h"
 #include "avl.h"
@@ -42,7 +43,7 @@ ARTICLE_SET initArticleSet() {
 }
 
 REVISION initRevision() {
-	//REVISION r = malloc(sizeof(struct revision)); // já não é preciso
+	REVISION r = malloc(sizeof(struct revision));
 	r->id = NULL;
 	r->timestamp = NULL;
 	r->title = NULL;
@@ -78,7 +79,7 @@ ARTICLE freeArticle(ARTICLE a) {
 	int i;
 
 	for (i = 0; i < a->revcount; i++) {
-		a->revisions[i] = free(a->revisions[i]);
+		a->revisions[i] = freeRevision(a->revisions[i]);
 	}	
 
 	free(a->id);
@@ -104,32 +105,32 @@ ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
 
 /* Inserts */
 
-void duplicateArticle(Node n, void* info) {
-			int cap = n->info->revcapacity;
-			int nr = n->info->revcount;
-		
-			if (nr == cap) {
-				int size = getRevisionSize(); // size da struct revision
-				realloc(n->info->revisions, size * cap * 2);
-				n->info->capacity *= 2;
-			}
-		
-			n->info->revisions[nr] = info->revisions[0];
-			(n->info->revcount)++;
-			(n->info->occurrences)++;
-			
-			info = freeArticle(info);
+void duplicate(Node n, void* dup) { // Falta corrigir esta função
+	int cap = n->info->revcapacity;
+	int nr = n->info->revcount;
+
+	if (nr == cap) {
+		realloc(n->info->revisions, sizeof(struct revision) * cap * 2);
+		n->info->capacity *= 2;
+	}
+
+	n->info->revisions[nr] = ((ARTICLE) dup)->revisions[0];
+	(n->info->revcount)++;
+	(n->info->occurrences)++;
+	
+	dup = freeArticle(dup);
 }
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
 	int pos = atoi(&(a->id[0]));
-	as->aset[pos] = insert(as->aset[pos], a->id, a, duplicateArticle);
+	as->aset[pos] = insert(as->aset[pos], a->id, a, duplicate);
 	return as;	
 }
 
+/*
 ARTICLE insertRevision(ARTICLE a, REVISION r) {
 
-}
+}*/
 
 /* Teste de existência */
 

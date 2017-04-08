@@ -193,3 +193,7 @@ AVL freeAvl(AVL a) {
 int totalNodes(AVL a) {
 	return (a) ? a->total : 0;
 }
+
+void incrementCounters(Node n, void (*inc)(void* info)) {
+	inc(n->info);
+}

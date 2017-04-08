@@ -9,6 +9,7 @@ typedef struct avl *AVL;
 AVL initAvl();
 AVL insert(AVL a, char* k, void* i, void (*f)(Node n, void* i));
 int exists(AVL a, char* k);
-AVL freeAVL(AVL a);
+AVL freeAvl(AVL a);
+void incrementCounters(Node n, void (*inc)(void* info));
 
 #endif
