@@ -9,11 +9,8 @@ program: interface
 avl:
 	$(CC) $(CFLAGS) -c avl.c $(LIBS)
 
-interface: contributors articles xmlparser
-	$(CC) $(CFLAGS) -c interface.c $(LIBS) contributors.o articles.o xmlparser.o
-
-xmlparser: interface avl contributors articles
-	$(CC) $(CFLAGS) -c xmlparser.c $(LIBS) interface.o avl.o contributors.o articles.o
+interface: avl contributors articles
+	$(CC) $(CFLAGS) -c interface.c $(LIBS) avl.o contributors.o articles.o
 
 articles: avl
 	$(CC) $(CFLAGS) -c articles.c $(LIBS) avl.o

@@ -150,30 +150,32 @@ AVL getArticleSubset(ARTICLE_SET as, int pos) {
 	return as->aset[pos];
 }
 
-unsigned int getRevisionSize() {
-	return (sizeof(struct revision));
-}
-
-void setArticleID(ARTICLE a, char* id) {
+ARTICLE setArticleID(ARTICLE a, char* id) {
 	strcpy(a->id, id);
+	return a;
 }
 
-void setRevisionID(REVISION r, char* id) {
+REVISION setRevisionID(REVISION r, char* id) {
 	strcpy(r->id, id);
+	return r;
 }
 
-void setTimestamp(REVISION r, char* t) {
+REVISION setTimestamp(REVISION r, char* t) {
 	strcpy(r->timestamp, t);
+	return r;
 }
 
-void setTitle(REVISION r, char* t) {
+REVISION setTitle(REVISION r, char* t) {
 	strcpy(r->title, t);
+	return r;
 }
 
-void setTextSize(REVISION r, int ts) {
+REVISION setTextSize(REVISION r, int ts) {
 	r->textsize = ts;
+	return r;
 }
 
-void setWordCount(REVISION r, int wc) {
+REVISION setWordCount(REVISION r, int wc) {
 	r->wc = wc;
+	return r;
 }
