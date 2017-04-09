@@ -1,3 +1,15 @@
+/**
+ * @file articles.h
+ * @brief API do módulo dos artigos
+ *
+ * @author Ana Paula Carvalho  - A61855
+ * @author Joana Arantes       - A57810
+ * @author João Pires Barreira - A73831
+ * @author Miguel Cunha        - A78478
+ *
+ * @version 2017-04-09
+ */
+
 #ifndef ARTICLES_H
 #define ARTICLES_H
 
@@ -10,6 +22,8 @@ typedef struct revision *REVISION;
 ARTICLE_SET initArticleSet();
 ARTICLE initArticle();
 REVISION initRevision();
+
+ARTICLE_SET freeArticleSet(ARTICLE_SET as);
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a);
 ARTICLE addRevision(ARTICLE a, REVISION r);

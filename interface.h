@@ -1,8 +1,19 @@
+/**
+ * @file avl.h
+ * @brief API do módulo da interface
+ *
+ * @author Ana Paula Carvalho  - A61855
+ * @author Joana Arantes       - A57810
+ * @author João Pires Barreira - A73831 
+ * @author Miguel Cunha        - A78478
+ *
+ * @version 2017-04-09
+ */
+
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
 typedef struct TCD_istruct *TAD_istruct;
-
 TAD_istruct init();
 TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]);
 

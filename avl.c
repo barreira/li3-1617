@@ -1,3 +1,17 @@
+/**
+ * @file avl.c
+ * @brief Definição de uma AVL genérica
+ * 
+ * Contém a definição da AVL genérica e respetivas funções.
+ * 
+ * @author Ana Paula Carvalho  - A61855
+ * @author Joana Arantes       - A57810
+ * @author João Pires Barreira - A73831 
+ * @author Miguel Cunha        - A78478
+ *
+ * @version 2017-04-09
+ */
+
 #include <stdlib.h>
 #include <string.h>
 

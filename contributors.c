@@ -1,3 +1,18 @@
+/**
+ * @file contributors.c
+ * @brief Definição das estruturas relativas aos contribuidores
+ * 
+ * Contém a definição das estruturas que definem um contribuidor e um array
+ * de AVLs de contribuidores.
+ * 
+ * @author Ana Paula Carvalho  - A61855
+ * @author Joana Arantes       - A57810
+ * @author João Pires Barreira - A73831 
+ * @author Miguel Cunha        - A78478
+ *
+ * @version 2017-04-09
+ */
+
 #include <stdlib.h>
 #include <string.h>
 

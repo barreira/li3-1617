@@ -1,3 +1,22 @@
+/**
+ * @file interface.c
+ * @brief Definição de todas as funções pertencentes à interface do projeto
+ * 
+ * Contém as funções responsáveis pelo parsing dos ficheiros XML, pela definição,
+ * carregamento e limpeza das estruturas e pelas queries. 
+ *
+ * @author Ana Paula Carvalho  - A61855
+ * @author Joana Arantes       - A57810
+ * @author João Pires Barreira - A73831 
+ * @author Miguel Cunha        - A78478
+ *
+ * TODO: corrigir contagem de palavras na função parseRevision
+ *
+ * @version 2017-04-09
+ */
+
+#include <string.h>
+
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
 
@@ -50,10 +69,23 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 		}
 
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "text"))) {
-			// xmlChar* text = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+			xmlChar* text = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 			
-			// Calcular o número de palavras + setWC(), percorrer...
-			// Calcular o tamanho do texto + setTextSize(), strlen(text)+1
+			if (text != NULL) {
+				unsigned int size;
+				size = strlen((char*) text) + 1;
+				setTextSize(r, size);
+			}
+
+			unsigned int i, palavras = 0;
+
+			for (i = 0; ((char*) text)[i] != NULL ; i++); {
+				if (((char*) text)[i] == " " || ((char*) text)[i] == '\n' || ((char*) text)[i] == '\t') {
+					palavras++;
+				}
+			}
+
+			setWordCount(r, palavras);
 		}
 	}
 }
@@ -143,15 +175,14 @@ TAD_istruct load(TAD_istruct qs, int nsnaps, char* snaps_paths[]) {
 	return qs;
 }
 
-/*
-TAD_istruct clean(TAD_istruct qs) {
-	if (qs) {
-		freeNode(qs->root);
-		free(qs);
-	}
 
-	return NULL;
-}*/
+TAD_istruct clean(TAD_istruct qs) {
+	qs->aset = freeArticleSet(qs->aset);
+	qs->cset = freeContributorSet(qs->cset);
+	free(qs);
+	qs = NULL;
+	return qs;
+}
 
 /* QUERIES */
 
