@@ -1,22 +1,26 @@
 CC = gcc
 CFLAGS = -Wall -g `pkg-config --cflags libxml-2.0`
-OBJS = $(patsubst %.c, %.o, $(wildcard *.c))
 LIBS = `pkg-config --libs libxml-2.0`
+OUT = program
+OBJS = program.o interface.o avl.o articles.o contributors.o
 
-program: interface
-	$(CC) $(CFLAGS) program.c -o program $(LIBS) interface.o
+program: $(OBJS)
+	$(CC) $(OBJS) $(CFLAGS) -o $(OUT) $(LIBS)	
 
-avl:
-	$(CC) $(CFLAGS) -c avl.c $(LIBS)
+program.o: program.c interface.h
+	cc -c program.c
 
-interface: avl contributors articles
-	$(CC) $(CFLAGS) -c interface.c $(LIBS) avl.o contributors.o articles.o
+avl.o: avl.c avl.h
+	cc -c avl.c
 
-articles: avl
-	$(CC) $(CFLAGS) -c articles.c $(LIBS) avl.o
+interface: interface.c interface.h contributors.h articles.h
+	cc -c interface.c
 
-contributors: avl
-	$(CC) $(CFLAGS) -c contributors.c $(LIBS) avl.o
+articles: articles.c articles.h avl.h
+	cc -c articles.c
+
+contributors: contributors.c contributors.h avl.h
+	cc -c contributors.c
 
 clean:
 	rm -f *.o program

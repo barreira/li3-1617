@@ -68,14 +68,14 @@ void increment(void* info) {
 	((CONTRIBUTOR) info)->revisions += 1;
 }
 
-void duplicate(Node n, void* dup) {
+void duplicateC(Node n, void* dup) {
 	incrementCounters(n, increment);
 	dup = freeContributor(dup);
 }
 
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	int pos = atoi(&(c->id[0]));
-	cs->cset[pos] = insert(cs->cset[pos], c->id, c, duplicate);
+	cs->cset[pos] = insert(cs->cset[pos], c->id, c, duplicateC);
 	return cs;
 }
 

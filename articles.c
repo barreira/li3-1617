@@ -105,7 +105,7 @@ ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
 
 /* Inserts */
 
-void duplicate(Node n, void* dup) { // Falta corrigir esta função
+void duplicateA(Node n, void* dup) {
 	ARTICLE tmp = getInfo(n);
 	int cap = tmp->revcapacity;
 	int nr = tmp->revcount;
@@ -127,14 +127,17 @@ void duplicate(Node n, void* dup) { // Falta corrigir esta função
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
 	int pos = atoi(&(a->id[0]));
-	as->aset[pos] = insert(as->aset[pos], a->id, a, duplicate);
+	as->aset[pos] = insert(as->aset[pos], a->id, a, duplicateA);
 	return as;	
 }
 
-/*
-ARTICLE insertRevision(ARTICLE a, REVISION r) {
 
-}*/
+ARTICLE addRevision(ARTICLE a, REVISION r) {
+	a->revisions[a->revcount] = r;
+	(a->revcount)++;
+	(a->occurrences)++;
+	return a;
+}
 
 /* Teste de existência */
 
