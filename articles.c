@@ -111,18 +111,18 @@ void duplicate(Node n, void* dup) { // Falta corrigir esta função
 	int nr = tmp->revcount;
 
 	if (nr == cap) {
-		realloc(tmp->revisions, sizeof(struct revision) * cap * 2);
-		tmp->capacity *= 2;
+		tmp->revisions = realloc(tmp->revisions, sizeof(struct revision) * cap * 2);
+		tmp->revcapacity *= 2;
 	}
 
 	tmp->revisions[nr] = ((ARTICLE) dup)->revisions[0];
 	(tmp->revcount)++;
 	(tmp->occurrences)++;
 	
-	// set info = temp
+	setInfo(n, tmp);
 
 	dup = freeArticle(dup);
-	tmp = free(tmp);
+	free(tmp);
 }
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {

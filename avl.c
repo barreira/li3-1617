@@ -201,3 +201,8 @@ void incrementCounters(Node n, void (*inc)(void* info)) {
 void* getInfo(Node n) {
 	return n->info;
 }
+
+Node setInfo(Node n, void* info) {
+	n->info = info;
+	return n;
+}

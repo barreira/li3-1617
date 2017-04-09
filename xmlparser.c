@@ -1,4 +1,5 @@
 #include <libxml/xmlmemory.h>
+#include <libxml/parser.h>
 
 #include "xmlparser.h"
 #include "avl.h"

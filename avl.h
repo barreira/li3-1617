@@ -12,5 +12,6 @@ AVL insert(AVL a, char* k, void* i, void (*f)(Node n, void* i));
 void incrementCounters(Node n, void (*inc)(void* info));
 int exists(AVL a, char* k);
 void* getInfo(Node n);
+Node setInfo(Node n, void* info);
 
 #endif
