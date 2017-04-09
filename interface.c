@@ -121,7 +121,7 @@ TAD_istruct parsePage(TAD_istruct s, xmlDocPtr doc, xmlNodePtr cur) {
 	return s;
 }
 
-static void parseFile(TAD_istruct s, char* file) {
+TAD_istruct parseFile(TAD_istruct s, char* file) {
 	xmlDocPtr doc;
 	xmlNodePtr cur;
 
@@ -129,7 +129,7 @@ static void parseFile(TAD_istruct s, char* file) {
 	
 	if (!doc) {
 		fprintf(stderr, "Document not parsed successfully \n");
-		return;
+		return NULL;
 	}
 
 	cur = xmlDocGetRootElement(doc);
@@ -137,12 +137,12 @@ static void parseFile(TAD_istruct s, char* file) {
 	if (!cur) {
 		fprintf(stderr, "Empty document\n");
 		xmlFreeDoc(doc);
-		return;
+		return NULL;
 	}
 	if (xmlStrcmp(cur->name, (const xmlChar *) "mediawiki")) {
 		fprintf(stderr, "Document of the wrong type (root node != mediawiki)");
 		xmlFreeDoc(doc);
-		return;
+		return NULL;
 	}
 
 	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
@@ -152,6 +152,7 @@ static void parseFile(TAD_istruct s, char* file) {
 	}
 
 	xmlFreeDoc(doc);
+	return s;
 }
 
 /* INIT, LOAD E CLEAN */
