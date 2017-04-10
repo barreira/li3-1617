@@ -28,9 +28,9 @@ struct contributor_set {
 };
 
 struct contributor {
-	char* id; //
-	char* username; //
-	int revisions; //
+	char* id;
+	char* username;
+	int revisions;
 };
 
 /* Inits */

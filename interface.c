@@ -32,18 +32,18 @@ struct TCD_istruct {
 
 /* XML PARSING */
 
-void parseContributor(CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
+CONTRIBUTOR parseContributor(CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 
 	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "username"))) {
 			xmlChar* username = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			setUsername(c, (char*) username);
+			c = setUsername(c, (char*) username);
 			free(username);
 		}
 
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "id"))) {
 			xmlChar* id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			setContributorID(c, (char*) id);
+			c = setContributorID(c, (char*) id);
 			free(id);
 		}
 	}
@@ -54,32 +54,32 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "id"))) {
 			xmlChar* id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			setRevisionID(r, (char*) id);
+			r = setRevisionID(r, (char*) id);
 			free(id);
 		}
 
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "timestamp"))) {
 			xmlChar* timestamp = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			setTimestamp(r, (char*) timestamp);
+			r = setTimestamp(r, (char*) timestamp);
 			free(timestamp);
 		}
 
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "contributor"))) {
-			parseContributor(c, doc, cur);
+			c = parseContributor(c, doc, cur);
 		}
 
-		if (!(xmlStrcmp(cur->name, (const xmlChar *) "text"))) {
+		if (!(xmlStrcmp(cur->name, (const xmlChar *) "text xml:space=\"preserve\""))) {
 			xmlChar* text = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 			
 			if (text != NULL) {
 				unsigned int size;
 				size = strlen((char*) text) + 1;
-				setTextSize(r, size);
+				r = setTextSize(r, size);
 			}
 
 			unsigned int i, palavras = 0;
 
-			for (i = 0; ((char*) text)[i] != NULL ; i++); {
+			for (i = 0; ((char*) text)[i] != '\0' ; i++); {
 				if (((char*) text)[i] == " " || ((char*) text)[i] == '\n' || ((char*) text)[i] == '\t') {
 					palavras++;
 				}
@@ -105,7 +105,7 @@ TAD_istruct parsePage(TAD_istruct s, xmlDocPtr doc, xmlNodePtr cur) {
 
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "id"))) {
 			xmlChar* id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			setArticleID(a, (char*) id);	
+			a = setArticleID(a, (char*) id);	
 			free(id);
 		}
 
