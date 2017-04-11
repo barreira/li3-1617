@@ -17,20 +17,19 @@
 #include <string.h>
 
 #include "contributors.h"
-#include "avl.h"
 
-#define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de contribuidor)
+#define SIZE 10
 
 /* Estruturas */
 
-struct contributor_set {
-	AVL cset[NUMSIZE]; // Array de AVLs (primeira para todos os contribuidores cujo id começa por "0", segunda para os que começam por "1", etc)
+struct contributor_set{
+	AVL contributors[SET_SIZE_C]; // Array de AVLs (primeira para todos os contribuidores cujo id começa por "0", segunda para os que começam por "1", etc)
 };
 
 struct contributor {
-	char* id; //
-	char* username; //
-	int revisions; //
+	char* id;
+	char* username;
+	int revisions;
 };
 
 /* Inits */
@@ -39,8 +38,8 @@ CONTRIBUTOR_SET initContributorSet() {
 	int i;
 	CONTRIBUTOR_SET cs = malloc(sizeof(struct contributor_set));
 
-	for (i = 0; i < NUMSIZE; i++) {
-		cs->cset[i] = initAvl();
+	for (i = 0; i < SET_SIZE_C; i++) {
+		cs->contributors[i] = initAvl();
 	}
 
 	return cs;
@@ -48,9 +47,9 @@ CONTRIBUTOR_SET initContributorSet() {
 
 CONTRIBUTOR initContributor() {
 	CONTRIBUTOR c = malloc(sizeof(struct contributor));
-	c->id = NULL;
-	c->username = NULL;
-	c->revisions = 0;
+	c->id = malloc(sizeof(char) * SIZE);
+	c->username = malloc(sizeof(char) * SIZE);
+	c->revisions = 1;
 	return c;
 }
 
@@ -59,7 +58,6 @@ CONTRIBUTOR initContributor() {
 CONTRIBUTOR freeContributor(CONTRIBUTOR c) {
 	free(c->id);
 	free(c->username);
-	free(&(c->revisions));
 	free(c);
 	c = NULL;
 	return c;
@@ -68,8 +66,8 @@ CONTRIBUTOR freeContributor(CONTRIBUTOR c) {
 CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs) {
 	int i;
 
-	for (i = 0; i < NUMSIZE; i++) {
-		cs->cset[i] = freeAvl(cs->cset[i]);
+	for (i = 0; i < SET_SIZE_C; i++) {
+		cs->contributors[i] = freeAvl(cs->contributors[i]);
 	}
 
 	free(cs);
@@ -89,23 +87,23 @@ void duplicateC(Node n, void* dup) {
 }
 
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
-	int pos = atoi(&(c->id[0]));
-	cs->cset[pos] = insert(cs->cset[pos], c->id, c, duplicateC);
+	int pos = c->id[0] - '0';
+	cs->contributors[pos] = insert(cs->contributors[pos], c->id, c, duplicateC);
 	return cs;
 }
 
 /* Teste de existência */
 
 int existsContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
-	int pos = atoi(&(c->id[0]));
-	int res = exists(cs->cset[pos], c->id);
+	int pos = c->id[0] - '0';
+	int res = exists(cs->contributors[pos], c->id);
 	return res;
 }
 
 /* Getters e Setters */
 
 AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos) {
-	return cs->cset[pos];
+	return cs->contributors[pos];
 }
 
 CONTRIBUTOR setContributorID(CONTRIBUTOR c, char* id) {

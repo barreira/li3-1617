@@ -13,6 +13,10 @@
 #ifndef ARTICLES_H
 #define ARTICLES_H
 
+#include "avl.h"
+
+#define SET_SIZE_A 10
+
 typedef struct article_set *ARTICLE_SET;
 typedef struct article *ARTICLE;
 typedef struct revision *REVISION;
@@ -27,6 +31,9 @@ ARTICLE_SET freeArticleSet(ARTICLE_SET as);
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a);
 ARTICLE addRevision(ARTICLE a, REVISION r);
+
+AVL getArticleSubset(ARTICLE_SET as, int pos);
+char* getTitle(REVISION r);
 
 ARTICLE setArticleID(ARTICLE a, char* id);
 REVISION setRevisionID(REVISION r, char* id);

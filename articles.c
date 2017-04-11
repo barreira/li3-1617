@@ -17,15 +17,14 @@
 #include <string.h>
 
 #include "articles.h"
-#include "avl.h"
 
-#define NUMSIZE 10 // Sequêcia de 0 a 9 (primeiro numero do id de artigo)
 #define DEFAULT_REVCOUNT 5 // média de revisões por arigo (confirmar)
+#define SIZE 10
 
 /* Estruturas */
 
 struct article_set {
-	AVL aset[NUMSIZE]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
+	AVL articles[SET_SIZE_A]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
 };
 
 struct revision {
@@ -50,8 +49,8 @@ ARTICLE_SET initArticleSet() {
 	int i;
 	ARTICLE_SET as = malloc(sizeof(struct article_set));
 
-	for (i = 0; i < NUMSIZE; i++) {
-		as->aset[i] = initAvl();
+	for (i = 0; i < SET_SIZE_A; i++) {
+		as->articles[i] = initAvl();
 	}
 
 	return as;
@@ -59,9 +58,9 @@ ARTICLE_SET initArticleSet() {
 
 REVISION initRevision() {
 	REVISION r = malloc(sizeof(struct revision));
-	r->id = NULL;
-	r->timestamp = NULL;
-	r->title = NULL;
+	r->id = malloc(sizeof(char) * SIZE);
+	r->timestamp = malloc(sizeof(char) * SIZE);
+	r->title = malloc(sizeof(char) * SIZE);
 	r->textsize = 0;
 	r->wc = 0;
 	return r;
@@ -69,11 +68,11 @@ REVISION initRevision() {
 
 ARTICLE initArticle() {
 	ARTICLE a = malloc(sizeof(struct article));
-	a->id = NULL;
-	a->revcount = 0;
+	a->id = malloc(sizeof(char) * SIZE);
+	a->revcount = 1;
 	a->revcapacity = DEFAULT_REVCOUNT;
 	a->revisions = malloc(sizeof(struct revision) * DEFAULT_REVCOUNT);
-	a->occurrences = 0;
+	a->occurrences = 1;
 	return a;
 }
 
@@ -83,8 +82,6 @@ REVISION freeRevision(REVISION r) {
 	free(r->id);
 	free(r->timestamp);
 	free(r->title);
-	free(&(r->textsize));
-	free(&(r->wc));
 	free(r);
 	r = NULL;
 	return r;
@@ -98,9 +95,6 @@ ARTICLE freeArticle(ARTICLE a) {
 	}	
 
 	free(a->id);
-	free(&(a->revcount));
-	free(&(a->revcapacity));
-	free(&(a->occurrences));
 	free(a);
 	a = NULL;
 	return a;
@@ -109,8 +103,8 @@ ARTICLE freeArticle(ARTICLE a) {
 ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
 	int i;
 
-	for (i = 0; i < NUMSIZE; i++) {
-		as->aset[i] = freeAvl(as->aset[i]);
+	for (i = 0; i < SET_SIZE_A; i++) {
+		as->articles[i] = freeAvl(as->articles[i]);
 	}
 
 	free(as);
@@ -141,8 +135,8 @@ void duplicateA(Node n, void* dup) {
 }
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
-	int pos = atoi(&(a->id[0]));
-	as->aset[pos] = insert(as->aset[pos], a->id, a, duplicateA);
+	int pos = a->id[0] - '0';
+	as->articles[pos] = insert(as->articles[pos], a->id, a, duplicateA);
 	return as;	
 }
 
@@ -157,15 +151,21 @@ ARTICLE addRevision(ARTICLE a, REVISION r) {
 /* Teste de existência */
 
 int existsArticle(ARTICLE_SET as, ARTICLE a) {
-	int pos = atoi(&(a->id[0]));
-	int res = exists(as->aset[pos], a->id);
+	int pos = a->id[0] - '0';
+	int res = exists(as->articles[pos], a->id);
 	return res;
 }
 
 /* Getters e Setters */
 
 AVL getArticleSubset(ARTICLE_SET as, int pos) {
-	return as->aset[pos];
+	return as->articles[pos];
+}
+
+char* getTitle(REVISION r) {
+	char* ret = malloc(sizeof(r->title));
+	strcpy(ret, r->title);
+	return ret;
 }
 
 ARTICLE setArticleID(ARTICLE a, char* id) {

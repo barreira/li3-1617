@@ -1,8 +1,10 @@
 #include <stdio.h>
 
-#include "interface.h"
+#include "menu.h"
 
 int main() {
+	
+	menu();
 
 	return 0;
 }

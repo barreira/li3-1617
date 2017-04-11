@@ -10,8 +10,8 @@
  * @version 2017-04-09
  */
 
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#ifndef AVL_H
+#define AVL_H
 
 typedef struct node *Node;
 typedef struct avl *AVL;
@@ -25,5 +25,6 @@ void incrementCounters(Node n, void (*inc)(void* info));
 int exists(AVL a, char* k);
 void* getInfo(Node n);
 Node setInfo(Node n, void* info);
+int getTotalNodes(AVL a);
 
 #endif

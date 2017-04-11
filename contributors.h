@@ -13,6 +13,10 @@
 #ifndef CONTRIBUTORS_H
 #define CONTRIBUTORS_H
 
+#include "avl.h"
+
+#define SET_SIZE_C 10
+
 typedef struct contributor_set *CONTRIBUTOR_SET;
 typedef struct contributor *CONTRIBUTOR;
 
@@ -25,9 +29,11 @@ CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs);
 
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c);
 
+AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos);
 CONTRIBUTOR setContributorID(CONTRIBUTOR c, char* id);
 CONTRIBUTOR setUsername(CONTRIBUTOR c, char* u);
 char* getContributorID(CONTRIBUTOR c);
 char* getUsername(CONTRIBUTOR c);
+
 
 #endif

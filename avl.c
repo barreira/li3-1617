@@ -17,6 +17,8 @@
 
 #include "avl.h"
 
+#define SIZE 10
+
 struct node {
 	char* key;
 	void* info;
@@ -72,6 +74,14 @@ Node rotateLeft(Node n) {
 /* Inits */
 
 Node initNode() {
+	/*
+	Node n = malloc(sizeof(struct node));
+	n->key = malloc(sizeof(char) * SIZE);
+	n->info = NULL;
+	n->height = 0;
+	n->left = NULL;
+	n->right = NULL;
+	return n;*/
 	return NULL;
 }
 
@@ -204,7 +214,7 @@ AVL freeAvl(AVL a) {
 
 /* Outras funções */
 
-int totalNodes(AVL a) {
+int getTotalNodes(AVL a) {
 	return (a) ? a->total : 0;
 }
 
