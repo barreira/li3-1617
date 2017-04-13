@@ -346,28 +346,28 @@ int isPrefix(char* s, char* p) {
 	return 0;
 }
 
-char** query9_aux(Node n, char* prefix, char** res) {
+char** query9_aux(Node n, char* prefix, char*** res, int* size) {
 	if (n == NULL) {
-		return res;
+		return *res;
 	}
 
 	REVISION r = getLastRevision((ARTICLE) n->info);
 	char* t = getTitle(r);
 
 	if (isPrefix(t, prefix)) {
-		int i;
-		for (i = 0; res[i] != NULL; i++);
-		res[i] = t;
+		*res = realloc(*res, sizeof(char*) * ((*size)+1));
+		(*res)[*size] = t;
+		(*size)++;
 	}
 
-	query9_aux(n->left, prefix, res);
-	query9_aux(n->right, prefix, res);
+	query9_aux(n->left, prefix, res, size);
+	query9_aux(n->right, prefix, res, size);
 
-	return res;	
+	return *res;	
 }
 
-char** query9(AVL a, char* prefix, char** res) {
-	return query9_aux(a->root, prefix, res);
+char** query9(AVL a, char* prefix, char*** res, int* size) {
+	return query9_aux(a->root, prefix, res, size);
 }
 
 

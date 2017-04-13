@@ -296,15 +296,20 @@ int prefix(char* s, char* p) {
 
 // 9
 char** titles_with_prefix(char* prefix, TAD_istruct qs) {
-	int i;
-	char** ret;
+	int i, size = 0;
+	char*** ret = malloc(sizeof(char**));
+	*ret = NULL;
 
 	for (i = 0; i < SET_SIZE_A; i++) {
 		AVL tmp = getArticleSubset(qs->aset, i);
-		query9(tmp, prefix, ret);
+		query9(tmp, prefix, ret, &size);
 	}
 
-	return ret;
+	if (*ret != NULL) {
+		(*ret)[size] = NULL;
+	}
+
+	return *ret;
 }
 
 // 10

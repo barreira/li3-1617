@@ -114,7 +114,6 @@ ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
 
 /* Inserts */
 
-
 REVISION getRevisionAt(REVISION* revs, int pos) {
 	REVISION r = initRevision();
 	setRevisionID(r, revs[pos]->id);
@@ -182,13 +181,13 @@ AVL getArticleSubset(ARTICLE_SET as, int pos) {
 }
 
 char* getTitle(REVISION r) {
-	char* ret = malloc(sizeof(r->title));
+	char* ret = malloc(sizeof(char) * (strlen(r->title) + 1));
 	strcpy(ret, r->title);
 	return ret;
 }
 
 char* getTimestamp(REVISION r) {
-	char* ret = malloc(sizeof(r->timestamp));
+	char* ret = malloc(sizeof(char) * (strlen(r->timestamp) + 1));
 	strcpy(ret, r->timestamp);
 	return ret;	
 }

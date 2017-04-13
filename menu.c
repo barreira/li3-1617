@@ -97,11 +97,13 @@ int menu()
         else if (strcmp(opcao, "1")==0)
         {
         	start = clock();
+            
             //Query 1
-            end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
             printf("Q1: %ld\n", all_articles(s));
+
+            end = clock();
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;            
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
 
             sair=1;
@@ -112,11 +114,13 @@ int menu()
         else if (strcmp(opcao, "2")==0)
         {
         	start = clock();
-            //Query 2
-            end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
+            //Query 2
             printf("Q2: %ld\n", unique_articles(s));
+
+            end = clock();
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
             sair=1;
@@ -127,11 +131,13 @@ int menu()
         else if (strcmp(opcao, "3")==0)
         {
         	start = clock();
+
             //Query 3
+            printf("Q3: %ld\n", all_revisions(s));
+            
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-            printf("Q3: %ld\n", all_revisions(s));
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
             sair=1;
@@ -142,11 +148,12 @@ int menu()
         else if (strcmp(opcao, "4")==0)
         {
         	start = clock();
+
             //Query 4
+
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-            printf("Q4: \n");
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
             sair=1;
@@ -172,6 +179,7 @@ int menu()
             
             end = clock();
             cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
 
             sair=1;
@@ -184,10 +192,10 @@ int menu()
         	start = clock();
 
             //Query 6
+
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-            printf("Q6: \n");
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
             sair=1;
@@ -214,6 +222,7 @@ int menu()
 
             end = clock();
             cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
 
             sair=1;
@@ -224,11 +233,12 @@ int menu()
         else if (strcmp(opcao, "8")==0)
         {
         	start = clock();
+            
             //Query 8
+
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-            printf("Q8: \n");
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
 
             sair=1;
@@ -239,11 +249,31 @@ int menu()
         else if (strcmp(opcao, "9")==0)
         {
         	start = clock();
+
             //Query 9
+            char prefix[100];
+            printf("Insira um prefixo: ");
+            scanf("%s", prefix);
+
+            char **res = titles_with_prefix(prefix, s);
+
+            if (res != NULL) {
+                int i;
+
+                printf("Q9: Artigos cujo título começa por %s:\n", prefix);
+
+                for (i = 0; res[i] != NULL; i++) {
+                    printf("%s\n", res[i]);
+                }
+                
+            }
+            else {
+                printf("Q9: Não existem artigos cujo título tenha %s como prefixo.\n", prefix);
+            }
+
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-            printf("Q9: \n");
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
             sair=1;
@@ -275,6 +305,7 @@ int menu()
 
             end = clock();
             cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
 
             sair=1;
