@@ -16,6 +16,7 @@
  */
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
@@ -55,7 +56,8 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 
 	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "id"))) {
-			xmlChar* id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+			xmlChar* id;
+			id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 			r = setRevisionID(r, (char*) id);
 			free(id);
 		}
@@ -79,15 +81,22 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 				r = setTextSize(r, size);
 			}
 
-			/*unsigned int i, palavras = 0;
+			int palavras = 0;
 
-			for (i = 0; ((char*) text)[i] != '\0' ; i++); {
-				if (((char*) text)[i] == " " || ((char*) text)[i] == '\n' || ((char*) text)[i] == '\t') {
-					palavras++;
+			while (*text != '\0') {
+
+				while (*text == ' ' || *text == '\n' || *text == '\t') {
+					text++;
+				}
+
+				palavras++;
+
+				while (*text != ' ' || *text != '\n' || *text != '\t') {
+					text++;
 				}
 			}
 
-			setWordCount(r, palavras);*/
+			setWordCount(r, palavras);
 		}
 	}
 }
@@ -107,7 +116,7 @@ TAD_istruct parsePage(TAD_istruct s, xmlDocPtr doc, xmlNodePtr cur) {
 
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "id"))) {
 			xmlChar* id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			a = setArticleID(a, (char*) id);	
+			a = setArticleID(a, (char*) id);
 			free(id);
 		}
 
@@ -116,7 +125,7 @@ TAD_istruct parsePage(TAD_istruct s, xmlDocPtr doc, xmlNodePtr cur) {
 		}
 	}
 
-	addRevision(a, r);
+	a = addRevision(a, r);
 	s->aset = insertArticle(s->aset, a);
 	s->cset = insertContributor(s->cset, c);	
 
@@ -141,6 +150,7 @@ TAD_istruct parseFile(TAD_istruct s, char* file) {
 		xmlFreeDoc(doc);
 		return NULL;
 	}
+
 	if (xmlStrcmp(cur->name, (const xmlChar *) "mediawiki")) {
 		fprintf(stderr, "Document of the wrong type (root node != mediawiki)");
 		xmlFreeDoc(doc);
@@ -189,29 +199,124 @@ TAD_istruct clean(TAD_istruct qs) {
 
 /* QUERIES */
 
+// 1
 long all_articles(TAD_istruct qs) {
 	long res = 0;
 	int i;
-	
-	AVL tmp = initAvl();
+	AVL tmp;
 
 	for (i = 0; i < SET_SIZE_A; i++) {
 		tmp = getArticleSubset(qs->aset, i);
-		res += getTotalNodes(tmp);
+		res += query1(tmp);
 	}
 
-	free(tmp);
 	return res;
 }
 
-/*
-long unique_articles(TAD_istruct qs);
-long all_revisions(TAD_istruct qs);
-long* top_10_contributors(TAD_istruct qs);
-char* contributor_name(long contributor_id, TAD_istruct qs);
-long* top_20_largest_articles(TAD_istruct qs);
-char* article_title(long article_id, TAD_istruct qs);
-long* top_N_articles_with_more_words(int n, TAD_istruct qs);
-char** titles_with_prefix(char* prefix, TAD_istruct qs);
-char* article_timestamp(long article_id, long revison_id, TAD_istruct qs);
-*/
+// 2
+long unique_articles(TAD_istruct qs) {
+	long res = 0;
+	int i;
+	AVL tmp;
+
+	for (i = 0; i < SET_SIZE_A; i++) {
+		tmp = getArticleSubset(qs->aset, i);
+		res += (long) getTotalNodes(tmp);
+	}
+
+	return res;
+}
+
+// 3
+long all_revisions(TAD_istruct qs) {
+	long res = 0;
+	int i;
+	AVL tmp;
+
+	for (i = 0; i < SET_SIZE_A; i++) {
+		tmp = getArticleSubset(qs->aset, i);
+		res += query3(tmp);
+	}
+
+	return res;	
+}
+
+// 4
+long* top_10_contributors(TAD_istruct qs) {
+	long* ret = 0;
+	return ret;
+}
+
+// 5
+char* contributor_name(long contributor_id, TAD_istruct qs) {
+	char* id = malloc(sizeof(contributor_id));
+	sprintf(id, "%ld", contributor_id);
+
+	int pos = id[0] - '0';
+	AVL tmp = getContributorSubset(qs->cset, pos);
+
+	return query5(tmp, id);
+}
+
+// 6
+long* top_20_largest_articles(TAD_istruct qs) {
+	long* ret = 0;
+	return ret;
+}
+
+// 7
+char* article_title(long article_id, TAD_istruct qs) {
+	char* id = malloc(sizeof(article_id));
+	sprintf(id, "%ld", article_id);
+
+	int pos = id[0] - '0';
+	AVL tmp = getArticleSubset(qs->aset, pos);
+
+	return query7(tmp, id);
+}
+
+// 8
+long* top_N_articles_with_more_words(int n, TAD_istruct qs) {
+	long* ret = 0;
+	return ret;	
+}
+
+
+int prefix(char* s, char* p) {
+	int i;
+
+	for (i = 0; s[i] == p[i] && s[i] != '\0' && p[i] != '\0'; i++);
+
+	if (i == strlen(p)) {
+		return 1;
+	}
+
+	return 0;
+}
+
+// 9
+char** titles_with_prefix(char* prefix, TAD_istruct qs) {
+	int i;
+	char** ret;
+
+	for (i = 0; i < SET_SIZE_A; i++) {
+		AVL tmp = getArticleSubset(qs->aset, i);
+		query9(tmp, prefix, ret);
+	}
+
+	return ret;
+}
+
+// 10
+char* article_timestamp(long article_id, long revision_id, TAD_istruct qs) {
+	char* a_id = malloc(sizeof(article_id));
+	sprintf(a_id, "%ld", article_id);
+
+	char* r_id = malloc(sizeof(revision_id));
+	sprintf(r_id, "%ld", revision_id);	
+
+	int pos = a_id[0] - '0';
+	AVL tmp = getArticleSubset(qs->aset, pos);
+
+	return query10(tmp, a_id, r_id);
+}

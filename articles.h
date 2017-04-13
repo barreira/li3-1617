@@ -33,7 +33,10 @@ ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a);
 ARTICLE addRevision(ARTICLE a, REVISION r);
 
 AVL getArticleSubset(ARTICLE_SET as, int pos);
+REVISION getRevision(ARTICLE a, char* revision_id);
+REVISION getLastRevision(ARTICLE a);
 char* getTitle(REVISION r);
+char* getTimestamp(REVISION r);
 
 ARTICLE setArticleID(ARTICLE a, char* id);
 REVISION setRevisionID(REVISION r, char* id);
@@ -41,5 +44,10 @@ REVISION setTimestamp(REVISION r, char* t);
 REVISION setTitle(REVISION r, char* t);
 REVISION setTextSize(REVISION r, int ts);
 REVISION setWordCount(REVISION r, int wc);
+
+/* Queries */
+
+long getOccurrences(void* i);
+long getRevCount(void *i);
 
 #endif

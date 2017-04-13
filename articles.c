@@ -19,7 +19,7 @@
 #include "articles.h"
 
 #define DEFAULT_REVCOUNT 5 // média de revisões por arigo (confirmar)
-#define SIZE 10
+#define SIZE 100
 
 /* Estruturas */
 
@@ -58,9 +58,9 @@ ARTICLE_SET initArticleSet() {
 
 REVISION initRevision() {
 	REVISION r = malloc(sizeof(struct revision));
-	r->id = malloc(sizeof(char) * SIZE);
-	r->timestamp = malloc(sizeof(char) * SIZE);
-	r->title = malloc(sizeof(char) * SIZE);
+	r->id = NULL;
+	r->timestamp = NULL;
+	r->title = NULL;
 	r->textsize = 0;
 	r->wc = 0;
 	return r;
@@ -68,11 +68,11 @@ REVISION initRevision() {
 
 ARTICLE initArticle() {
 	ARTICLE a = malloc(sizeof(struct article));
-	a->id = malloc(sizeof(char) * SIZE);
-	a->revcount = 1;
+	a->id = NULL;
+	a->revcount = 0;
 	a->revcapacity = DEFAULT_REVCOUNT;
 	a->revisions = malloc(sizeof(struct revision) * DEFAULT_REVCOUNT);
-	a->occurrences = 1;
+	a->occurrences = 0;
 	return a;
 }
 
@@ -114,29 +114,48 @@ ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
 
 /* Inserts */
 
-void duplicateA(Node n, void* dup) {
-	ARTICLE tmp = getInfo(n);
-	int cap = tmp->revcapacity;
-	int nr = tmp->revcount;
 
-	if (nr == cap) {
-		tmp->revisions = realloc(tmp->revisions, sizeof(struct revision) * cap * 2);
-		tmp->revcapacity *= 2;
+REVISION getRevisionAt(REVISION* revs, int pos) {
+	REVISION r = initRevision();
+	setRevisionID(r, revs[pos]->id);
+	setTimestamp(r, revs[pos]->timestamp);
+	setTitle(r, revs[pos]->title);
+	setTextSize(r, revs[pos]->textsize);
+	setWordCount(r, revs[pos]->wc);
+	return r;
+}
+
+void* duplicateA(void* info, void* dup) {
+	int lr, cmp;
+	
+	lr = ((ARTICLE) info)->revcount - 1;
+	cmp = strcmp(((ARTICLE) info)->revisions[lr]->id, ((ARTICLE) dup)->revisions[0]->id);
+
+	if (cmp != 0) {
+		int cap = ((ARTICLE) info)->revcapacity;
+		int nr = ((ARTICLE) info)->revcount;
+
+		if (nr == cap) {
+			((ARTICLE) info)->revisions = realloc(((ARTICLE) info)->revisions, sizeof(struct revision) * cap * 2);
+			((ARTICLE) info)->revcapacity *= 2;
+		}
+
+		((ARTICLE) info)->revisions[nr] = getRevisionAt(((ARTICLE) dup)->revisions, 0); // ((ARTICLE) dup)->revisions[0]; 
+		((ARTICLE) info)->revcount += 1;
+		dup = freeArticle((ARTICLE) dup);
 	}
 
-	tmp->revisions[nr] = ((ARTICLE) dup)->revisions[0];
-	(tmp->revcount)++;
-	(tmp->occurrences)++;
-	
-	setInfo(n, tmp);
+	((ARTICLE) info)->occurrences += 1;
 
-	dup = freeArticle(dup);
-	free(tmp);
+	return info;
 }
 
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
-	int pos = a->id[0] - '0';
-	as->articles[pos] = insert(as->articles[pos], a->id, a, duplicateA);
+	if (a->id != NULL) {
+		int pos = a->id[0] - '0';
+		as->articles[pos] = insert(as->articles[pos], a->id, a, duplicateA);
+	}
+
 	return as;	
 }
 
@@ -168,22 +187,32 @@ char* getTitle(REVISION r) {
 	return ret;
 }
 
+char* getTimestamp(REVISION r) {
+	char* ret = malloc(sizeof(r->timestamp));
+	strcpy(ret, r->timestamp);
+	return ret;	
+}
+
 ARTICLE setArticleID(ARTICLE a, char* id) {
+	a->id = malloc(sizeof(char) * SIZE);
 	strcpy(a->id, id);
 	return a;
 }
 
 REVISION setRevisionID(REVISION r, char* id) {
+	r->id = malloc(sizeof(char) * SIZE);
 	strcpy(r->id, id);
 	return r;
 }
 
 REVISION setTimestamp(REVISION r, char* t) {
+	r->timestamp = malloc(sizeof(char) * SIZE);
 	strcpy(r->timestamp, t);
 	return r;
 }
 
 REVISION setTitle(REVISION r, char* t) {
+	r->title = malloc(sizeof(char) * SIZE);
 	strcpy(r->title, t);
 	return r;
 }
@@ -196,4 +225,32 @@ REVISION setTextSize(REVISION r, int ts) {
 REVISION setWordCount(REVISION r, int wc) {
 	r->wc = wc;
 	return r;
+}
+
+/* Queries */
+
+long getOccurrences(void* i) {
+	long ret = (long) ((ARTICLE) i)->occurrences;
+	return ret;
+}
+
+long getRevCount(void *i) {
+	long ret = (long) ((ARTICLE) i)->revcount;
+	return ret;
+}
+
+REVISION getRevision(ARTICLE a, char* revision_id) {
+	int i;
+
+	for (i = 0; i < a->revcount; i++) {
+		if (strcmp(a->revisions[i]->id, revision_id) == 0) {
+			return a->revisions[i];
+		}
+	}
+
+	return NULL;
+}
+
+REVISION getLastRevision(ARTICLE a) {
+	return a->revisions[a->revcount - 1];
 }

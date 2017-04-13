@@ -16,7 +16,7 @@ interface: interface.c interface.h avl.h contributors.h articles.h
 menu: menu.c menu.h interface.h
 	cc -c menu.c
 
-avl: avl.c avl.h
+avl: avl.c avl.h articles.h contributors.h
 	cc -c avl.c
 
 articles: articles.c articles.h avl.h

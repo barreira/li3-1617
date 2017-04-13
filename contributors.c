@@ -15,10 +15,11 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "contributors.h"
 
-#define SIZE 10
+#define SIZE 100
 
 /* Estruturas */
 
@@ -47,8 +48,8 @@ CONTRIBUTOR_SET initContributorSet() {
 
 CONTRIBUTOR initContributor() {
 	CONTRIBUTOR c = malloc(sizeof(struct contributor));
-	c->id = malloc(sizeof(char) * SIZE);
-	c->username = malloc(sizeof(char) * SIZE);
+	c->id = NULL;
+	c->username = NULL;
 	c->revisions = 1;
 	return c;
 }
@@ -77,18 +78,18 @@ CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs) {
 
 /* Inserts */
 
-void increment(void* info) {
+void* duplicateC(void* info, void* dup) {
 	((CONTRIBUTOR) info)->revisions += 1;
-}
-
-void duplicateC(Node n, void* dup) {
-	incrementCounters(n, increment);
-	dup = freeContributor(dup);
+	dup = freeContributor((CONTRIBUTOR) dup);
+	return info;
 }
 
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
-	int pos = c->id[0] - '0';
-	cs->contributors[pos] = insert(cs->contributors[pos], c->id, c, duplicateC);
+	if (c->id != NULL) { 
+		int pos = c->id[0] - '0';
+		cs->contributors[pos] = insert(cs->contributors[pos], c->id, c, duplicateC);
+	}
+
 	return cs;
 }
 
@@ -107,11 +108,13 @@ AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos) {
 }
 
 CONTRIBUTOR setContributorID(CONTRIBUTOR c, char* id) {
+	c->id = malloc(sizeof(char) * SIZE);
 	strcpy(c->id, id);
 	return c;
 }
 
 CONTRIBUTOR setUsername(CONTRIBUTOR c, char* u) {
+	c->username = malloc(sizeof(char) * SIZE);
 	strcpy(c->username, u);
 	return c;
 }

@@ -6,13 +6,17 @@
 #include <ctype.h>
 #include <time.h>
 #include <stdbool.h>
+#include <time.h>
+
+clock_t start, end;
+double cpu_time_used;
 
 TAD_istruct s = NULL;
 
 int menu()
 {
-    char opcao[1], op[1];
-    int sair=0, flag=0;
+    char opcao[1];
+    int sair=0;
     
     printf("\n******************************************************************************************\n");
     printf("*                                          MENU                                          *\n");
@@ -22,14 +26,14 @@ int menu()
     printf("* c) Clean                                                                               *\n");
     printf("* 1) all_articles                                                                        *\n");
     printf("* 2) unique_articles                                                                     *\n");
-    printf("* 3) Quantas revisões foram efetuadas naqueles backups.                                  *\n");
-    printf("* 4) 10 autores que contribuíram para um maior número de versões de artigos.             *\n");
-    printf("* 5) Nome do autor com um determinado identificador.                                     *\n");
-    printf("* 6) 20 artigos que possuem textos com um maior tamanho.                                 *\n");
-    printf("* 7) Título do artigo com um determinado identificador.                                  *\n");
-    printf("* 8) Identificadores dos N artigos que possuem textos com um maior número de palavras.   *\n");
-    printf("* 9) Lista de títulos de artigos que começam com um determinado prefixo.                 *\n");
-    printf("* 10) Timestamp para uma certa revisão de um artigo.                                     *\n");
+    printf("* 3) all_revisions                                                                       *\n");
+    printf("* 4) top_10_contributors                                                                 *\n");
+    printf("* 5) contributor_name                                                                    *\n");
+    printf("* 6) top_20_largest_articles                                                             *\n");
+    printf("* 7) article_title                                                                       *\n");
+    printf("* 8) top_N_articles_with_more_words                                                      *\n");
+    printf("* 9) titles_with_prefix                                                                  *\n");
+    printf("* 10) article_timestamp                                                                  *\n");
     printf("* 0) Sair                                                                                *\n");
     printf("******************************************************************************************\n\n");
     printf("Selecione a opção que pretende realizar: ");
@@ -41,8 +45,14 @@ int menu()
     {   
         if (strcmp(opcao, "i") == 0)
         {
+            start = clock();
+
             s = init();
-            flag=1;
+
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             sair=1;
             fflush(stdin);
             menu();
@@ -50,13 +60,35 @@ int menu()
 
         else if (strcmp(opcao, "l") == 0)
         {
+            start = clock();
+
             char* snaps[3];
+            //snaps[0] = "snapshot";
             snaps[0] = "snapshot_dec16";
             snaps[1] = "snapshot_jan17";
             snaps[2] = "snapshot_fev17";
             s = load(s, 3, snaps);
 
-            flag=1;
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+            sair=1;
+            fflush(stdin);
+            menu();            
+        }
+
+        else if (strcmp(opcao, "c") == 0)
+        {
+            start = clock();
+
+            //fazer clean
+            s = clean(s);
+
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             sair=1;
             fflush(stdin);
             menu();            
@@ -64,321 +96,203 @@ int menu()
 
         else if (strcmp(opcao, "1")==0)
         {
+        	start = clock();
+            //Query 1
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
             printf("Q1: %ld\n", all_articles(s));
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
-                    printf("Q1: %ld\n", all_articles(s));
-                    printf("\nDeseja executar esta query novamente?(S/N): ");
-                    scanf("%s", op);
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
         else if (strcmp(opcao, "2")==0)
         {
-            //query2();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
-                    printf("Qual a letra inicial do produto a escolher? (A, B, ..., Z) ");
-                    //scanf("%s",l);
-                    //query2(l);
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
+        	start = clock();
+            //Query 2
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            printf("Q2: %ld\n", unique_articles(s));
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+            
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
-        else if(strcmp(opcao, "3")==0)
+        else if (strcmp(opcao, "3")==0)
         {
-            //query3();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", (char *) op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
+        	start = clock();
+            //Query 3
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
+            printf("Q3: %ld\n", all_revisions(s));
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+            
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
         else if (strcmp(opcao, "4")==0)
         {
-            //query4();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
-                    //query4();
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
+        	start = clock();
+            //Query 4
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            printf("Q4: \n");
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+            
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
         else if (strcmp(opcao, "5")==0)
         {
-            //query5();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
-                    //query5();
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
+        	start = clock();
+            
+            //Query 5
+            char id[100];
+            printf("Insira um id de um contribuidor: ");
+            scanf("%s", id);
+            char* res = contributor_name(atol(id), s);
+            if (res != NULL) {
+                printf("Q5: O username do contribuidor %s é %s.\n", id, res);
             }
+            else {
+                printf("Q5: O contribuidor %s não existe.\n", id);
+            }
+            
+            end = clock();
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
         else if (strcmp(opcao, "6")==0)
         {
-            //query6();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
+        	start = clock();
 
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
+            //Query 6
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+            printf("Q6: \n");
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+            
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
         else if (strcmp(opcao, "7")==0)
         {
-            //query7();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
-                    //query7();
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
+            start = clock();
+            
+            //Query 7
+            char id[100];
+            printf("Insira um id de um artigo: ");
+            scanf("%s", id);
+            
+            char* res = article_title(atol(id), s);
+            if (res != NULL) {
+                printf("Q7: O título do artigo %s é %s.\n", id, res);
             }
+            else {
+                printf("Q7: O artigo %s não existe.\n", id);
+            }
+
+            end = clock();
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
         else if (strcmp(opcao, "8")==0)
         {
-            //query8();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
+        	start = clock();
+            //Query 8
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-                    //query8(p, f);
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
+            printf("Q8: \n");
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
         else if (strcmp(opcao, "9")==0)
         {
-            //query9();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
+        	start = clock();
+            //Query 9
+            end = clock();
+ 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-                    //query9(c,m);
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
+            printf("Q9: \n");
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+            
+            sair=1;
+            fflush(stdin);
+            menu();
         }
 
-        else if(strcmp(opcao, "10")==0)
+        else if (strcmp(opcao, "10")==0)
         {
-            //query10();
-            printf("\nDeseja executar esta query novamente?(S/N): ");
-            scanf("%s", op);
-            printf("\n");
-            while (flag!=1)
-            {
-                if ((strcmp(op,"S")==0)||(strcmp(op,"s")==0))
-                {
-                    //query10();
-                    flag=0;
-                    sair=0;
-                }
-                else if ((strcmp(op,"N")==0)||(strcmp(op,"n")==0))
-                {
-                    flag=1;
-                    sair=1;
-                    fflush(stdin);
-                    menu();
-                }
-                else if ((strcmp(op,"S")!=0)||(strcmp(op,"N")!=0)||(strcmp(op,"s")!=0)||(strcmp(op,"n")!=0))
-                {
-                    printf("\nOpção inexistente! Deverá seleccionar 'S' ou 'N'! ");
-                    scanf("%s",op);
-                    flag=0;
-                }
-            }
-        }
+        	start = clock();
 
+            //Query 10
+            char a_id[100];
+            printf("Insira um id de um artigo: \n");
+            scanf("%s", a_id);
+
+            char r_id[100];
+            printf("Insira um id de uma revisão: \n");
+            scanf("%s", r_id);            
+            
+            char* res = article_timestamp(atol(a_id), atol(r_id), s);
+
+            if (res != NULL) {
+                printf("Q10: A revisão %s do artigo %s tem o timestamp %s.\n", a_id, r_id, res);
+            }
+            else {
+                printf("Q10: O artigo %s ou a revisão %s não existem.\n", a_id, r_id);
+            }
+
+            end = clock();
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
+
+            sair=1;
+            fflush(stdin);
+            menu();
+        }
         
         else if (strcmp(opcao, "0")==0)
             sair=1;
 
         else
         {
-            printf("Opção inexistente! Deverá seleccionar um valor entre 0 e 12.\n");
-            printf("Seleccione a opção que pretende realizar: ");
+            printf("Opção inexistente! Deverá selecionar um valor entre 0 e 10 ou os caracteres i, l ou c.\n");
+            printf("Selecione a opção que pretende realizar: ");
             scanf("%s", opcao);
             printf("\n");
         }
     }
+
     return 0;
 }
