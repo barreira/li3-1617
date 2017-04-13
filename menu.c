@@ -64,9 +64,9 @@ int menu()
 
             char* snaps[3];
             //snaps[0] = "snapshot";
-            snaps[0] = "snapshot_dec16";
-            snaps[1] = "snapshot_jan17";
-            snaps[2] = "snapshot_fev17";
+            snaps[0] = "../snapshot_dec16";
+            snaps[1] = "../snapshot_jan17";
+            snaps[2] = "../snapshot_fev17";
             s = load(s, 3, snaps);
 
             end = clock();
