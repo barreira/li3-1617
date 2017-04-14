@@ -72,31 +72,32 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 			c = parseContributor(c, doc, cur);
 		}
 
-		if (!(xmlStrcmp(cur->name, (const xmlChar *) "text xml:space=\"preserve\""))) {
+		if (!(xmlStrcmp(cur->name, (const xmlChar *) "text"))) {
 			xmlChar* text = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 			
 			if (text != NULL) {
 				unsigned int size;
 				size = strlen((char*) text) + 1;
 				r = setTextSize(r, size);
-			}
+				
+				/*int palavras = 0;
 
-			int palavras = 0;
+				while (*text != '\0') {
 
-			while (*text != '\0') {
+					while (*text == ' ' || *text == '\n' || *text == '\t') {
+						text++;
+					}
 
-				while (*text == ' ' || *text == '\n' || *text == '\t') {
-					text++;
+					palavras++;
+
+					while (*text != ' ' || *text != '\n' || *text != '\t') {
+						text++;
+					}
 				}
 
-				palavras++;
-
-				while (*text != ' ' || *text != '\n' || *text != '\t') {
-					text++;
-				}
+				setWordCount(r, palavras);*/			
 			}
 
-			setWordCount(r, palavras);
 		}
 	}
 }
@@ -295,6 +296,13 @@ int prefix(char* s, char* p) {
 }
 
 // 9
+int my_strcmp(const void* a, const void* b) { 
+	char const *char_a = *(char const **)a;
+	char const *char_b = *(char const **)b;
+
+	return strcmp(char_a, char_b);
+}
+
 char** titles_with_prefix(char* prefix, TAD_istruct qs) {
 	int i, size = 0;
 	char*** ret = malloc(sizeof(char**));
@@ -304,6 +312,8 @@ char** titles_with_prefix(char* prefix, TAD_istruct qs) {
 		AVL tmp = getArticleSubset(qs->aset, i);
 		query9(tmp, prefix, ret, &size);
 	}
+
+	qsort(*ret, size, sizeof(char*), my_strcmp);
 
 	if (*ret != NULL) {
 		(*ret)[size] = NULL;
