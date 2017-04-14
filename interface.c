@@ -396,19 +396,6 @@ long* top_N_articles_with_more_words(int n, TAD_istruct qs) {
 	return ret;	
 }
 
-
-int prefix(char* s, char* p) {
-	int i;
-
-	for (i = 0; s[i] == p[i] && s[i] != '\0' && p[i] != '\0'; i++);
-
-	if (i == strlen(p)) {
-		return 1;
-	}
-
-	return 0;
-}
-
 // 9
 int my_strcmp(const void* a, const void* b) { 
 	char const *char_a = *(char const **)a;
