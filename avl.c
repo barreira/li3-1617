@@ -340,6 +340,42 @@ char* query5(AVL a, char* contributor_id) {
 	return query5_aux(a->root, contributor_id);
 }
 
+long* query6_aux(Node n, long** ids, long** sizes, int size) {
+	int i, index;
+
+	if (n == NULL) {
+		return *sizes;
+	}
+
+	long id = atol(getArticleID((ARTICLE) n->info));
+	int s = getBiggestRevisionSize((ARTICLE) n->info);
+
+	for (i = 0; i < size && (*sizes)[i] > s; i++);
+	
+	while (i < size && (*sizes)[i] == s && (*ids)[i] < id) {
+		i++;
+	}
+
+	index = i;
+
+	for (i = size; i > index; i--) {
+		(*sizes)[i] = (*sizes)[i-1];
+		(*ids)[i] = (*ids)[i-1];
+	}
+
+	(*sizes)[i] = s;
+	(*ids)[i] = id;
+
+	query6_aux(n->left, ids, sizes, size);
+	query6_aux(n->right, ids, sizes, size);
+
+	return *sizes;
+}
+
+long* query6(AVL a, long** ids, long** sizes, int size) {
+	return query6_aux(a->root, ids, sizes, size);
+}
+
 char* query7_aux(Node n, char* article_id) {
 	if (n == NULL) {
 		return NULL;

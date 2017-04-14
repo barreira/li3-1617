@@ -33,6 +33,7 @@ long query1(AVL a);
 long query3(AVL a);
 long* query4(AVL a, long** ids, long** revs, int size);
 char* query5(AVL a, char* contributor_id);
+long* query6(AVL a, long** ids, long** sizes, int size);
 char* query7(AVL a, char* article_id);
 char** query9(AVL a, char* prefix, char*** res, int* size);
 char* query10(AVL a, char* article_id, char* revision_id);

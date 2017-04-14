@@ -199,6 +199,15 @@ int menu()
         	start = clock();
 
             //Query 6
+        	int i;
+            long* res = top_20_largest_articles(s);
+
+            printf("Q9: Top 20 dos artigos com maior texto:\n");
+
+        	for (i = 0; i < 20; i++) {
+        		printf("%d - %ld\n", i+1, res[i]);
+        	}
+
 
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;

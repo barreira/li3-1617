@@ -183,6 +183,12 @@ AVL getArticleSubset(ARTICLE_SET as, int pos) {
 	return as->articles[pos];
 }
 
+char* getArticleID(ARTICLE a) {
+	char* ret = malloc(sizeof(char) * (strlen(a->id) + 1));
+	strcpy(ret, a->id);
+	return ret;	
+}
+
 char* getTitle(REVISION r) {
 	char* ret = malloc(sizeof(char) * (strlen(r->title) + 1));
 	strcpy(ret, r->title);
@@ -255,4 +261,16 @@ REVISION getRevision(ARTICLE a, char* revision_id) {
 
 REVISION getLastRevision(ARTICLE a) {
 	return a->revisions[a->revcount - 1];
+}
+
+int getBiggestRevisionSize(ARTICLE a) {
+	int i, s = 0;
+
+	for (i = 0; i < a->revcount; i++) {
+		if (a->revisions[i]->textsize >= s) {
+			s = a->revisions[i]->textsize;
+		}
+	}
+
+	return s;
 }

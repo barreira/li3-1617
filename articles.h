@@ -35,6 +35,7 @@ ARTICLE addRevision(ARTICLE a, REVISION r);
 AVL getArticleSubset(ARTICLE_SET as, int pos);
 REVISION getRevision(ARTICLE a, char* revision_id);
 REVISION getLastRevision(ARTICLE a);
+char* getArticleID(ARTICLE a);
 char* getTitle(REVISION r);
 char* getTimestamp(REVISION r);
 
@@ -49,5 +50,6 @@ REVISION setWordCount(REVISION r, int wc);
 
 long getOccurrences(void* i);
 long getRevCount(void *i);
+int getBiggestRevisionSize(ARTICLE a);
 
 #endif

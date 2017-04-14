@@ -375,8 +375,16 @@ char* contributor_name(long contributor_id, TAD_istruct qs) {
 
 // 6
 long* top_20_largest_articles(TAD_istruct qs) {
-	long* ret = 0;
-	return ret;
+	long* sizes = calloc(20, sizeof(long));
+	long* ids = calloc(20, sizeof(long));
+	int i;
+
+	for (i = 0; i < SET_SIZE_A; i++) {
+		AVL tmp = getArticleSubset(qs->aset, i);
+		query6(tmp, &ids, &sizes, 20);
+	}
+
+	return ids;
 }
 
 // 7
