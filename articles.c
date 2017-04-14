@@ -124,7 +124,7 @@ REVISION getRevisionAt(REVISION* revs, int pos) {
 	return r;
 }
 
-void* duplicateA(void* info, void* dup) {
+void* duplicateA(void* info, void* dup, int* flag) {
 	int lr, cmp;
 	
 	lr = ((ARTICLE) info)->revcount - 1;
@@ -143,16 +143,19 @@ void* duplicateA(void* info, void* dup) {
 		((ARTICLE) info)->revcount += 1;
 		dup = freeArticle((ARTICLE) dup);
 	}
+	else {
+		*flag = 1;
+	}
 
 	((ARTICLE) info)->occurrences += 1;
 
 	return info;
 }
 
-ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a) {
+ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a, int* flag) {
 	if (a->id != NULL) {
 		int pos = a->id[0] - '0';
-		as->articles[pos] = insert(as->articles[pos], a->id, a, duplicateA);
+		as->articles[pos] = insert(as->articles[pos], a->id, a, duplicateA, flag);
 	}
 
 	return as;	

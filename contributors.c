@@ -78,7 +78,7 @@ CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs) {
 
 /* Inserts */
 
-void* duplicateC(void* info, void* dup) {
+void* duplicateC(void* info, void* dup, int *flag) {
 	((CONTRIBUTOR) info)->revisions += 1;
 	dup = freeContributor((CONTRIBUTOR) dup);
 	return info;
@@ -87,7 +87,7 @@ void* duplicateC(void* info, void* dup) {
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	if (c->id != NULL) { 
 		int pos = c->id[0] - '0';
-		cs->contributors[pos] = insert(cs->contributors[pos], c->id, c, duplicateC);
+		cs->contributors[pos] = insert(cs->contributors[pos], c->id, c, duplicateC, NULL);
 	}
 
 	return cs;
@@ -128,5 +128,10 @@ char* getContributorID(CONTRIBUTOR c) {
 char* getUsername(CONTRIBUTOR c) {
 	char* aux = malloc(sizeof(c->username)); // é assim?
 	strcpy(aux, c->username);
+	return aux;
+}
+
+int getRevisions(CONTRIBUTOR c) {
+	int aux = c->revisions;
 	return aux;
 }

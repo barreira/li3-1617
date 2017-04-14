@@ -20,7 +20,7 @@ typedef struct avl *AVL;
 
 AVL initAvl();
 AVL freeAvl(AVL a);
-AVL insert(AVL a, char* k, void* i, void* (*f)(void* info, void* dup));
+AVL insert(AVL a, char* k, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag);
 void incrementCounters(Node n, void (*inc)(void* info));
 int exists(AVL a, char* k);
 void* getInfo(Node n);
@@ -31,9 +31,12 @@ int getTotalNodes(AVL a);
 
 long query1(AVL a);
 long query3(AVL a);
+long* query4(AVL a, long** ids, long** revs, int size);
 char* query5(AVL a, char* contributor_id);
 char* query7(AVL a, char* article_id);
 char** query9(AVL a, char* prefix, char*** res, int* size);
 char* query10(AVL a, char* article_id, char* revision_id);
+
+int getContributorRevsByID(AVL a, char* id);
 
 #endif

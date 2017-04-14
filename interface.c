@@ -103,7 +103,6 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 }
 
 TAD_istruct parsePage(TAD_istruct s, xmlDocPtr doc, xmlNodePtr cur) {
-
 	ARTICLE a = initArticle();
 	REVISION r = initRevision();
 	CONTRIBUTOR c = initContributor();
@@ -127,8 +126,15 @@ TAD_istruct parsePage(TAD_istruct s, xmlDocPtr doc, xmlNodePtr cur) {
 	}
 
 	a = addRevision(a, r);
-	s->aset = insertArticle(s->aset, a);
-	s->cset = insertContributor(s->cset, c);	
+	
+	int flag = 0;
+	s->aset = insertArticle(s->aset, a, &flag);
+	
+	if (flag == 0) {
+		s->cset = insertContributor(s->cset, c);
+	} else {
+		c = freeContributor(c);
+	}
 
 	return s;
 }
@@ -244,8 +250,116 @@ long all_revisions(TAD_istruct qs) {
 
 // 4
 long* top_10_contributors(TAD_istruct qs) {
-	long* ret = 0;
-	return ret;
+	long* revs = calloc(10, sizeof(long));
+	long* ids = calloc(10, sizeof(long));
+	int i;
+
+	for (i = 0; i < SET_SIZE_C; i++) {
+		AVL tmp = getContributorSubset(qs->cset, i);
+		query4(tmp, &ids, &revs, 10);
+	}
+	/*
+	printf("Número de revisões:\n");
+	for (i = 0; i < 10; i++) {
+		printf("%d - %ld\n", i+1, revs[i]);
+	}
+	printf("\n");
+
+	printf("OS NOSSOS RESULTADOS:\n");
+	AVL tmp = getContributorSubset(qs->cset, 2);
+	int print = getContributorRevsByID(tmp, "28903366");
+	printf("1 - CID: 28903366 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 1);
+	print = getContributorRevsByID(tmp, "194203");
+	printf("2 - CID: 194203 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "212624");
+	printf("3 - CID: 212624 - REVS: %d\n", print);
+	
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "27823944");
+	printf("4 - CID: 27823944 - REVS: %d\n", print);
+	
+	tmp = getContributorSubset(qs->cset, 1);
+	print = getContributorRevsByID(tmp, "13286072");
+	printf("5 - CID: 13286072 - REVS: %d\n", print);	
+	
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "27015025");
+	printf("6 - CID: 27015025 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 8);
+	print = getContributorRevsByID(tmp, "8066546");
+	printf("7 - CID: 8066546 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 7);
+	print = getContributorRevsByID(tmp, "7328338");
+	printf("8 - CID: 7328338 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 1);
+	print = getContributorRevsByID(tmp, "1215485");
+	printf("9 - CID: 1215485 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 7);
+	print = getContributorRevsByID(tmp, "7852030");
+	printf("10 - CID: 7852030 - REVS: %d\n", print);
+	printf("\n");
+
+	printf("OS RESULTADOS DOS PROFS:\n");
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "28903366");
+	printf("1 - CID: 28903366 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 1);
+	print = getContributorRevsByID(tmp, "13286072");
+	printf("2 - CID: 13286072 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "27823944");
+	printf("3 - CID: 27823944 - REVS: %d\n", print);
+	
+	tmp = getContributorSubset(qs->cset, 1);
+	print = getContributorRevsByID(tmp, "194203");
+	printf("4 - CID: 194203 - REVS: %d\n", print);
+	
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "27015025");
+	printf("5 - CID: 27015025 - REVS: %d\n", print);	
+	
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "212624");
+	printf("6 - CID: 212624 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 7);
+	print = getContributorRevsByID(tmp, "7852030");
+	printf("7 - CID: 7852030 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 7);
+	print = getContributorRevsByID(tmp, "7328338");
+	printf("8 - CID: 7328338 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 7);
+	print = getContributorRevsByID(tmp, "7611264");
+	printf("9 - CID: 7611264 - REVS: %d\n", print);
+
+	tmp = getContributorSubset(qs->cset, 1);
+	print = getContributorRevsByID(tmp, "14508071");
+	printf("10 - CID: 14508071 - REVS: %d\n", print);
+	printf("\n");
+	
+	AVL tmp = getContributorSubset(qs->cset, 1);
+	int print = getContributorRevsByID(tmp, "194203");
+	printf("CID: 194203 - REVS: %d\n", print);
+	printf("\n");
+
+	tmp = getContributorSubset(qs->cset, 2);
+	print = getContributorRevsByID(tmp, "27015025");
+	printf("CID: 27015025 - REVS: %d\n", print);
+	printf("\n");*/
+
+	return ids;
 }
 
 // 5

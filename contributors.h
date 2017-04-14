@@ -29,11 +29,13 @@ CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs);
 
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c);
 
+CONTRIBUTOR freeContributor(CONTRIBUTOR c);
+
 AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos);
 CONTRIBUTOR setContributorID(CONTRIBUTOR c, char* id);
 CONTRIBUTOR setUsername(CONTRIBUTOR c, char* u);
 char* getContributorID(CONTRIBUTOR c);
 char* getUsername(CONTRIBUTOR c);
-
+int getRevisions(CONTRIBUTOR c);
 
 #endif

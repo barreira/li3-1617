@@ -63,7 +63,7 @@ int menu()
             start = clock();
 
             char* snaps[3];
-            //snaps[0] = "snapshot";
+            //snaps[0] = "../snapshot";
             snaps[0] = "../snapshot_dec16";
             snaps[1] = "../snapshot_jan17";
             snaps[2] = "../snapshot_fev17";
@@ -150,10 +150,17 @@ int menu()
         	start = clock();
 
             //Query 4
+            int i;
+            long* res = top_10_contributors(s);
+
+            printf("Q4: Top 10 dos contribuidores com maior número de revisões:\n");
+
+        	for (i = 0; i < 10; i++) {
+        		printf("%d - %ld\n", i+1, res[i]);
+        	}
 
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-            printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
             sair=1;
@@ -311,8 +318,8 @@ int menu()
             sair=1;
             fflush(stdin);
             menu();
-        }
-        
+        }       
+
         else if (strcmp(opcao, "0")==0)
             sair=1;
 

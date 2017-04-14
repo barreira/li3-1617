@@ -29,7 +29,7 @@ REVISION initRevision();
 
 ARTICLE_SET freeArticleSet(ARTICLE_SET as);
 
-ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a);
+ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a, int* flag);
 ARTICLE addRevision(ARTICLE a, REVISION r);
 
 AVL getArticleSubset(ARTICLE_SET as, int pos);

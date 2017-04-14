@@ -125,7 +125,7 @@ int exists(AVL a, char* k) {
 
 /* Inserts */
 
-Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup), int *total) {
+Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup, int* flag), int* total, int* flag) {
 	if (!n) {
 		n = malloc(sizeof(struct node));
 		n->key = k;
@@ -140,15 +140,15 @@ Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup), int
 		int cmp = strcmp(n->key, k);
 
 		if (cmp > 0) {
-			n->left = insertNode(n->left, k, i, f, total);
+			n->left = insertNode(n->left, k, i, f, total, flag);
 		}
 
 		else if (cmp < 0) {
-			n->right = insertNode(n->right, k, i, f, total);
+			n->right = insertNode(n->right, k, i, f, total, flag);
 		}
 
 		else { /* A função f, passada como parâmetro, trata dos casos em que já haja um nodo com o id na árvore */
-			n->info = f(n->info, i);
+			n->info = f(n->info, i, flag);
 		}
 		
 		if (cmp) { /* balancear */
@@ -189,17 +189,12 @@ Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup), int
 	return n;
 }
 
-AVL insert(AVL a, char* k, void* i, void* (*f)(void* info, void* dup)) {
+AVL insert(AVL a, char* k, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag) {
 	if (!a) {
 		a = initAvl();
 	}
 
-	/*
-	if (exists(a, k)) {
-		(a->total)++;
-	}*/
-
-	a->root = insertNode(a->root, k, i, f, &(a->total));
+	a->root = insertNode(a->root, k, i, f, &(a->total), flag);
 
 	return a;
 }
@@ -283,6 +278,42 @@ long query3_aux(Node n, int acc) {
 
 long query3(AVL a) {
 	return query3_aux(a->root, 0);
+}
+
+long* query4_aux(Node n, long** ids, long** revs, int size) {
+	int i, index;
+
+	if (n == NULL) {
+		return *revs;
+	}
+
+	long id = atol(getContributorID((CONTRIBUTOR) n->info));
+	long r = (long) getRevisions((CONTRIBUTOR) n->info);
+
+	for (i = 0; i < size && (*revs)[i] > r; i++);
+	
+	while (i < size && (*revs)[i] == r && (*ids)[i] < id) {
+		i++;
+	}
+
+	index = i;
+
+	for (i = size; i > index; i--) {
+		(*revs)[i] = (*revs)[i-1];
+		(*ids)[i] = (*ids)[i-1];
+	}
+
+	(*revs)[i] = r;
+	(*ids)[i] = id;
+
+	query4_aux(n->left, ids, revs, size);
+	query4_aux(n->right, ids, revs, size);
+
+	return *revs;	
+}
+
+long* query4(AVL a, long** ids, long** revs, int size) {
+	return query4_aux(a->root, ids, revs, size);
 }
 
 char* query5_aux(Node n, char* contributor_id) {
@@ -396,4 +427,28 @@ char* query10_aux(Node n, char* article_id, char* revision_id) {
 
 char* query10(AVL a, char* article_id, char* revision_id) {
 	return query10_aux(a->root, article_id, revision_id);
+}
+
+int getContributorRevsByID_aux(Node n, char* id) {
+	if (n == NULL) {
+		return 0;
+	}
+ 
+	int cmp = strcmp(n->key, id);
+
+	if (cmp == 0) {
+		return getRevisions((CONTRIBUTOR) n->info);
+	}
+	else if (cmp > 0 && n->left != NULL) {
+		return getContributorRevsByID_aux(n->left, id);
+	}
+	else if (n->right != NULL) {
+		return getContributorRevsByID_aux(n->right, id);
+	}
+
+	return 0;	
+}
+
+int getContributorRevsByID(AVL a, char* id) {
+	return getContributorRevsByID_aux(a->root, id);
 }
