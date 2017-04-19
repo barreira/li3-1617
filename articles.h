@@ -51,5 +51,6 @@ REVISION setWordCount(REVISION r, int wc);
 long getOccurrences(void* i);
 long getRevCount(void *i);
 int getBiggestRevisionSize(ARTICLE a);
+int getBiggestRevisionWC(ARTICLE a);
 
 #endif

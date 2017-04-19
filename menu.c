@@ -251,6 +251,14 @@ int menu()
         	start = clock();
             
             //Query 8
+            int tam;
+            printf("Insira um tamanho: ");
+            scanf("%d", &tam);
+            
+            long* res = top_N_articles_with_more_words(tam, s);
+            for (int i = 0; i < tam; i++) {
+                printf("%d - %ld\n", i+1, res[i]);
+            }
 
             end = clock();
  			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;

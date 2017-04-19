@@ -274,3 +274,15 @@ int getBiggestRevisionSize(ARTICLE a) {
 
 	return s;
 }
+
+int getBiggestRevisionWC(ARTICLE a) {
+	int i, s = 0;
+
+	for (i = 0; i < a->revcount; i++) {
+		if (a->revisions[i]->wc >= s) {
+			s = a->revisions[i]->wc;
+		}
+	}
+
+	return s;
+}

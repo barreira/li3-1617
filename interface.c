@@ -80,22 +80,22 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur) {
 				size = strlen((char*) text) + 1;
 				r = setTextSize(r, size);
 				
-				/*int palavras = 0;
+				int palavras = 0;
 
-				while (*text != '\0') {
-
-					while (*text == ' ' || *text == '\n' || *text == '\t') {
+				for (int i = 0; text[i] != '\0'; i++) {
+					if (text[i] != ' ' && text[i] != '\n' && text[i] != '\t') {
 						text++;
 					}
+					else if (text[i] == ' ' || text[i] == '\n' || text[i] == '\t') {
+						palavras++;
 
-					palavras++;
-
-					while (*text != ' ' || *text != '\n' || *text != '\t') {
-						text++;
+						while (text[i] == ' ' || text[i] == '\n' || text[i] == '\t') {
+							text++;
+						}
 					}
 				}
 
-				setWordCount(r, palavras);*/			
+				setWordCount(r, palavras);
 			}
 
 		}
@@ -400,8 +400,16 @@ char* article_title(long article_id, TAD_istruct qs) {
 
 // 8
 long* top_N_articles_with_more_words(int n, TAD_istruct qs) {
-	long* ret = 0;
-	return ret;	
+	long* words = calloc(n, sizeof(long));
+	long* ids = calloc(n, sizeof(long));
+	int i;
+
+	for (i = 0; i < SET_SIZE_A; i++) {
+		AVL tmp = getArticleSubset(qs->aset, i);
+		query8(tmp, &ids, &words, n);
+	}
+
+	return ids;
 }
 
 // 9

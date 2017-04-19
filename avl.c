@@ -76,14 +76,6 @@ Node rotateLeft(Node n) {
 /* Inits */
 
 Node initNode() {
-	/*
-	Node n = malloc(sizeof(struct node));
-	n->key = malloc(sizeof(char) * SIZE);
-	n->info = NULL;
-	n->height = 0;
-	n->left = NULL;
-	n->right = NULL;
-	return n;*/
 	return NULL;
 }
 
@@ -309,7 +301,7 @@ long* query4_aux(Node n, long** ids, long** revs, int size) {
 	query4_aux(n->left, ids, revs, size);
 	query4_aux(n->right, ids, revs, size);
 
-	return *revs;	
+	return *revs;
 }
 
 long* query4(AVL a, long** ids, long** revs, int size) {
@@ -399,6 +391,42 @@ char* query7_aux(Node n, char* article_id) {
 
 char* query7(AVL a, char* article_id) {
 	return query7_aux(a->root, article_id);
+}
+
+long* query8_aux(Node n, long** ids, long** words, int size) {
+	int i, index;
+
+	if (n == NULL) {
+		return *words;
+	}
+
+	long id = atol(getArticleID((ARTICLE) n->info));
+	int s = getBiggestRevisionWC((ARTICLE) n->info);
+
+	for (i = 0; i < size && (*words)[i] > s; i++);
+	
+	while (i < size && (*words)[i] == s && (*ids)[i] < id) {
+		i++;
+	}
+
+	index = i;
+
+	for (i = size; i > index; i--) {
+		(*words)[i] = (*words)[i-1];
+		(*ids)[i] = (*ids)[i-1];
+	}
+
+	(*words)[i] = s;
+	(*ids)[i] = id;
+
+	query8_aux(n->left, ids, words, size);
+	query8_aux(n->right, ids, words, size);
+
+	return *words;
+}
+
+long* query8(AVL a, long** ids, long** words, int size) {
+	return query8_aux(a->root, ids, words, size);
 }
 
 int isPrefix(char* s, char* p) {
