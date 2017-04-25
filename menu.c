@@ -7,7 +7,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <time.h>
-
+/*
 clock_t start, end;
 double cpu_time_used;
 
@@ -350,4 +350,4 @@ int menu()
     }
 
     return 0;
-}
+}*/

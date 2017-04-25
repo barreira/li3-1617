@@ -15,24 +15,18 @@
 
 #include "avl.h"
 
-#define SET_SIZE_A 10
-
-typedef struct article_set *ARTICLE_SET;
 typedef struct article *ARTICLE;
 typedef struct revision *REVISION;
 
 /* API */
 
-ARTICLE_SET initArticleSet();
 ARTICLE initArticle();
 REVISION initRevision();
 
-ARTICLE_SET freeArticleSet(ARTICLE_SET as);
-
-ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a, int* flag);
+void* duplicateA(void* info, void* dup, int* flag);
+/*ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a, int* flag);*/
 ARTICLE addRevision(ARTICLE a, REVISION r);
 
-AVL getArticleSubset(ARTICLE_SET as, int pos);
 REVISION getRevision(ARTICLE a, char* revision_id);
 REVISION getLastRevision(ARTICLE a);
 char* getArticleID(ARTICLE a);

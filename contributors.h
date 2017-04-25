@@ -15,23 +15,17 @@
 
 #include "avl.h"
 
-#define SET_SIZE_C 10
-
-typedef struct contributor_set *CONTRIBUTOR_SET;
 typedef struct contributor *CONTRIBUTOR;
 
 /* API */
 
-CONTRIBUTOR_SET initContributorSet();
 CONTRIBUTOR initContributor();
 
-CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs);
-
-CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c);
+void* duplicateC(void* info, void* dup, int *flag);
+/*CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c);*/
 
 CONTRIBUTOR freeContributor(CONTRIBUTOR c);
 
-AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos);
 CONTRIBUTOR setContributorID(CONTRIBUTOR c, char* id);
 CONTRIBUTOR setUsername(CONTRIBUTOR c, char* u);
 char* getContributorID(CONTRIBUTOR c);

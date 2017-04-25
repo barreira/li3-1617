@@ -27,8 +27,10 @@ void* getInfo(Node n);
 Node setInfo(Node n, void* info);
 int getTotalNodes(AVL a);
 
-/* Queries */
+void mapAVL(AVL a, void* acc, void (*f)(void* info, void* acc));
 
+/* Queries */
+/*
 long query1(AVL a);
 long query3(AVL a);
 long* query4(AVL a, long** ids, long** revs, int size);
@@ -39,6 +41,6 @@ long* query8(AVL a, long** ids, long** words, int size);
 char** query9(AVL a, char* prefix, char*** res, int* size);
 char* query10(AVL a, char* article_id, char* revision_id);
 
-int getContributorRevsByID(AVL a, char* id);
+int getContributorRevsByID(AVL a, char* id);*/
 
 #endif

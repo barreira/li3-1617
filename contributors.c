@@ -19,13 +19,7 @@
 
 #include "contributors.h"
 
-#define SIZE 100
-
 /* Estruturas */
-
-struct contributor_set{
-	AVL contributors[SET_SIZE_C]; // Array de AVLs (primeira para todos os contribuidores cujo id começa por "0", segunda para os que começam por "1", etc)
-};
 
 struct contributor {
 	char* id;
@@ -34,17 +28,6 @@ struct contributor {
 };
 
 /* Inits */
-
-CONTRIBUTOR_SET initContributorSet() {
-	int i;
-	CONTRIBUTOR_SET cs = malloc(sizeof(struct contributor_set));
-
-	for (i = 0; i < SET_SIZE_C; i++) {
-		cs->contributors[i] = initAvl();
-	}
-
-	return cs;
-}
 
 CONTRIBUTOR initContributor() {
 	CONTRIBUTOR c = malloc(sizeof(struct contributor));
@@ -64,18 +47,6 @@ CONTRIBUTOR freeContributor(CONTRIBUTOR c) {
 	return c;
 }
 
-CONTRIBUTOR_SET freeContributorSet(CONTRIBUTOR_SET cs) {
-	int i;
-
-	for (i = 0; i < SET_SIZE_C; i++) {
-		cs->contributors[i] = freeAvl(cs->contributors[i]);
-	}
-
-	free(cs);
-	cs = NULL;
-	return cs;
-}
-
 /* Inserts */
 
 void* duplicateC(void* info, void* dup, int *flag) {
@@ -84,6 +55,7 @@ void* duplicateC(void* info, void* dup, int *flag) {
 	return info;
 }
 
+/*
 CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	if (c->id != NULL) { 
 		int pos = c->id[0] - '0';
@@ -91,42 +63,35 @@ CONTRIBUTOR_SET insertContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
 	}
 
 	return cs;
-}
-
-/* Teste de existência */
-
-int existsContributor(CONTRIBUTOR_SET cs, CONTRIBUTOR c) {
-	int pos = c->id[0] - '0';
-	int res = exists(cs->contributors[pos], c->id);
-	return res;
-}
+}*/
 
 /* Getters e Setters */
 
-AVL getContributorSubset(CONTRIBUTOR_SET cs, int pos) {
-	return cs->contributors[pos];
-}
-
 CONTRIBUTOR setContributorID(CONTRIBUTOR c, char* id) {
-	c->id = malloc(sizeof(char) * SIZE);
+	c->id = malloc(strlen(id) + 1);
 	strcpy(c->id, id);
 	return c;
 }
 
 CONTRIBUTOR setUsername(CONTRIBUTOR c, char* u) {
-	c->username = malloc(sizeof(char) * SIZE);
+	c->username = malloc(strlen(u) + 1);
 	strcpy(c->username, u);
 	return c;
 }
 
 char* getContributorID(CONTRIBUTOR c) {
-	char* aux = malloc(sizeof(c->id)); // é assim?
-	strcpy(aux, c->id);
+	char* aux = NULL;
+
+	if (c->id != NULL) {
+		aux = malloc(strlen(c->id) + 1);
+		strcpy(aux, c->id);
+	}
+
 	return aux;
 }
 
 char* getUsername(CONTRIBUTOR c) {
-	char* aux = malloc(sizeof(c->username)); // é assim?
+	char* aux = malloc(strlen(c->username) + 1);
 	strcpy(aux, c->username);
 	return aux;
 }

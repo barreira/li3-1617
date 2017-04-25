@@ -19,13 +19,8 @@
 #include "articles.h"
 
 #define DEFAULT_REVCOUNT 5 // média de revisões por arigo (confirmar)
-#define SIZE 100
 
 /* Estruturas */
-
-struct article_set {
-	AVL articles[SET_SIZE_A]; // Array de AVLs (primeira para todos os artigos cujo id começa por "0", segunda para os que começam por "1", etc)
-};
 
 struct revision {
 	char* id;
@@ -44,17 +39,6 @@ struct article {
 };
 
 /* Inits */
-
-ARTICLE_SET initArticleSet() {
-	int i;
-	ARTICLE_SET as = malloc(sizeof(struct article_set));
-
-	for (i = 0; i < SET_SIZE_A; i++) {
-		as->articles[i] = initAvl();
-	}
-
-	return as;
-}
 
 REVISION initRevision() {
 	REVISION r = malloc(sizeof(struct revision));
@@ -100,18 +84,6 @@ ARTICLE freeArticle(ARTICLE a) {
 	return a;
 }
 
-ARTICLE_SET freeArticleSet(ARTICLE_SET as) {
-	int i;
-
-	for (i = 0; i < SET_SIZE_A; i++) {
-		as->articles[i] = freeAvl(as->articles[i]);
-	}
-
-	free(as);
-	as = NULL;
-	return as;
-}
-
 /* Inserts */
 
 REVISION getRevisionAt(REVISION* revs, int pos) {
@@ -151,7 +123,7 @@ void* duplicateA(void* info, void* dup, int* flag) {
 
 	return info;
 }
-
+/*
 ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a, int* flag) {
 	if (a->id != NULL) {
 		int pos = a->id[0] - '0';
@@ -159,8 +131,7 @@ ARTICLE_SET insertArticle(ARTICLE_SET as, ARTICLE a, int* flag) {
 	}
 
 	return as;	
-}
-
+}*/
 
 ARTICLE addRevision(ARTICLE a, REVISION r) {
 	a->revisions[a->revcount] = r;
@@ -169,19 +140,7 @@ ARTICLE addRevision(ARTICLE a, REVISION r) {
 	return a;
 }
 
-/* Teste de existência */
-
-int existsArticle(ARTICLE_SET as, ARTICLE a) {
-	int pos = a->id[0] - '0';
-	int res = exists(as->articles[pos], a->id);
-	return res;
-}
-
 /* Getters e Setters */
-
-AVL getArticleSubset(ARTICLE_SET as, int pos) {
-	return as->articles[pos];
-}
 
 char* getArticleID(ARTICLE a) {
 	char* ret = malloc(sizeof(char) * (strlen(a->id) + 1));
@@ -202,25 +161,25 @@ char* getTimestamp(REVISION r) {
 }
 
 ARTICLE setArticleID(ARTICLE a, char* id) {
-	a->id = malloc(sizeof(char) * SIZE);
+	a->id = malloc(strlen(id) + 1);
 	strcpy(a->id, id);
 	return a;
 }
 
 REVISION setRevisionID(REVISION r, char* id) {
-	r->id = malloc(sizeof(char) * SIZE);
+	r->id = malloc(strlen(id) + 1);
 	strcpy(r->id, id);
 	return r;
 }
 
 REVISION setTimestamp(REVISION r, char* t) {
-	r->timestamp = malloc(sizeof(char) * SIZE);
+	r->timestamp = malloc(strlen(t) + 1);
 	strcpy(r->timestamp, t);
 	return r;
 }
 
 REVISION setTitle(REVISION r, char* t) {
-	r->title = malloc(sizeof(char) * SIZE);
+	r->title = malloc(strlen(t) + 1);
 	strcpy(r->title, t);
 	return r;
 }
