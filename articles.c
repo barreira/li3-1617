@@ -222,6 +222,29 @@ REVISION getLastRevision(ARTICLE a) {
 	return a->revisions[a->revcount - 1];
 }
 
+char* getLastRevisionTitle(ARTICLE a) {
+	char* ret;
+	
+	ret = malloc(sizeof(char) * (strlen(a->revisions[a->revcount-1]->title) + 1));
+	strcpy(ret, a->revisions[a->revcount-1]->title);
+
+	return ret;
+}
+
+char* getArticleRevisionTimestamp(ARTICLE a, char* revision_id) {
+	char* ret;
+
+	for (int i = 0; i < a->revcount; i++) {
+		if (strcmp(a->revisions[i]->id, revision_id) == 0) {
+			ret = malloc(sizeof(char) * strlen(a->revisions[i]->timestamp));
+			strcpy(ret, a->revisions[i]->timestamp);
+			return ret;
+		}
+	}
+
+	return NULL;
+}
+
 int getBiggestRevisionSize(ARTICLE a) {
 	int i, s = 0;
 

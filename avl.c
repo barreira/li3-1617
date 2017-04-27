@@ -244,16 +244,46 @@ Node setInfo(Node n, void* info) {
 
 /* Map */
 
-void mapNode(Node n, void* acc, void (*f)(void* info, void* acc)) {
+void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux)) {
 	if (n != NULL) {
-		mapNode(n->left, acc, f);
-		f(n->info, acc);
-		mapNode(n->right, acc, f);
+		mapAVL_aux(n->left, acc, aux, f);
+		f(n->info, acc, aux);
+		mapAVL_aux(n->right, acc, aux, f);
 	}
 }
 
-void mapAVL(AVL a, void* acc, void (*f)(void* info, void* acc)) {
+void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux)) {
 	if (a != NULL) {
-		mapNode(a->root, acc, f);
+		mapAVL_aux(a->root, acc, aux, f);
 	}
+}
+
+/* Finds */
+
+void* findAndApply_aux(Node n, char* key, void* aux, void* (*f)(void* info, void* aux)) {
+	if (n == NULL) {
+		return NULL;
+	}
+ 
+	int cmp = strcmp(n->key, key);
+
+	if (cmp == 0) {
+		return f(n->info, aux);
+	}
+	else if (cmp > 0 && n->left != NULL) {
+		return findAndApply_aux(n->left, key, aux, f);
+	}
+	else if (n->right != NULL) { /* cmp < 0 */
+		return findAndApply_aux(n->right, key, aux, f);
+	}
+
+	return NULL;
+}
+
+void* findAndApply(AVL a, char* key, void* aux, void* (*f)(void* info, void* aux)) {
+	if (a != NULL) {
+		return findAndApply_aux(a->root, key, aux, f);
+	}
+
+	return NULL;
 }

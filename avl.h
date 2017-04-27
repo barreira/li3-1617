@@ -27,7 +27,8 @@ void* getInfo(Node n);
 Node setInfo(Node n, void* info);
 int getTotalNodes(AVL a);
 
-void mapAVL(AVL a, void* acc, void (*f)(void* info, void* acc));
+void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux));
+void* findAndApply(AVL a, char* key, void* aux, void* (*f)(void* info, void* aux));
 
 /* Queries */
 /*

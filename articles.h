@@ -46,5 +46,7 @@ long getOccurrences(void* i);
 long getRevCount(void *i);
 int getBiggestRevisionSize(ARTICLE a);
 int getBiggestRevisionWC(ARTICLE a);
+char* getLastRevisionTitle(ARTICLE a);
+char* getArticleRevisionTimestamp(ARTICLE a, char* revision_id);
 
 #endif

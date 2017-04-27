@@ -15,6 +15,7 @@
  * @version 2017-04-09
  */
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <math.h>
 
@@ -56,142 +57,87 @@ TAD_istruct clean(TAD_istruct qs) {
 	return qs;
 }
 
+/* FUNÇÕES AUXILIARES */
+
+int getLongLength(long x) {
+	int digits = 1;
+
+	while (x >= 10) {
+	    x /= 10;
+	    digits++;
+	}
+
+	return digits;
+}
+
 /* QUERIES */
 
 // 1
 long all_articles(TAD_istruct qs) {
 	return query1(qs->wikidata);
 }
-/*
+
 // 2
 long unique_articles(TAD_istruct qs) {
-	long res = 0;
-	int i;
-	AVL tmp;
-
-	for (i = 0; i < SET_SIZE_A; i++) {
-		tmp = getArticleSubset(qs->aset, i);
-		res += (long) getTotalNodes(tmp);
-	}
-
-	return res;
+	return query2(qs->wikidata);
 }
 
 // 3
 long all_revisions(TAD_istruct qs) {
-	long res = 0;
-	int i;
-	AVL tmp;
-
-	for (i = 0; i < SET_SIZE_A; i++) {
-		tmp = getArticleSubset(qs->aset, i);
-		res += query3(tmp);
-	}
-
-	return res;	
+	return query3(qs->wikidata);
 }
+
 
 // 4
 long* top_10_contributors(TAD_istruct qs) {
-	long* revs = calloc(10, sizeof(long));
-	long* ids = calloc(10, sizeof(long));
-	int i;
-
-	for (i = 0; i < SET_SIZE_C; i++) {
-		AVL tmp = getContributorSubset(qs->cset, i);
-		query4(tmp, &ids, &revs, 10);
-	}
-
-	return ids;
+	return query4(qs->wikidata);
 }
 
 // 5
 char* contributor_name(long contributor_id, TAD_istruct qs) {
-	char* id = malloc(sizeof(contributor_id));
+	char* id;
+
+	id = malloc(sizeof(char) * getLongLength(contributor_id));
 	sprintf(id, "%ld", contributor_id);
 
-	int pos = id[0] - '0';
-	AVL tmp = getContributorSubset(qs->cset, pos);
-
-	return query5(tmp, id);
+	return query5(qs->wikidata, id);
 }
 
 // 6
 long* top_20_largest_articles(TAD_istruct qs) {
-	long* sizes = calloc(20, sizeof(long));
-	long* ids = calloc(20, sizeof(long));
-	int i;
-
-	for (i = 0; i < SET_SIZE_A; i++) {
-		AVL tmp = getArticleSubset(qs->aset, i);
-		query6(tmp, &ids, &sizes, 20);
-	}
-
-	return ids;
+	return query6(qs->wikidata);
 }
 
 // 7
 char* article_title(long article_id, TAD_istruct qs) {
-	char* id = malloc(sizeof(article_id));
+	char* id;
+
+	id = malloc(sizeof(char) * getLongLength(article_id));
 	sprintf(id, "%ld", article_id);
 
-	int pos = id[0] - '0';
-	AVL tmp = getArticleSubset(qs->aset, pos);
-
-	return query7(tmp, id);
+	return query7(qs->wikidata, id);
 }
 
 // 8
 long* top_N_articles_with_more_words(int n, TAD_istruct qs) {
-	long* words = calloc(n, sizeof(long));
-	long* ids = calloc(n, sizeof(long));
-	int i;
-
-	for (i = 0; i < SET_SIZE_A; i++) {
-		AVL tmp = getArticleSubset(qs->aset, i);
-		query8(tmp, &ids, &words, n);
-	}
-
-	return ids;
+	return query8(qs->wikidata, n);
 }
 
 // 9
-int my_strcmp(const void* a, const void* b) { 
-	char const *char_a = *(char const **)a;
-	char const *char_b = *(char const **)b;
-
-	return strcmp(char_a, char_b);
-}
 
 char** titles_with_prefix(char* prefix, TAD_istruct qs) {
-	int i, size = 0;
-	char*** ret = malloc(sizeof(char**));
-	*ret = NULL;
-
-	for (i = 0; i < SET_SIZE_A; i++) {
-		AVL tmp = getArticleSubset(qs->aset, i);
-		query9(tmp, prefix, ret, &size);
-	}
-
-	qsort(*ret, size, sizeof(char*), my_strcmp);
-
-	if (*ret != NULL) {
-		(*ret)[size] = NULL;
-	}
-
-	return *ret;
+	return query9(qs->wikidata, prefix);
 }
 
 // 10
 char* article_timestamp(long article_id, long revision_id, TAD_istruct qs) {
-	char* a_id = malloc(sizeof(article_id));
+	char *a_id, *r_id;
+
+	a_id = malloc(sizeof(char) * getLongLength(article_id));
 	sprintf(a_id, "%ld", article_id);
 
-	char* r_id = malloc(sizeof(revision_id));
+	r_id = malloc(sizeof(char) * getLongLength(revision_id));
 	sprintf(r_id, "%ld", revision_id);	
 
-	int pos = a_id[0] - '0';
-	AVL tmp = getArticleSubset(qs->aset, pos);
-
-	return query10(tmp, a_id, r_id);
-}*/
+	return query10(qs->wikidata, a_id, r_id);
+}
