@@ -30,7 +30,7 @@ struct node {
 
 struct avl {
 	int total;
-	Node root;	
+	Node root;
 };
 
 /* Funções auxiliares */

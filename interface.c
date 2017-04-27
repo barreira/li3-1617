@@ -97,7 +97,7 @@ long* top_10_contributors(TAD_istruct qs) {
 char* contributor_name(long contributor_id, TAD_istruct qs) {
 	char* id;
 
-	id = malloc(sizeof(char) * getLongLength(contributor_id));
+	id = malloc(sizeof(char) * (getLongLength(contributor_id) + 1));
 	sprintf(id, "%ld", contributor_id);
 
 	return query5(qs->wikidata, id);
@@ -112,7 +112,7 @@ long* top_20_largest_articles(TAD_istruct qs) {
 char* article_title(long article_id, TAD_istruct qs) {
 	char* id;
 
-	id = malloc(sizeof(char) * getLongLength(article_id));
+	id = malloc(sizeof(char) * (article_id));
 	sprintf(id, "%ld", article_id);
 
 	return query7(qs->wikidata, id);
@@ -133,10 +133,10 @@ char** titles_with_prefix(char* prefix, TAD_istruct qs) {
 char* article_timestamp(long article_id, long revision_id, TAD_istruct qs) {
 	char *a_id, *r_id;
 
-	a_id = malloc(sizeof(char) * getLongLength(article_id));
+	a_id = malloc(sizeof(char) * (getLongLength(article_id) + 1));
 	sprintf(a_id, "%ld", article_id);
 
-	r_id = malloc(sizeof(char) * getLongLength(revision_id));
+	r_id = malloc(sizeof(char) * (getLongLength(revision_id) + 1));
 	sprintf(r_id, "%ld", revision_id);	
 
 	return query10(qs->wikidata, a_id, r_id);
