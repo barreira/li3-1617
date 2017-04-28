@@ -7,9 +7,9 @@ int main(int argc, char* argv[]) {
 	
 	// Invocação do menu
 
-	//menu();
+	menu();
 
-	
+/*	
 	// Init
 
 	TAD_istruct qs;
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 	} 
 	
     printf("\nQ9:");
-    char **res9 = titles_with_prefix("Anax", qs);
+    char **res9 = titles_with_prefix("A", qs);
     for (int i = 0; res9[i] != NULL; i++) printf("\t%s\n", res9[i]);
 
 	printf("\nQ10: \t%s\n", article_timestamp(12, 763082287, qs));
@@ -81,6 +81,6 @@ int main(int argc, char* argv[]) {
 	// Clean
 
 	qs = clean(qs);
-
+*/
 	return 0;
 }
