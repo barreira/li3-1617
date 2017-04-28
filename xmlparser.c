@@ -120,27 +120,27 @@ WikiData parseFile(WikiData wd, char* file) {
 
 	doc = xmlParseFile(file);
 	
-	if (!doc) {
+	if (doc == NULL) {
 		fprintf(stderr, "Document not parsed successfully \n");
 		return NULL;
 	}
 
 	cur = xmlDocGetRootElement(doc);
 	
-	if (!cur) {
+	if (cur == NULL) {
 		fprintf(stderr, "Empty document\n");
 		xmlFreeDoc(doc);
 		return NULL;
 	}
 
-	if (xmlStrcmp(cur->name, (const xmlChar *) "mediawiki")) {
+	if (xmlStrcmp(cur->name, (const xmlChar *) "mediawiki") != 0) {
 		fprintf(stderr, "Document of the wrong type (root node != mediawiki)");
 		xmlFreeDoc(doc);
 		return NULL;
 	}
 
 	for (cur = cur->xmlChildrenNode; cur != NULL; cur = cur->next) {
-		if (!(xmlStrcmp(cur->name, (const xmlChar *) "page"))) {
+		if (xmlStrcmp(cur->name, (const xmlChar *) "page") == 0) {
 			wd = parsePage(wd, doc, cur);
 		}
 	}

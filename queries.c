@@ -21,14 +21,26 @@ struct wikidata {
 	ArticleSet aset;
 };
 
-
 /* Estruturas (inits) */
+
+int strcmpA(const void* a, const void* b) {
+	char* id_a = getArticleID((ARTICLE) a);
+	char* id_b = getArticleID((ARTICLE) b);
+	return strcmp(id_a, id_b);
+}
+
+int strcmpC(const void* a, const void* b) {
+	char* id_a = getContributorID((CONTRIBUTOR) a);
+	char* id_b = getContributorID((CONTRIBUTOR) b);
+	return strcmp(id_a, id_b);
+}
+
 
 ArticleSet initArticleSet() {
 	ArticleSet as = malloc(sizeof(struct articleset));
 
 	for (int i = 0; i < SET_SIZE; i++) {
-		as->articles[i] = initAvl();
+		as->articles[i] = initAvl(strcmpA);
 	}
 
 	return as;
@@ -38,7 +50,7 @@ ContributorSet initContributorSet() {
 	ContributorSet cs = malloc(sizeof(struct contributorset));
 
 	for (int i = 0; i < SET_SIZE; i++) {
-		cs->contributors[i] = initAvl();
+		cs->contributors[i] = initAvl(strcmpC);
 	}
 
 	return cs;
@@ -92,7 +104,7 @@ WikiData insertArticle(WikiData wd, ARTICLE a, int* flag) {
 
 	if (a != NULL) {
 		int pos = id[0] - '0';
-		wd->aset->articles[pos] = insert(wd->aset->articles[pos], id, a, duplicateA, flag);
+		wd->aset->articles[pos] = insert(wd->aset->articles[pos], a, duplicateA, flag);
 	}
 
 	return wd;	
@@ -103,7 +115,7 @@ WikiData insertContributor(WikiData wd, CONTRIBUTOR c) {
 
 	if (id != NULL) { 
 		int pos = id[0] - '0';
-		wd->cset->contributors[pos] = insert(wd->cset->contributors[pos], id, c, duplicateC, NULL);
+		wd->cset->contributors[pos] = insert(wd->cset->contributors[pos], c, duplicateC, NULL);
 	}
 
 	return wd;
@@ -233,7 +245,13 @@ char* query5(WikiData wd, char* contributor_id) {
 	int pos;
 	
 	pos = contributor_id[0] - '0';
-	username = findAndApply(wd->cset->contributors[pos], contributor_id, NULL, query5_aux);
+
+	CONTRIBUTOR tmp = initContributor();
+	setContributorID(tmp, contributor_id);
+
+	username = findAndApply(wd->cset->contributors[pos], tmp, NULL, query5_aux);
+
+	free(tmp);
 
 	return username;
 }
@@ -287,7 +305,13 @@ char* query7(WikiData wd, char* article_id) {
 	int pos;
 	
 	pos = article_id[0] - '0';
-	title = findAndApply(wd->aset->articles[pos], article_id, NULL, query7_aux);
+
+	ARTICLE tmp = initArticle();
+	setArticleID(tmp, article_id);
+
+	title = findAndApply(wd->aset->articles[pos], tmp, NULL, query7_aux);
+
+	free(tmp);
 
 	return title;
 }
@@ -396,7 +420,13 @@ char* query10(WikiData wd, char* article_id, char* revision_id) {
 	int pos;
 	
 	pos = article_id[0] - '0';
-	timestamp = findAndApply(wd->aset->articles[pos], article_id, revision_id, query10_aux);
+
+	ARTICLE tmp = initArticle();
+	setArticleID(tmp, article_id);
+
+	timestamp = findAndApply(wd->aset->articles[pos], tmp, revision_id, query10_aux);
+
+	free(tmp);
 
 	return timestamp;
 }
