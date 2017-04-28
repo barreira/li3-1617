@@ -19,8 +19,6 @@
 #include "articles.h"
 #include "contributors.h"
 
-#define SIZE 10
-
 struct node {
 	void* info;
 	int height;
