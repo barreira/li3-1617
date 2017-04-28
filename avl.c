@@ -15,8 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <stdio.h>
-
 #include "avl.h"
 #include "articles.h"
 #include "contributors.h"
