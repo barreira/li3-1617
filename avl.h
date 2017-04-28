@@ -20,7 +20,7 @@ typedef struct avl *AVL;
 
 AVL initAvl();
 AVL freeAvl(AVL a);
-AVL insert(AVL a, char* k, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag);
+AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag);
 void incrementCounters(Node n, void (*inc)(void* info));
 int exists(AVL a, char* k);
 void* getInfo(Node n);
@@ -28,7 +28,7 @@ Node setInfo(Node n, void* info);
 int getTotalNodes(AVL a);
 
 void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux));
-void* findAndApply(AVL a, char* key, void* aux, void* (*f)(void* info, void* aux));
+void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void* info, void* aux));
 
 /* Queries */
 /*

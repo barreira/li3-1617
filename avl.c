@@ -19,10 +19,7 @@
 #include "articles.h"
 #include "contributors.h"
 
-#define SIZE 10
-
 struct node {
-	char* key;
 	void* info;
 	int height;
 	struct node *left, *right;
@@ -31,6 +28,7 @@ struct node {
 struct avl {
 	int total;
 	Node root;
+	int (*cmp)(const void*, const void*);
 };
 
 /* Funções auxiliares */
@@ -79,15 +77,16 @@ Node initNode() {
 	return NULL;
 }
 
-AVL initAvl() {
+AVL initAvl(int (*cmp)(const void*, const void*)) {
 	AVL a = malloc(sizeof(struct avl));
 	a->root = initNode();
 	a->total = 0;
+	a->cmp = cmp;
 	return a;	
 }
 
 /* Teste de existência */
-
+/*
 int existsNode(Node n, char* k) {
 	int res = 0;
 
@@ -103,7 +102,7 @@ int existsNode(Node n, char* k) {
 	else if (cmp > 0 && n->left) {
 		res = existsNode(n->left, k);
 	}
-	else if (n->right) { /* cmp < 0 */
+	else if (n->right) { // cmp < 0
 		res = existsNode(n->right, k);
 	}
 
@@ -113,14 +112,13 @@ int existsNode(Node n, char* k) {
 int exists(AVL a, char* k) {
 	int res = existsNode(a->root, k);
 	return res;
-}
+}*/
 
 /* Inserts */
 
-Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup, int* flag), int* total, int* flag) {
+Node insertNode(AVL a, Node n, void* i, void* (*f)(void* info, void* dup, int* flag), int* total, int* flag) {
 	if (!n) {
 		n = malloc(sizeof(struct node));
-		n->key = k;
 		n->info = i;
 		n->height = 0;
 		n->left = NULL;
@@ -129,14 +127,14 @@ Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup, int*
 	}
 
 	else {
-		int cmp = strcmp(n->key, k);
+		int cmp = a->cmp(n->info, i);
 
 		if (cmp > 0) {
-			n->left = insertNode(n->left, k, i, f, total, flag);
+			n->left = insertNode(a, n->left, i, f, total, flag);
 		}
 
 		else if (cmp < 0) {
-			n->right = insertNode(n->right, k, i, f, total, flag);
+			n->right = insertNode(a, n->right, i, f, total, flag);
 		}
 
 		else { /* A função f, passada como parâmetro, trata dos casos em que já haja um nodo com o id na árvore */
@@ -151,7 +149,7 @@ Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup, int*
 			int bal = hl-hr;
 
 			if (bal > 1) { /* right bal */
-				int lcmp = strcmp(k, n->left->key);
+				int lcmp = a->cmp(i, n->left->info);
 
 				if (lcmp < 0) {
 					return rotateRight(n);
@@ -164,7 +162,7 @@ Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup, int*
 			}
 
 			else if (bal < -1) { /* left bal */
-				int rcmp = strcmp(k, n->right->key);
+				int rcmp = a->cmp(i, n->right->info);
 
 				if (rcmp > 0) {
 					return rotateLeft(n);
@@ -181,12 +179,8 @@ Node insertNode(Node n, char* k, void* i, void* (*f)(void* info, void* dup, int*
 	return n;
 }
 
-AVL insert(AVL a, char* k, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag) {
-	if (!a) {
-		a = initAvl();
-	}
-
-	a->root = insertNode(a->root, k, i, f, &(a->total), flag);
+AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag) {
+	a->root = insertNode(a, a->root, i, f, &(a->total), flag);
 
 	return a;
 }
@@ -195,8 +189,6 @@ AVL insert(AVL a, char* k, void* i, void* (*f)(void* info, void* dup, int* flag)
 
 Node freeNode(Node n) {
 	if (n != NULL) {
-		free(n->key);
-
 		if (n->right != NULL) {
 			n->right = freeNode(n->right);
 		}
@@ -260,29 +252,29 @@ void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* 
 
 /* Finds */
 
-void* findAndApply_aux(Node n, char* key, void* aux, void* (*f)(void* info, void* aux)) {
+void* findAndApply_aux(AVL a, Node n, void* i, void* aux, void* (*f)(void* info, void* aux)) {
 	if (n == NULL) {
 		return NULL;
 	}
  
-	int cmp = strcmp(n->key, key);
+	int cmp = a->cmp(n->info, i);
 
 	if (cmp == 0) {
 		return f(n->info, aux);
 	}
 	else if (cmp > 0 && n->left != NULL) {
-		return findAndApply_aux(n->left, key, aux, f);
+		return findAndApply_aux(a, n->left, i, aux, f);
 	}
 	else if (n->right != NULL) { /* cmp < 0 */
-		return findAndApply_aux(n->right, key, aux, f);
+		return findAndApply_aux(a, n->right, i, aux, f);
 	}
 
 	return NULL;
 }
 
-void* findAndApply(AVL a, char* key, void* aux, void* (*f)(void* info, void* aux)) {
+void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void* info, void* aux)) {
 	if (a != NULL) {
-		return findAndApply_aux(a->root, key, aux, f);
+		return findAndApply_aux(a, a->root, i, aux, f);
 	}
 
 	return NULL;
