@@ -7,7 +7,7 @@
  * @author João Pires Barreira - A73831
  * @author Miguel Cunha        - A78478
  *
- * @version 2017-04-09
+ * @version 2017-04-29
  */
 
 #ifndef ARTICLES_H
@@ -46,6 +46,19 @@ ARTICLE initArticle();
  * @return Devolve o apontador para uma nova revisão (inicializada)
  */
 REVISION initRevision();
+
+
+/*
+ * @brief Liberta o espaço ocupado por um artigo
+ *
+ * Liberta os campos que, eventualmente, tinham sido alocados manualmente na
+ * memória através de malloc (os campos do tipo char*), o array de revisões (e
+ * cada uma das revisões que lá estavam) e o apontador para o artigo passado
+ * como parâmetro que é, posteriormente, colocado a NULL.
+ *
+ * @param a Artigo a libertar
+ */
+ARTICLE freeArticle(ARTICLE a);
 
 
 /*

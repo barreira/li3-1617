@@ -20,43 +20,54 @@
 #include "contributors.h"
 
 struct node {
-	void* info;
-	int height;
-	struct node *left, *right;
+	void* info;                // Informação guardada no nó
+	
+	int height;                // Altura do nó na árvore
+
+	struct node *left, *right; // Apontador para as raízes (nós) das sub-árvores
+	                           // esquerda e direita
 };
 
 struct avl {
-	int total;
-	Node root;
-	int (*cmp)(const void*, const void*);
+	int total;                            // Contador do total de nós na árvore
+
+	Node root;                            // Apontador para o raíz (nó) da
+	                                      // árvore
+
+	int (*cmp)(const void*, const void*); // Apontador para a função de 
+	                                      // comparação dos nós da árvore
+	
+	void (*delete)(void*);                // Apontador para função de free dos
+									      // nós da árvore
 };
 
-/* Funções auxiliares */
+/******************************************************************************
+ *                           FUNÇÕES AUXILIARES                               *
+ ******************************************************************************/
 
 /*
  * @brief Devolve o maior de dois inteiros
- *
  */
 int greater(int x, int y)
 {
-	return (x > y) ? x : y;
+	return (x > y) ? x
+	               : y;
 }
 
 /*
  * @brief Devolve a altura de um nó numa árvore
- *
- * @param n Nó de uma árvore
  */
 int getHeight(Node n)
 {
-	return (n) ? n->height : 0;
+	return (n != NULL) ? n->height
+	                   : 0;
 }
 
 /*
  * @brief Atualiza a altura de dois nós de uma árvore
  *
  * @param x Nó de uma árvore
- * @param y Nó de uma árvore 
+ * @param y Nó de uma árvore
  */
 Node updateHeight(Node x, Node y)
 {
@@ -65,7 +76,89 @@ Node updateHeight(Node x, Node y)
 	return y;
 }
 
-/* Rotações */
+
+/******************************************************************************
+ *                                 INITS                                      *
+ ******************************************************************************/
+
+/*
+ * @brief Inicializa um nó de uma árvore
+ *
+ * @param x Nó de uma árvore
+ */
+Node initNode()
+{
+	return NULL;
+}
+
+
+/*
+ * @brief Inicializa uma árvore
+ * 
+ * Recebe como parâmetro um apontador para a função de comparação
+ * dos nós da árvore.
+ *
+ * @param cmp Apontador para função de comparação dos nós
+ */
+AVL initAvl(int (*cmp)(const void*, const void*), void (*delete)(void*))
+{
+	AVL a = malloc(sizeof(struct avl));
+	a->root = initNode();
+	a->total = 0;
+	a->cmp = cmp;
+	a->delete = delete;
+	return a;	
+}
+
+
+/******************************************************************************
+ *                                 FREES                                      *
+ ******************************************************************************/
+
+/*
+ * @brief Liberta o espaço ocupado por um nó de uma árvore
+ *
+ * @param n Nó a libertar
+ */
+Node freeNode(AVL a, Node n)
+{
+	if (n != NULL) {
+		if (n->right != NULL) {
+			n->right = freeNode(a, n->right);
+		}
+
+		if (n->left != NULL) {
+			n->left = freeNode(a, n->left);
+		}		
+
+		a->delete(n->info);
+
+		free(n);
+		n = NULL;	
+	}
+	
+	return n;
+}
+
+
+/*
+ * @brief Liberta o espaço ocupado por uma árvore
+ * 
+ * @param n Árvore a libertar
+ */
+AVL freeAvl(AVL a)
+{
+	a->root = freeNode(a, a->root);
+
+	free(a);
+	a = NULL;
+	
+	return a;
+}
+
+/******************************************************************************
+ *                                  INSERT                                    *
+ ******************************************************************************/
 
 /*
  * @brief Efetua uma rotação à esquerda de uma árvore
@@ -84,6 +177,7 @@ Node rotateRight(Node n)
 	return tmp;
 }
 
+
 /*
  * @brief Efetua uma rotação à esquerda de uma árvore
  *
@@ -101,36 +195,6 @@ Node rotateLeft(Node n)
 	return tmp;
 }
 
-/* Inits */
-
-/*
- * @brief Inicializa um nó de uma árvore
- *
- * @param x Nó de uma árvore
- */
-Node initNode()
-{
-	return NULL;
-}
-
-/*
- * @brief Inicializa uma árvore
- * 
- * Recebe como parâmetro um apontador para a função de comparação
- * dos nós da árvore.
- *
- * @param cmp Apontador para função de comparação dos nós
- */
-AVL initAvl(int (*cmp)(const void*, const void*))
-{
-	AVL a = malloc(sizeof(struct avl));
-	a->root = initNode();
-	a->total = 0;
-	a->cmp = cmp;
-	return a;	
-}
-
-/* Inserts */
 
 /*
  * @brief Efetua a inserção de um nó numa árvore
@@ -142,8 +206,7 @@ AVL initAvl(int (*cmp)(const void*, const void*))
                árvore
  * @param flag 
  */
-Node insertNode(AVL a, Node n, void* i,
-                void* (*f)(void* info, void* dup, int* flag), int* flag)
+Node insertNode(AVL a, Node n, void* i, void* (*f)(void*, void*, int*), int* flag)
 {
 	if (!n) {
 		n = malloc(sizeof(struct node));
@@ -211,6 +274,7 @@ Node insertNode(AVL a, Node n, void* i,
 	return n;
 }
 
+
 /*
  * @brief Efetua a inserção de um nó numa árvore
  *
@@ -218,64 +282,25 @@ Node insertNode(AVL a, Node n, void* i,
  * @param i Informação a inserir na árvore
  * @param f Apontador para a função que trata de inserções repetidas na árvore
  */
-AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag),
-           int* flag)
+AVL insert(AVL a, void* i, void* (*f)(void*, void*, int*), int* flag)
 {
 	a->root = insertNode(a, a->root, i, f, flag);
 
 	return a;
 }
 
-/* Frees */
 
-/*
- * @brief Liberta o espaço ocupado por um nó de uma árvore
- * 
- * @param n Nó a libertar
- */
-Node freeNode(Node n)
-{
-	if (n != NULL) {
-		if (n->right != NULL) {
-			n->right = freeNode(n->right);
-		}
-
-		if (n->left != NULL) {
-			n->left = freeNode(n->left);
-		}		
-
-		free(n);
-		n = NULL;	
-	}
-	// free info?
-	return n;
-}
-
-/*
- * @brief Liberta o espaço ocupado por uma árvore
- * 
- * @param n Árvore a libertar
- */
-AVL freeAvl(AVL a)
-{
-	a->root = freeNode(a->root);
-	free(a);
-	a = NULL;
-	return a;
-}
-
-/* Outras funções */
+/******************************************************************************
+ *                               OUTRAS FUNÇÕES                               *
+ ******************************************************************************/
 
 /*
  * @brief Devolve o número total de nós de uma árvore
  */
 int getTotalNodes(AVL a)
 {
-	if (a == NULL) {
-		return 0;
-	}
-
-	return a->total;
+	int ret = a->total;
+	return ret;
 }
 
 /*
@@ -284,12 +309,15 @@ int getTotalNodes(AVL a)
  * @param n   Nó a incrementar
  * @param inc Apontador para função de incrementação dos contadores de um nó
  */
-void incrementCounters(Node n, void (*inc)(void* info))
+void incrementCounters(Node n, void (*inc)(void*))
 {
 	inc(n->info);
 }
 
-/* Map */
+
+/******************************************************************************
+ *                       TREE TRAVERSAL FUNCTIONS                             *
+ ******************************************************************************/
 
 /*
  * @brief Aplica uma função a um nó e às suas subárvores esquerda e direita
@@ -299,8 +327,7 @@ void incrementCounters(Node n, void (*inc)(void* info))
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar aos nós de uma árvore
  */
-void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc,
-                void* aux))
+void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void*, void*, void*))
 {
 	if (n != NULL) {
 		mapAVL_aux(n->left, acc, aux, f);
@@ -317,8 +344,7 @@ void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc,
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar aos nós de uma árvore
  */
-void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc,
-            void* aux))
+void mapAVL(AVL a, void* acc, void* aux, void (*f)(void*, void*, void*))
 {
 	if (a != NULL) {
 		mapAVL_aux(a->root, acc, aux, f);
@@ -338,8 +364,7 @@ void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc,
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar ao nó
  */
-void* findAndApply_aux(AVL a, Node n, void* i, void* aux,
-                       void* (*f)(void* info, void* aux))
+void* findAndApply_aux(AVL a, Node n, void* i, void* aux, void* (*f)(void*, void*))
 {
 	if (n == NULL) {
 		return NULL;
@@ -371,7 +396,7 @@ void* findAndApply_aux(AVL a, Node n, void* i, void* aux,
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar ao nó
  */
-void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void* info, void* aux))
+void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void*, void*))
 {
 	if (a != NULL) {
 		return findAndApply_aux(a, a->root, i, aux, f);

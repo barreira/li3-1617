@@ -24,17 +24,14 @@ AVL initAvl();
 
 AVL freeAvl(AVL a);
 
-AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag),
-           int* flag);
+AVL insert(AVL a, void* i, void* (*f)(void*, void*, int*), int* flag);
 
-void incrementCounters(Node n, void (*inc)(void* info));
+void incrementCounters(Node n, void (*inc)(void*));
 
 int getTotalNodes(AVL a);
 
-void mapAVL(AVL a, void* acc, void* aux,
-            void (*f)(void* info, void* acc, void* aux));
+void mapAVL(AVL a, void* acc, void* aux, void (*f)(void*, void*, void*));
 
-void* findAndApply(AVL a, void* i, void* aux,
-                   void* (*f)(void* info, void* aux));
+void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void*, void*));
 
 #endif

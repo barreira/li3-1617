@@ -6,8 +6,6 @@
 
 #define SET_SIZE 10
 
-/* Estruturas (definição) */
-
 typedef struct contributorset {
 	AVL contributors[SET_SIZE];
 } *ContributorSet;
@@ -23,24 +21,28 @@ struct wikidata {
 
 /* Estruturas (inits) */
 
-int strcmpA(const void* a, const void* b) {
-	char* id_a = getArticleID((ARTICLE) a);
-	char* id_b = getArticleID((ARTICLE) b);
-	return strcmp(id_a, id_b);
+int cmpArticle(const void* a, const void* b) {
+	return strcmp(getArticleID((ARTICLE) a), getArticleID((ARTICLE) b));
 }
 
-int strcmpC(const void* a, const void* b) {
-	char* id_a = getContributorID((CONTRIBUTOR) a);
-	char* id_b = getContributorID((CONTRIBUTOR) b);
-	return strcmp(id_a, id_b);
+int cmpContributor(const void* a, const void* b) {
+	return strcmp(getContributorID((CONTRIBUTOR) a),
+	              getContributorID((CONTRIBUTOR) b));
 }
 
+void deleteArticle(void* a) {
+	freeArticle((ARTICLE) a);
+}
+
+void deleteContributor(void* c) {
+	freeContributor((CONTRIBUTOR) c);
+}
 
 ArticleSet initArticleSet() {
 	ArticleSet as = malloc(sizeof(struct articleset));
 
 	for (int i = 0; i < SET_SIZE; i++) {
-		as->articles[i] = initAvl(strcmpA);
+		as->articles[i] = initAvl(cmpArticle, deleteArticle);
 	}
 
 	return as;
@@ -50,7 +52,7 @@ ContributorSet initContributorSet() {
 	ContributorSet cs = malloc(sizeof(struct contributorset));
 
 	for (int i = 0; i < SET_SIZE; i++) {
-		cs->contributors[i] = initAvl(strcmpC);
+		cs->contributors[i] = initAvl(cmpContributor, deleteContributor);
 	}
 
 	return cs;
