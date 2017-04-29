@@ -7,7 +7,7 @@
  * @author João Pires Barreira - A73831 
  * @author Miguel Cunha        - A78478
  *
- * @version 2017-04-28
+ * @version 2017-04-29
  */
 
 #ifndef AVL_H
@@ -16,29 +16,25 @@
 typedef struct node *Node;
 typedef struct avl *AVL;
 
-/* API */
+/******************************************************************************
+ *                                  API                                       *
+ ******************************************************************************/
 
 AVL initAvl();
+
 AVL freeAvl(AVL a);
-AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag);
+
+AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag),
+           int* flag);
+
 void incrementCounters(Node n, void (*inc)(void* info));
+
 int getTotalNodes(AVL a);
 
-void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux));
-void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void* info, void* aux));
+void mapAVL(AVL a, void* acc, void* aux,
+            void (*f)(void* info, void* acc, void* aux));
 
-/* Queries */
-/*
-long query1(AVL a);
-long query3(AVL a);
-long* query4(AVL a, long** ids, long** revs, int size);
-char* query5(AVL a, char* contributor_id);
-long* query6(AVL a, long** ids, long** sizes, int size);
-char* query7(AVL a, char* article_id);
-long* query8(AVL a, long** ids, long** words, int size);
-char** query9(AVL a, char* prefix, char*** res, int* size);
-char* query10(AVL a, char* article_id, char* revision_id);
-
-int getContributorRevsByID(AVL a, char* id);*/
+void* findAndApply(AVL a, void* i, void* aux,
+                   void* (*f)(void* info, void* aux));
 
 #endif

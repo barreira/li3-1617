@@ -9,7 +9,7 @@
  * @author João Pires Barreira - A73831 
  * @author Miguel Cunha        - A78478
  *
- * @version 2017-04-28
+ * @version 2017-04-29
  */
 
 #include <stdlib.h>
@@ -37,7 +37,8 @@ struct avl {
  * @brief Devolve o maior de dois inteiros
  *
  */
-int greater(int x, int y) {
+int greater(int x, int y)
+{
 	return (x > y) ? x : y;
 }
 
@@ -46,7 +47,8 @@ int greater(int x, int y) {
  *
  * @param n Nó de uma árvore
  */
-int getHeight(Node n) {
+int getHeight(Node n)
+{
 	return (n) ? n->height : 0;
 }
 
@@ -56,7 +58,8 @@ int getHeight(Node n) {
  * @param x Nó de uma árvore
  * @param y Nó de uma árvore 
  */
-Node updateHeight(Node x, Node y) {
+Node updateHeight(Node x, Node y)
+{
 	x->height = greater(getHeight(x->left), getHeight(x->right)) + 1;
 	y->height = greater(getHeight(y->left), getHeight(y->right)) + 1;
 	return y;
@@ -69,7 +72,8 @@ Node updateHeight(Node x, Node y) {
  *
  * @param n Raiz da árvore
  */
-Node rotateRight(Node n) {
+Node rotateRight(Node n)
+{
 	Node tmp;
 
 	tmp = n->left;
@@ -85,7 +89,8 @@ Node rotateRight(Node n) {
  *
  * @param n Raíz da árvore
  */
-Node rotateLeft(Node n) {
+Node rotateLeft(Node n)
+{
 	Node tmp;
 
 	tmp = n->right;
@@ -133,11 +138,12 @@ AVL initAvl(int (*cmp)(const void*, const void*))
  * @param a    Árvore onde se efetuará a inserção
  * @param n    Nodo atual da árvore (onde se tenta inserir)
  * @param i    Informação a inserir na árvore
- * @param f    Apontador para a função que trata de inserções repetidas na árvore
+ * @param f    Apontador para a função que trata de inserções repetidas na
+               árvore
  * @param flag 
  */
-Node insertNode(AVL a, Node n, void* i, void* (*f)(void* info, void* dup,
-                int* flag), int* flag)
+Node insertNode(AVL a, Node n, void* i,
+                void* (*f)(void* info, void* dup, int* flag), int* flag)
 {
 	if (!n) {
 		n = malloc(sizeof(struct node));
@@ -159,7 +165,11 @@ Node insertNode(AVL a, Node n, void* i, void* (*f)(void* info, void* dup,
 			n->right = insertNode(a, n->right, i, f, flag);
 		}
 
-		else { /* A função f, passada como parâmetro, trata dos casos em que já haja um nodo com o id na árvore */
+		else {
+
+			// A função f, passada como parâmetro, trata dos casos em que já
+			// haja um nodo com o id na árvore
+			
 			n->info = f(n->info, i, flag);
 		}
 		
@@ -208,7 +218,9 @@ Node insertNode(AVL a, Node n, void* i, void* (*f)(void* info, void* dup,
  * @param i Informação a inserir na árvore
  * @param f Apontador para a função que trata de inserções repetidas na árvore
  */
-AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag) {
+AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag),
+           int* flag)
+{
 	a->root = insertNode(a, a->root, i, f, flag);
 
 	return a;
@@ -221,7 +233,8 @@ AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag), int* fl
  * 
  * @param n Nó a libertar
  */
-Node freeNode(Node n) {
+Node freeNode(Node n)
+{
 	if (n != NULL) {
 		if (n->right != NULL) {
 			n->right = freeNode(n->right);
@@ -243,7 +256,8 @@ Node freeNode(Node n) {
  * 
  * @param n Árvore a libertar
  */
-AVL freeAvl(AVL a) {
+AVL freeAvl(AVL a)
+{
 	a->root = freeNode(a->root);
 	free(a);
 	a = NULL;
@@ -255,7 +269,8 @@ AVL freeAvl(AVL a) {
 /*
  * @brief Devolve o número total de nós de uma árvore
  */
-int getTotalNodes(AVL a) {
+int getTotalNodes(AVL a)
+{
 	if (a == NULL) {
 		return 0;
 	}
@@ -269,7 +284,8 @@ int getTotalNodes(AVL a) {
  * @param n   Nó a incrementar
  * @param inc Apontador para função de incrementação dos contadores de um nó
  */
-void incrementCounters(Node n, void (*inc)(void* info)) {
+void incrementCounters(Node n, void (*inc)(void* info))
+{
 	inc(n->info);
 }
 
@@ -283,7 +299,9 @@ void incrementCounters(Node n, void (*inc)(void* info)) {
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar aos nós de uma árvore
  */
-void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux)) {
+void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc,
+                void* aux))
+{
 	if (n != NULL) {
 		mapAVL_aux(n->left, acc, aux, f);
 		f(n->info, acc, aux);
@@ -299,7 +317,9 @@ void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc, v
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar aos nós de uma árvore
  */
-void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux)) {
+void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc,
+            void* aux))
+{
 	if (a != NULL) {
 		mapAVL_aux(a->root, acc, aux, f);
 	}
@@ -310,15 +330,17 @@ void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* 
 /*
  * @brief Aplica uma função a um nó específico de uma árvore
  *
- * Primeiro procura, na árvore, o nó recebido como parâmetro e, de seguida, aplica-lhe a função
- * recebida como parâmetro.
+ * Primeiro procura, na árvore, o nó recebido como parâmetro e, de seguida,
+ * aplica-lhe a função recebida como parâmetro.
  *
  * @param a   Árvore
  * @param i   Nó a procurar na árvore
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar ao nó
  */
-void* findAndApply_aux(AVL a, Node n, void* i, void* aux, void* (*f)(void* info, void* aux)) {
+void* findAndApply_aux(AVL a, Node n, void* i, void* aux,
+                       void* (*f)(void* info, void* aux))
+{
 	if (n == NULL) {
 		return NULL;
 	}
@@ -341,15 +363,16 @@ void* findAndApply_aux(AVL a, Node n, void* i, void* aux, void* (*f)(void* info,
 /*
  * @brief Aplica uma função a um nó específico de uma árvore
  *
- * Primeiro procura, na árvore, o nó recebido como parâmetro e, de seguida, aplica-lhe a função
- * recebida como parâmetro.
+ * Primeiro procura, na árvore, o nó recebido como parâmetro e, de seguida,
+ * aplica-lhe a função recebida como parâmetro.
  *
  * @param a   Árvore
  * @param i   Nó a procurar na árvore
  * @param aux Variável auxiliar (opcional) à execução da função recebida
  * @param f   Apontador para a função a aplicar ao nó
  */
-void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void* info, void* aux)) {
+void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void* info, void* aux))
+{
 	if (a != NULL) {
 		return findAndApply_aux(a, a->root, i, aux, f);
 	}

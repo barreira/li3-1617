@@ -25,8 +25,8 @@
 /*
  * @brief Faz a leitura e o parsing de uma tag "revision" de uma snapshot
  *
- * Lê as tags hierarquicamente inferiores a "revision", retirando a informação necessária
- * e colocando-a nas estruturas previamente criadas.
+ * Lê as tags hierarquicamente inferiores a "revision", retirando a informação
+ * necessária e colocando-a nas estruturas previamente criadas.
  *
  * @param r    Estrutura para onde irão ser lidos os dados da revisão
  * @param c    Estrutura para onde irão ser lidos os dados do contribuidor
@@ -45,10 +45,12 @@ void parseContributor(CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 
 			// Retira-se o username do contribuidor
 
-			xmlChar* username = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+			xmlChar* username = xmlNodeListGetString(doc,
+			                                         cur->xmlChildrenNode,
+													 1);
 
-			// Coloca-se uma cópia do username lido na estrutura que guarda o contribuidor
-			// e liberta-se o espaço ocupado pela informação lida			
+			// Coloca-se uma cópia do username lido na estrutura que guarda o
+			// contribuidor e liberta-se o espaço ocupado pela informação lida			
 
 			c = setUsername(c, (char*) username);
 			free(username);
@@ -62,8 +64,8 @@ void parseContributor(CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 
 			xmlChar* id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 
-			// Coloca-se uma cópia do ID lido na estrutura que guarda o contribuidor
-			// e liberta-se o espaço ocupado pela informação lida			
+			// Coloca-se uma cópia do ID lido na estrutura que guarda o
+			// contribuidor e liberta-se o espaço ocupado pela informação lida			
 
 			c = setContributorID(c, (char*) id);
 			free(id);
@@ -75,8 +77,8 @@ void parseContributor(CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 /*
  * @brief Faz a leitura e o parsing de uma tag "revision" de uma snapshot
  *
- * Lê as tags hierarquicamente inferiores a "revision", retirando a informação necessária
- * e colocando-a nas estruturas previamente criadas.
+ * Lê as tags hierarquicamente inferiores a "revision", retirando a informação
+ * necessária e colocando-a nas estruturas previamente criadas.
  *
  * @param r    Estrutura para onde irão ser lidos os dados da revisão
  * @param c    Estrutura para onde irão ser lidos os dados do contribuidor
@@ -97,8 +99,8 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 
 			xmlChar* id = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 
-			// Coloca-se uma cópia do ID lido na estrutura que guarda a revisão e
-			// liberta-se o espaço ocupado pela informação lida
+			// Coloca-se uma cópia do ID lido na estrutura que guarda a revisão
+			// e liberta-se o espaço ocupado pela informação lida
 
 			r = setRevisionID(r, (char*) id);
 			free(id);
@@ -110,10 +112,12 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 
 			// Retira-se o timestamp
 
-			xmlChar* timestamp = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+			xmlChar* timestamp = xmlNodeListGetString(doc,
+			                                          cur->xmlChildrenNode,
+													  1);
 
-			// Coloca-se uma cópia do timestamp lido na estrutura que guarda a revisão e
-			// liberta-se o espaço ocupado pela informação lida
+			// Coloca-se uma cópia do timestamp lido na estrutura que guarda a
+			// revisão e liberta-se o espaço ocupado pela informação lida
 
 			r = setTimestamp(r, (char*) timestamp);
 			free(timestamp);
@@ -133,7 +137,8 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 		if (!(xmlStrcmp(cur->name, (const xmlChar *) "text"))) {
 			xmlChar* text = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 			
-			// Verifica-se se a tag é a que, realmente, possui o texto da revisão do artigo
+			// Verifica-se se a tag é a que, realmente, possui o texto da
+			// revisão do artigo
 
 			if (text != NULL) {
 				
@@ -141,7 +146,8 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 
 				int size = strlen((char*) text) + 1;
 
-				// Coloca-se o tamanho do texto da revisão na estrutura que guarda a revisão
+				// Coloca-se o tamanho do texto da revisão na estrutura que
+				// guarda a revisão
 
 				r = setTextSize(r, size);
 				
@@ -151,22 +157,24 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 
 				for (int i = 0; text[i] != '\0'; i++) {
 
-					// Caso se encontre um espaço, um \n ou um \t, incrementa-se o contador
-					// das palavras
+					// Caso se encontre um espaço, um \n ou um \t, incrementa-se
+					// o contador das palavras
 
 					if (text[i] == ' ' || text[i] == '\n' || text[i] == '\t') {
 						palavras++;
 
-						// Continua-se a percorrer o texto até encontrar o carater inicial da
-						// próxima palavra (ou o fim)
+						// Continua-se a percorrer o texto até encontrar o
+						// carater inicial da próxima palavra (ou o fim)
 
-						while (text[i+1] == ' ' || text[i+1] == '\n' || text[i+1] == '\t') {
+						while (text[i+1] == ' ' || text[i+1] == '\n' ||
+							   text[i+1] == '\t') {
 							i++;
 						}
 					}
 				}
 
-				// Coloca-se o número de palavras do texto da revisão na estrutura que guarda a revisão
+				// Coloca-se o número de palavras do texto da revisão na
+				// estrutura que guarda a revisão
 
 				setWordCount(r, palavras);
 			}
@@ -179,8 +187,9 @@ void parseRevision(REVISION r, CONTRIBUTOR c, xmlDocPtr doc, xmlNodePtr cur)
 /*
  * @brief Faz a leitura e o parsing de uma tag "page" de uma snapshot
  *
- * Lê as tags hierarquicamente inferiores a "page", retirando a informação necessária,
- * criando as estruturas necessárias e inserindo-as na estrutura de dados recebida.
+ * Lê as tags hierarquicamente inferiores a "page", retirando a informação
+ * necessária, criando as estruturas necessárias e inserindo-as na estrutura de
+ * dados recebida.
  *
  * @param wd   Estrutura para onde irão ser lidos os dados
  * @param doc  Ficheiro XML
@@ -208,8 +217,8 @@ WikiData parsePage(WikiData wd, xmlDocPtr doc, xmlNodePtr cur)
 
 			xmlChar* title = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
 
-			// Coloca-se uma cópia do título lido na estrutura que guarda o artigo e
-			// liberta-se o espaço ocupado pela informação lida
+			// Coloca-se uma cópia do título lido na estrutura que guarda o
+			// artigo e liberta-se o espaço ocupado pela informação lida
 
 			r = setTitle(r, (char*) title);
 			free(title);
@@ -244,21 +253,23 @@ WikiData parsePage(WikiData wd, xmlDocPtr doc, xmlNodePtr cur)
 
 	a = addRevision(a, r);
 
-	int flag = 0; // Flag que indicará, após a inserção do artigo na estrutura, se já existia
-	              // a revisão do artigo lido do ficheiro
+	int flag = 0; // Flag que indicará, após a inserção do artigo na estrutura,
+	              // se já existia a revisão do artigo lido do ficheiro
 
 	// Faz-se a inserção do artigo lido na estrutura
 
 	wd = insertArticle(wd, a, &flag); 
 
-	// Se a flag estiver a 1, indica-nos que a revisão do artigo que tentámos inserir já existia
-	// na árvore, logo não é necessário colocar o contribuidor na estrutura pois ele já existe
-	// e não se trata de uma nova contribuição
+	// Se a flag estiver a 1, indica-nos que a revisão do artigo que tentámos
+	// inserir já existia na árvore, logo não é necessário colocar o
+	// contribuidor na estrutura pois ele já existe e não se trata de uma nova
+	// contribuição
 	
 	if (flag == 0) {
 
-		// Caso a flag esteja a 0, pode-se inserir o contribuidor na estrutura pois trata-se, de
-		// facto, de uma nova contribuição (ou de um contribuidor novo)
+		// Caso a flag esteja a 0, pode-se inserir o contribuidor na estrutura
+		// pois trata-se, de facto, de uma nova contribuição (ou de um
+		// contribuidor novo)
 
 		wd = insertContributor(wd, c);
 	}
@@ -276,8 +287,8 @@ WikiData parsePage(WikiData wd, xmlDocPtr doc, xmlNodePtr cur)
 /*
  * @brief Faz a leitura e o parsing de um ficheiro XML
  *
- * Lê um ficheiro XML (correspondente a uma snapshot), validando-o, fazendo o seu parsing
- * e carregando a estrutura WikiData recebida.
+ * Lê um ficheiro XML (correspondente a uma snapshot), validando-o, fazendo o
+ * seu parsing e carregando a estrutura WikiData recebida.
  *
  * @param wd   Estrutura para onde irão ser lidos os dados
  * @param file Ficheiro XML
@@ -310,7 +321,8 @@ WikiData parseFile(WikiData wd, char* file)
 		return NULL;
 	}
 
-	// Caso o ficheiro não seja do tipo esperado, devolve-se um erro para o stderr
+	// Caso o ficheiro não seja do tipo esperado, devolve-se um erro para o
+	// stderr
 
 	if (xmlStrcmp(cur->name, (const xmlChar *) "mediawiki") != 0) {
 		fprintf(stderr, "Document of the wrong type (root node != mediawiki)");

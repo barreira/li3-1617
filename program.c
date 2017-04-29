@@ -2,9 +2,9 @@
  * @file program.c
  * @brief Módulo principal do projeto
  * 
- * Módulo responsável pelo chamamento da interface gráfica do menu ou,
- * em alternativa, por correr o programa sequencialmente (init -> load
- * -> queries -> clean). 
+ * Módulo responsável pelo chamamento da interface gráfica do menu ou, em
+ * alternativa, por correr o programa sequencialmente (init -> load -> queries
+ * -> clean). 
  *
  * @author Ana Paula Carvalho  - A61855
  * @author Joana Arantes       - A57810
@@ -19,7 +19,8 @@
 #include "interface.h"
 #include "menu.h"
 
-int main() {
+int main()
+{
 	
 	// Invocação do menu
 

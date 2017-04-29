@@ -15,15 +15,15 @@
 
 #include "queries.h"
 
-/****************************************************************************************
- *                                       API                                            *
- ****************************************************************************************/
+/******************************************************************************
+ *                                  API                                       *
+ ******************************************************************************/
 
 /*
  * @brief Faz a leitura e o parsing de um ficheiro XML
  *
- * Lê um ficheiro XML (correspondente a uma snapshot), validando-o, fazendo o seu parsing
- * e carregando a estrutura WikiData recebida.
+ * Lê um ficheiro XML (correspondente a uma snapshot), validando-o, fazendo o
+ * seu parsing e carregando a estrutura WikiData recebida.
  *
  * @param wd   Estrutura para onde irão ser lidos os dados
  * @param file Ficheiro XML

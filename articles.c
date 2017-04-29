@@ -1,16 +1,16 @@
 /**
  * @file articles.c
- * @brief Definição das estruturas relativas aos artigos
+ * @brief Definição das estruturas/funções relativas aos artigos
  * 
- * Contém a definição das estruturas que definem um artigo e um array de AVLs
- * de artigos.
+ * Contém a definição das estruturas que definem um artigo (e revisões do mesmo)
+ * e respetivas funções.
  * 
  * @author Ana Paula Carvalho  - A61855
  * @author Joana Arantes       - A57810
  * @author João Pires Barreira - A73831 
  * @author Miguel Cunha        - A78478
  *
- * @version 2017-04-09
+ * @version 2017-04-29
  */
 
 #include <stdlib.h>
@@ -18,7 +18,7 @@
 
 #include "articles.h"
 
-#define DEFAULT_REVCOUNT 5 // média de revisões por arigo (confirmar)
+#define DEFAULT_REVCOUNT 5
 
 /* Estruturas */
 
