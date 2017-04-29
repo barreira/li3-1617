@@ -7,7 +7,7 @@
  * @author João Pires Barreira - A73831 
  * @author Miguel Cunha        - A78478
  *
- * @version 2017-04-09
+ * @version 2017-04-28
  */
 
 #ifndef AVL_H
@@ -22,9 +22,6 @@ AVL initAvl();
 AVL freeAvl(AVL a);
 AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag);
 void incrementCounters(Node n, void (*inc)(void* info));
-int exists(AVL a, char* k);
-void* getInfo(Node n);
-Node setInfo(Node n, void* info);
 int getTotalNodes(AVL a);
 
 void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux));

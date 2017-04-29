@@ -9,7 +9,7 @@
  * @author João Pires Barreira - A73831 
  * @author Miguel Cunha        - A78478
  *
- * @version 2017-04-09
+ * @version 2017-04-28
  */
 
 #include <stdlib.h>
@@ -33,14 +33,29 @@ struct avl {
 
 /* Funções auxiliares */
 
+/*
+ * @brief Devolve o maior de dois inteiros
+ *
+ */
 int greater(int x, int y) {
 	return (x > y) ? x : y;
 }
 
+/*
+ * @brief Devolve a altura de um nó numa árvore
+ *
+ * @param n Nó de uma árvore
+ */
 int getHeight(Node n) {
 	return (n) ? n->height : 0;
 }
 
+/*
+ * @brief Atualiza a altura de dois nós de uma árvore
+ *
+ * @param x Nó de uma árvore
+ * @param y Nó de uma árvore 
+ */
 Node updateHeight(Node x, Node y) {
 	x->height = greater(getHeight(x->left), getHeight(x->right)) + 1;
 	y->height = greater(getHeight(y->left), getHeight(y->right)) + 1;
@@ -49,6 +64,11 @@ Node updateHeight(Node x, Node y) {
 
 /* Rotações */
 
+/*
+ * @brief Efetua uma rotação à esquerda de uma árvore
+ *
+ * @param n Raiz da árvore
+ */
 Node rotateRight(Node n) {
 	Node tmp;
 
@@ -60,6 +80,11 @@ Node rotateRight(Node n) {
 	return tmp;
 }
 
+/*
+ * @brief Efetua uma rotação à esquerda de uma árvore
+ *
+ * @param n Raíz da árvore
+ */
 Node rotateLeft(Node n) {
 	Node tmp;
 
@@ -73,11 +98,26 @@ Node rotateLeft(Node n) {
 
 /* Inits */
 
-Node initNode() {
+/*
+ * @brief Inicializa um nó de uma árvore
+ *
+ * @param x Nó de uma árvore
+ */
+Node initNode()
+{
 	return NULL;
 }
 
-AVL initAvl(int (*cmp)(const void*, const void*)) {
+/*
+ * @brief Inicializa uma árvore
+ * 
+ * Recebe como parâmetro um apontador para a função de comparação
+ * dos nós da árvore.
+ *
+ * @param cmp Apontador para função de comparação dos nós
+ */
+AVL initAvl(int (*cmp)(const void*, const void*))
+{
 	AVL a = malloc(sizeof(struct avl));
 	a->root = initNode();
 	a->total = 0;
@@ -85,56 +125,38 @@ AVL initAvl(int (*cmp)(const void*, const void*)) {
 	return a;	
 }
 
-/* Teste de existência */
-/*
-int existsNode(Node n, char* k) {
-	int res = 0;
-
-	if (n == NULL) {
-		return res;
-	}
- 
-	int cmp = strcmp(n->key, k);
-
-	if (cmp == 0) {
-		return 1;
-	}
-	else if (cmp > 0 && n->left) {
-		res = existsNode(n->left, k);
-	}
-	else if (n->right) { // cmp < 0
-		res = existsNode(n->right, k);
-	}
-
-	return res;
-}
-
-int exists(AVL a, char* k) {
-	int res = existsNode(a->root, k);
-	return res;
-}*/
-
 /* Inserts */
 
-Node insertNode(AVL a, Node n, void* i, void* (*f)(void* info, void* dup, int* flag), int* total, int* flag) {
+/*
+ * @brief Efetua a inserção de um nó numa árvore
+ *
+ * @param a    Árvore onde se efetuará a inserção
+ * @param n    Nodo atual da árvore (onde se tenta inserir)
+ * @param i    Informação a inserir na árvore
+ * @param f    Apontador para a função que trata de inserções repetidas na árvore
+ * @param flag 
+ */
+Node insertNode(AVL a, Node n, void* i, void* (*f)(void* info, void* dup,
+                int* flag), int* flag)
+{
 	if (!n) {
 		n = malloc(sizeof(struct node));
 		n->info = i;
 		n->height = 0;
 		n->left = NULL;
 		n->right = NULL;
-		*total += 1;
+		(a->total)++;
 	}
 
 	else {
 		int cmp = a->cmp(n->info, i);
 
 		if (cmp > 0) {
-			n->left = insertNode(a, n->left, i, f, total, flag);
+			n->left = insertNode(a, n->left, i, f, flag);
 		}
 
 		else if (cmp < 0) {
-			n->right = insertNode(a, n->right, i, f, total, flag);
+			n->right = insertNode(a, n->right, i, f, flag);
 		}
 
 		else { /* A função f, passada como parâmetro, trata dos casos em que já haja um nodo com o id na árvore */
@@ -179,14 +201,26 @@ Node insertNode(AVL a, Node n, void* i, void* (*f)(void* info, void* dup, int* f
 	return n;
 }
 
+/*
+ * @brief Efetua a inserção de um nó numa árvore
+ *
+ * @param a Árvore onde se efetuará a inserção
+ * @param i Informação a inserir na árvore
+ * @param f Apontador para a função que trata de inserções repetidas na árvore
+ */
 AVL insert(AVL a, void* i, void* (*f)(void* info, void* dup, int* flag), int* flag) {
-	a->root = insertNode(a, a->root, i, f, &(a->total), flag);
+	a->root = insertNode(a, a->root, i, f, flag);
 
 	return a;
 }
 
 /* Frees */
 
+/*
+ * @brief Liberta o espaço ocupado por um nó de uma árvore
+ * 
+ * @param n Nó a libertar
+ */
 Node freeNode(Node n) {
 	if (n != NULL) {
 		if (n->right != NULL) {
@@ -204,6 +238,11 @@ Node freeNode(Node n) {
 	return n;
 }
 
+/*
+ * @brief Liberta o espaço ocupado por uma árvore
+ * 
+ * @param n Árvore a libertar
+ */
 AVL freeAvl(AVL a) {
 	a->root = freeNode(a->root);
 	free(a);
@@ -213,6 +252,9 @@ AVL freeAvl(AVL a) {
 
 /* Outras funções */
 
+/*
+ * @brief Devolve o número total de nós de uma árvore
+ */
 int getTotalNodes(AVL a) {
 	if (a == NULL) {
 		return 0;
@@ -221,21 +263,26 @@ int getTotalNodes(AVL a) {
 	return a->total;
 }
 
+/*
+ * @brief Incrementa os contadores de um nó de uma árvore
+ *
+ * @param n   Nó a incrementar
+ * @param inc Apontador para função de incrementação dos contadores de um nó
+ */
 void incrementCounters(Node n, void (*inc)(void* info)) {
 	inc(n->info);
 }
 
-void* getInfo(Node n) {
-	return n->info;
-}
-
-Node setInfo(Node n, void* info) {
-	n->info = info;
-	return n;
-}
-
 /* Map */
 
+/*
+ * @brief Aplica uma função a um nó e às suas subárvores esquerda e direita
+ *
+ * @param n   Nó de uma árvore
+ * @param acc Acumulador do resultado da aplicação da função a um nó
+ * @param aux Variável auxiliar (opcional) à execução da função recebida
+ * @param f   Apontador para a função a aplicar aos nós de uma árvore
+ */
 void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux)) {
 	if (n != NULL) {
 		mapAVL_aux(n->left, acc, aux, f);
@@ -244,6 +291,14 @@ void mapAVL_aux(Node n, void* acc, void* aux, void (*f)(void* info, void* acc, v
 	}
 }
 
+/*
+ * @brief Aplica uma função a todos os nós de uma árvore
+ *
+ * @param a   Árvore
+ * @param acc Acumulador do resultado da aplicação da função a um nó
+ * @param aux Variável auxiliar (opcional) à execução da função recebida
+ * @param f   Apontador para a função a aplicar aos nós de uma árvore
+ */
 void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* aux)) {
 	if (a != NULL) {
 		mapAVL_aux(a->root, acc, aux, f);
@@ -252,6 +307,17 @@ void mapAVL(AVL a, void* acc, void* aux, void (*f)(void* info, void* acc, void* 
 
 /* Finds */
 
+/*
+ * @brief Aplica uma função a um nó específico de uma árvore
+ *
+ * Primeiro procura, na árvore, o nó recebido como parâmetro e, de seguida, aplica-lhe a função
+ * recebida como parâmetro.
+ *
+ * @param a   Árvore
+ * @param i   Nó a procurar na árvore
+ * @param aux Variável auxiliar (opcional) à execução da função recebida
+ * @param f   Apontador para a função a aplicar ao nó
+ */
 void* findAndApply_aux(AVL a, Node n, void* i, void* aux, void* (*f)(void* info, void* aux)) {
 	if (n == NULL) {
 		return NULL;
@@ -272,6 +338,17 @@ void* findAndApply_aux(AVL a, Node n, void* i, void* aux, void* (*f)(void* info,
 	return NULL;
 }
 
+/*
+ * @brief Aplica uma função a um nó específico de uma árvore
+ *
+ * Primeiro procura, na árvore, o nó recebido como parâmetro e, de seguida, aplica-lhe a função
+ * recebida como parâmetro.
+ *
+ * @param a   Árvore
+ * @param i   Nó a procurar na árvore
+ * @param aux Variável auxiliar (opcional) à execução da função recebida
+ * @param f   Apontador para a função a aplicar ao nó
+ */
 void* findAndApply(AVL a, void* i, void* aux, void* (*f)(void* info, void* aux)) {
 	if (a != NULL) {
 		return findAndApply_aux(a, a->root, i, aux, f);
