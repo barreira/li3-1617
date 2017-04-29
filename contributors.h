@@ -67,7 +67,7 @@ CONTRIBUTOR freeContributor(CONTRIBUTOR c);
  *
  * @return Retorna a informação atualiza do nó original da árvore
  */
-void* duplicateC(void* info, void* dup, int *flag);
+void* duplicateContributor(void* info, void* dup, int *flag);
 
 
 /*

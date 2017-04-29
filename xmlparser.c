@@ -251,7 +251,7 @@ WikiData parsePage(WikiData wd, xmlDocPtr doc, xmlNodePtr cur)
 
 	// Adiciona-se a revisão ao artigo
 
-	a = addRevision(a, r);
+	a = addFirstRevision(a, r);
 
 	int flag = 0; // Flag que indicará, após a inserção do artigo na estrutura,
 	              // se já existia a revisão do artigo lido do ficheiro

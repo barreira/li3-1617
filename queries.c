@@ -104,7 +104,10 @@ WikiData insertArticle(WikiData wd, ARTICLE a, int* flag) {
 
 	if (a != NULL) {
 		int pos = id[0] - '0';
-		wd->aset->articles[pos] = insert(wd->aset->articles[pos], a, duplicateA, flag);
+		wd->aset->articles[pos] = insert(wd->aset->articles[pos],
+		                                 a,
+										 duplicateArticle,
+										 flag);
 	}
 
 	return wd;	
@@ -115,7 +118,10 @@ WikiData insertContributor(WikiData wd, CONTRIBUTOR c) {
 
 	if (id != NULL) { 
 		int pos = id[0] - '0';
-		wd->cset->contributors[pos] = insert(wd->cset->contributors[pos], c, duplicateC, NULL);
+		wd->cset->contributors[pos] = insert(wd->cset->contributors[pos],
+		                                     c,
+											 duplicateContributor,
+											 NULL);
 	}
 
 	return wd;
@@ -155,7 +161,7 @@ SQ9 initStructQ9() {
 // 1
 
 void query1_aux(void* info, void* acc, void* aux) {
-	(*(long*) acc) += getOccurrences((ARTICLE) info);
+	(*(long*) acc) += (long) getOccurrences((ARTICLE) info);
 }
 
 long query1(WikiData wd) {
@@ -181,7 +187,7 @@ long query2(WikiData wd) {
 }
 
 void query3_aux(void* info, void* acc, void* aux) {
-	(*(long*) acc) += getRevCount((ARTICLE) info);
+	(*(long*) acc) += (long) getRevCount((ARTICLE) info);
 }
 
 // 3

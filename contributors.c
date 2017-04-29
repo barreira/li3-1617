@@ -7,7 +7,7 @@
  * 
  * @author Ana Paula Carvalho  - A61855
  * @author Joana Arantes       - A57810
- * @author João Pires Barreira - A73831 
+ * @author João Pires Barreira - A73831
  * @author Miguel Cunha        - A78478
  *
  * @version 2017-04-29
@@ -101,14 +101,14 @@ CONTRIBUTOR freeContributor(CONTRIBUTOR c)
  * AVL e, por isso, tem de receber a flag como parâmetro, mesmo não precisando
  * dela.
  *
- * @param info Nó original da árvore
- * @param dup  Nó (duplicado) que se tentou inserir na árvore
+ * @param info Nó original da árvore (contribuidor)
+ * @param dup  Nó (duplicado) que se tentou inserir na árvore (contribuidor)
  * @param flag É sempre NULL pois não é utilizada neste caso (módulo dos
  *             contribuidores) mas tem de obedecer à API do módulo da AVL
  *
  * @return Retorna a informação atualiza do nó original da árvore
  */
-void* duplicateC(void* info, void* dup, int* flag)
+void* duplicateContributor(void* info, void* dup, int* flag)
 {
 	((CONTRIBUTOR) info)->revisions += 1;
 	dup = freeContributor((CONTRIBUTOR) dup);
