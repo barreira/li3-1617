@@ -19,24 +19,10 @@ struct wikidata {
 	ArticleSet aset;
 };
 
-/* Estruturas (inits) */
 
-int cmpArticle(const void* a, const void* b) {
-	return strcmp(getArticleID((ARTICLE) a), getArticleID((ARTICLE) b));
-}
-
-int cmpContributor(const void* a, const void* b) {
-	return strcmp(getContributorID((CONTRIBUTOR) a),
-	              getContributorID((CONTRIBUTOR) b));
-}
-
-void deleteArticle(void* a) {
-	freeArticle((ARTICLE) a);
-}
-
-void deleteContributor(void* c) {
-	freeContributor((CONTRIBUTOR) c);
-}
+/******************************************************************************
+ *                                 INITS                                      *
+ ******************************************************************************/
 
 ArticleSet initArticleSet() {
 	ArticleSet as = malloc(sizeof(struct articleset));

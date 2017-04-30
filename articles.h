@@ -103,6 +103,33 @@ ARTICLE addFirstRevision(ARTICLE a, REVISION r);
 
 
 /*
+ * @brief Função genérica de comparação de dois nós de uma árvore de artigos
+ *
+ * É passado um apontador para esta função aquando da criação de uma AVL
+ * genérica. Esta função é utilizada pela AVL genérica para a comparação dos
+ * seus nós, por exemplo, durante a inserção de um novo nó na árvore ou em
+ * qualquer outra travessia pela árvore.
+ *
+ * @param a Informação (void* correspondente a um artigo) da AVL genérica
+ * @param b Informação (void* correspondente a um artigo) da AVL genérica
+ * 
+ */
+int cmpArticle(const void* a, const void* b);
+
+
+/*
+ * @brief Função genérica de free de um nó de uma árvore de artigos
+ *
+ * É passado um apontador para esta função aquando da criação de uma AVL
+ * genérica. Esta função é utilizada pela AVL genérica para a remoção dos seus
+ * nós.
+ *
+ * @param a Informação (void* correspondente a um artigo) a ser libertada
+ */
+void deleteArticle(void* a);
+
+
+/*
  * @brief Retorna o campo ID de um artigo
  *
  * Em vez de retornar o valor do ID por referência, devolve uma cópia, alocando
@@ -142,6 +169,16 @@ int getRevCount(ARTICLE a);
  * @return Cópia do campo title do artigo
  */
 char* getTitle(REVISION r);
+
+
+/*
+ * @brief Retorna o campo timestamp de um artigo
+ *
+ * Em vez de retornar o valor do timestamp por referência, devolve uma cópia,
+ * alocando o espaço necessário (que depois deverá ser libertado).
+ *
+ * @return Cópia do campo timestamp do artigo
+ */
 char* getTimestamp(REVISION r);
 
 
@@ -198,6 +235,7 @@ REVISION setTitle(REVISION r, char* t);
  *         campo referente ao textsize alterado.
  */
 REVISION setTextSize(REVISION r, int ts);
+
 
 /*
  * @brief Altera o valor do campo wc de uma revisão

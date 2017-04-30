@@ -71,6 +71,34 @@ void* duplicateContributor(void* info, void* dup, int *flag);
 
 
 /*
+ * @brief Função genérica de comparação de dois nós de uma árvore de
+ *        contribuidores
+ *
+ * É passado um apontador para esta função aquando da criação de uma AVL
+ * genérica. Esta função é utilizada pela AVL genérica para a comparação dos
+ * seus nós, por exemplo, durante a inserção de um novo nó na árvore ou em
+ * qualquer outra travessia pela árvore.
+ *
+ * @param a Informação (void* correspondente a um contribuidor) da AVL genérica
+ * @param b Informação (void* correspondente a um contribuidor) da AVL genérica
+ * 
+ */
+int cmpContributor(const void* a, const void* b);
+
+
+/*
+ * @brief Função genérica de free de um nó de uma árvore de contribuidores
+ *
+ * É passado um apontador para esta função aquando da criação de uma AVL
+ * genérica. Esta função é utilizada pela AVL genérica para a remoção dos seus
+ * nós.
+ *
+ * @param c Informação (void* correspondente a um contribuidor) a ser libertada
+ */
+void deleteContributor(void* c);
+
+
+/*
  * @brief Altera o valor do campo ID de um contribuidor
  *
  * É alocado espaço e efetuada uma cópia do ID recebido.

@@ -290,6 +290,7 @@ ARTICLE addFirstRevision(ARTICLE a, REVISION r)
 	return a;
 }
 
+
 /******************************************************************************
  *                            GETTERS E SETTERS                               *
  ******************************************************************************/
@@ -459,6 +460,44 @@ char* getTimestamp(REVISION r) {
 	strcpy(ret, r->timestamp);
 	return ret;	
 }
+
+
+/******************************************************************************
+ *             FUNÇÕES AUXILIARES PARA O MÓDULO DA AVL GENÉRICA               *
+ ******************************************************************************/
+
+/*
+ * @brief Função genérica de comparação de dois nós de uma árvore de artigos
+ *
+* É passado um apontador para esta função aquando da criação de uma AVL
+ * genérica. Esta função é utilizada pela AVL genérica para a comparação dos
+ * seus nós, por exemplo, durante a inserção de um novo nó na árvore ou em
+ * qualquer outra travessia pela árvore.
+ *
+ * @param a Informação (void* correspondente a um artigo) da AVL genérica
+ * @param b Informação (void* correspondente a um artigo) da AVL genérica
+ * 
+ */
+int cmpArticle(const void* a, const void* b)
+{
+	return strcmp(getArticleID((ARTICLE) a), getArticleID((ARTICLE) b));
+}
+
+
+/*
+ * @brief Função genérica de free de um nó de uma árvore de artigos
+ *
+ * É passado um apontador para esta função aquando da criação de uma AVL
+ * genérica. Esta função é utilizada pela AVL genérica para a remoção dos seus
+ * nós.
+ *
+ * @param a Informação (void* correspondente a um artigo) a ser libertada
+ */
+void deleteArticle(void* a)
+{
+	freeArticle((ARTICLE) a);
+}
+
 
 /******************************************************************************
  *                      FUNÇÕES AUXILIARES ÀS QUERIES                         *
