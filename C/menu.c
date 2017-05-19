@@ -88,7 +88,7 @@ int menu()
             s = init();
 
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             sair=1;
@@ -116,7 +116,7 @@ int menu()
             s = load(s, 3, snaps);
 
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             sair=1;
@@ -139,7 +139,7 @@ int menu()
             s = clean(s);
 
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             sair=1;
@@ -157,7 +157,7 @@ int menu()
 
         else if (strcmp(opcao, "1")==0)
         {
-        	start = clock();
+            start = clock();
             
             printf("Q1: %ld\n", all_articles(s));
 
@@ -182,7 +182,7 @@ int menu()
 
         else if (strcmp(opcao, "2")==0)
         {
-        	start = clock();
+            start = clock();
 
             printf("Q2: %ld\n", unique_articles(s));
 
@@ -207,12 +207,12 @@ int menu()
 
         else if (strcmp(opcao, "3")==0)
         {
-        	start = clock();
+            start = clock();
 
             printf("Q3: %ld\n", all_revisions(s));
             
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
             printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
@@ -233,19 +233,19 @@ int menu()
 
         else if (strcmp(opcao, "4")==0)
         {
-        	start = clock();
+            start = clock();
 
             int i;
             long* res = top_10_contributors(s);
 
             printf("Q4: Top 10 dos contribuidores com maior número de revisões:\n");
 
-        	for (i = 0; i < 10; i++) {
-        		printf("%d - %ld\n", i+1, res[i]);
-        	}
+            for (i = 0; i < 10; i++) {
+                printf("%d - %ld\n", i+1, res[i]);
+            }
 
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
             sair=1;
@@ -263,7 +263,7 @@ int menu()
 
         else if (strcmp(opcao, "5")==0)
         {
-        	start = clock();
+            start = clock();
             
             char id[100];
             printf("Insira um id de um contribuidor: ");
@@ -299,20 +299,20 @@ int menu()
 
         else if (strcmp(opcao, "6")==0)
         {
-        	start = clock();
+            start = clock();
 
-        	int i;
+            int i;
             long* res = top_20_largest_articles(s);
 
             printf("Q9: Top 20 dos artigos com maior texto:\n");
 
-        	for (i = 0; i < 20; i++) {
-        		printf("%d - %ld\n", i+1, res[i]);
-        	}
+            for (i = 0; i < 20; i++) {
+                printf("%d - %ld\n", i+1, res[i]);
+            }
 
 
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
             printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
@@ -369,7 +369,7 @@ int menu()
 
         else if (strcmp(opcao, "8")==0)
         {
-        	start = clock();
+            start = clock();
             
             int tam;
             printf("Insira um tamanho: ");
@@ -381,7 +381,7 @@ int menu()
             }
 
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
             printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
 
@@ -401,7 +401,7 @@ int menu()
 
         else if (strcmp(opcao, "9")==0)
         {
-        	start = clock();
+            start = clock();
 
             char prefix[100];
             printf("Insira um prefixo: ");
@@ -424,7 +424,7 @@ int menu()
             }
 
             end = clock();
- 			cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
             printf("\n");
             printf("Opção executada com sucesso em %f segundos!\n", cpu_time_used);
             
@@ -443,7 +443,7 @@ int menu()
 
         else if (strcmp(opcao, "10")==0)
         {
-        	start = clock();
+            start = clock();
 
             char a_id[100];
             printf("Insira um id de um artigo: \n");

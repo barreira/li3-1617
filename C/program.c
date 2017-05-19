@@ -24,9 +24,9 @@ int main()
 	
 	// Invocação do menu
 
-	//menu();
+	menu();
 
-	
+/*	
 	// Init
 
 	TAD_istruct qs;
@@ -98,6 +98,6 @@ int main()
 	// Clean
 
 	qs = clean(qs);
-
+*/
 	return 0;
 }

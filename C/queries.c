@@ -705,7 +705,8 @@ char* query7(WikiData wd, char* article_id)
  *             desta query e que tem o array referente ao top pedido
  * @param aux  É usado para receber o tamanho do top pedido
  */
-void query8_aux(void* info, void* acc, void* aux) {
+void query8_aux(void* info, void* acc, void* aux)
+{
 	int i, index, n;
 	long id, wc;
 

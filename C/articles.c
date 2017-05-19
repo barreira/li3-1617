@@ -440,7 +440,8 @@ int getRevCount(ARTICLE a)
  *
  * @return Cópia do campo title do artigo
  */
-char* getTitle(REVISION r) {
+char* getTitle(REVISION r)
+{
 	char* ret = malloc(sizeof(char) * (strlen(r->title) + 1));
 	strcpy(ret, r->title);
 	return ret;
@@ -455,7 +456,8 @@ char* getTitle(REVISION r) {
  *
  * @return Cópia do campo timestamp do artigo
  */
-char* getTimestamp(REVISION r) {
+char* getTimestamp(REVISION r)
+{
 	char* ret = malloc(sizeof(char) * (strlen(r->timestamp) + 1));
 	strcpy(ret, r->timestamp);
 	return ret;	
@@ -511,7 +513,8 @@ void deleteArticle(void* a)
  *
  * @return Cópia do título da última revisão do artigo
  */
-char* getLastRevisionTitle(ARTICLE a) {
+char* getLastRevisionTitle(ARTICLE a)
+{
 	char* ret;
 	
 	ret = malloc(sizeof(char) * (strlen(a->revisions[a->revcount-1]->title) + 1));
@@ -552,7 +555,8 @@ char* getArticleRevisionTimestamp(ARTICLE a, char* revision_id)
 /*
  * @brief Retorna o tamanho da maior revisão de um artigo
  */
-int getBiggestRevisionSize(ARTICLE a) {
+int getBiggestRevisionSize(ARTICLE a)
+{
 	int s = 0;
 
 	for (int i = 0; i < a->revcount; i++) {
@@ -568,7 +572,8 @@ int getBiggestRevisionSize(ARTICLE a) {
 /*
  * @brief Retorna o maior wordcount das revisões de um artigo
  */
-int getBiggestRevisionWC(ARTICLE a) {
+int getBiggestRevisionWC(ARTICLE a)
+{
 	int s = 0;
 
 	for (int i = 0; i < a->revcount; i++) {
