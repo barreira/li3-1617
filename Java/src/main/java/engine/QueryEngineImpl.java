@@ -16,12 +16,13 @@ public class QueryEngineImpl implements Interface {
 
     public void load(int nsnaps, ArrayList<String> snaps_paths) {
         for (String s : snaps_paths) {
-            loadFile(wd, s);
+            parseFile(wd, s);
         }
     }
 
     public void clean() {
-        wd = null; // para o garbage collector poder limpar
+        wd = null;
+        // para o garbage collector poder limpar
     }
 
     // Queries

@@ -1,29 +1,31 @@
 package engine;
 
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public class WikiData {
 
     // Variáveis de instância
 
-    private Set<Article> artigos;
-    private Set<Contributor> contribuidores;
+    private Map<String, Article> artigos;
+    private Map<String, Contributor> contribuidores;
     // private Map<Contributor> contributorMap; // para q5
     // private Map<Article> articleMap // para q7 e q10
-    //
 
     // Construtores
 
     public WikiData() {
-        artigos = new HashSet<>();
-        contribuidores = new HashSet<>();
+        artigos = new TreeMap<String, Article>();
+        contribuidores = new TreeMap<String, Contributor>();
     }
 
-    public WikiData(Set<Article> artigos, Set<Contributor> contribuidores) {
-        this.artigos = artigos;
-        this.contribuidores = contribuidores;
+    public WikiData(Map<String, Article> artigos, Map<String, Contributor> contribuidores) {
+        setArtigos(artigos);
+        setContribuidores(contribuidores);
     }
 
     public WikiData(WikiData wd) {
@@ -33,28 +35,59 @@ public class WikiData {
 
     // Getters e Setters
 
-    public Set<Article> getArtigos() {
-        return artigos.stream()
-                      .map(Article::clone)
-                      .collect(Collectors.toSet());
+    public Map<String, Article> getArtigos() {
+        return artigos.values()
+                      .stream()
+                      .collect(toMap(Article::getID, Article::clone));
     }
 
-    public Set<Contributor> getContribuidores() {
-        return contribuidores.stream()
-                             .map(Contributor::clone)
-                             .collect(Collectors.toSet());
+    public Map<String, Contributor> getContribuidores() {
+        return contribuidores.values()
+                             .stream()
+                             .collect(toMap(Contributor::getID, Contributor::clone));
     }
 
-    public void setArtigos(Set<Article> artigos) {
-        this.artigos = artigos.stream()
-                              .map(Article::clone)
-                              .collect(Collectors.toSet());;
+    public void setArtigos(Map<String, Article> artigos) {
+        this.artigos = artigos.values()
+                              .stream()
+                              .collect(toMap(Article::getID, Article::clone));
     }
 
-    public void setContribuidores(Set<Contributor> contribuidores) {
-        this.contribuidores = contribuidores.stream()
-                                            .map(Contributor::clone)
-                                            .collect(Collectors.toSet());;
+    public void setContribuidores(Map<String, Contributor> contribuidores) {
+        this.contribuidores = contribuidores.values()
+                                            .stream()
+                                            .collect(toMap(Contributor::getID, Contributor::clone));
+    }
+
+    // Outros métodos
+
+    public void insertArticle(Article a) {
+        if (artigos.containsKey(a.getID())) {
+            Artigo original = artigos.get(a.getID()); // artigo que já estava no TreeMap artigos
+
+            List<Revision> revisions = original.getRevisions();
+
+            Revision rev1 = revisions.get(revisions.size() - 1);
+            Revision rev2 = a.getRevisions().get(0); // artigo que se está a tentar inserir só tem uma revisão
+
+            if (rev1.getID().equals(rev2.getID()) == false) {
+                revisions.add(rev2.clone());
+            }
+        }
+        else {
+            artigos.put(a.getID(), a.clone());
+        }
+    }
+
+    public void insertContributor(Contributor c) {
+        if (contribuidores.containsKey(c.getID())) {
+
+            // continuar isto
+
+        }
+        else {
+            contribuidores.put(c.getID(), c.clone());
+        }
     }
 
     // Equals, toString, clone e hashCode
@@ -79,10 +112,10 @@ public class WikiData {
 
         sb.append(" { ");
 
-        for (Article a : artigos) {
+        for (Article a : artigos.values()) {
             sb.append(a.toString());
 
-            if (counter1 < artigos.size()) {
+            if (counter1 < artigos.values().size()) {
                 sb.append(", ");
             }
 
@@ -91,10 +124,10 @@ public class WikiData {
 
         sb.append(" }, { ");
 
-        for (Contributor c : contribuidores) {
+        for (Contributor c : contribuidores.values()) {
             sb.append(c.toString());
 
-            if (counter2 < contribuidores.size()) {
+            if (counter2 < contribuidores.values().size()) {
                 sb.append(", ");
             }
 

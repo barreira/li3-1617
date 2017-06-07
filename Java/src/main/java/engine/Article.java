@@ -1,7 +1,7 @@
 package engine;
 
-import java.util.Set;
-import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Article {
@@ -10,20 +10,20 @@ public class Article {
 
     private String id;
     private int occurrences;
-    private Set<Revision> revisions;
+    private List<Revision> revisions;
 
     // Construtores
 
     public Article() {
         id = "N/A";
         occurrences = 0;
-        revisions = new HashSet<>();
+        revisions = new ArrayList<>();
     }
 
-    public Article(String id, int occurrences, Set<Revision> revisions) {
-        this.id = id;
-        this.occurrences = occurrences;
-        this.revisions = revisions;
+    public Article(String id, int occurrences, List<Revision> revisions) {
+        setID(id);
+        setOccurrences(occurrences);
+        setRevisions(revisions);
     }
 
     public Article(Article a) {
@@ -42,10 +42,10 @@ public class Article {
         return occurrences;
     }
 
-    public Set<Revision> getRevisions() {
+    public List<Revision> getRevisions() {
         return revisions.stream()
                         .map(Revision::clone)
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.toList());
     }
 
     public void setID(String id) {
@@ -56,10 +56,20 @@ public class Article {
         this.occurrences = occurrences;
     }
 
-    public void setRevisions(Set<Revision> revisions) {
+    public void setRevisions(List<Revision> revisions) {
         this.revisions = revisions.stream()
                                   .map(Revision::clone)
-                                  .collect(Collectors.toSet());
+                                  .collect(Collectors.toList());
+    }
+
+    // Outros métodos
+
+    public void addRevision(Revision r) {
+        revisions.add(r.clone());
+    }
+
+    public void incrementOccurrences() {
+        occurrences += 1;
     }
 
     // Equals, toString, clone e hashCode
