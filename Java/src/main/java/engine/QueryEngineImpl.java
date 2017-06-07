@@ -2,6 +2,9 @@ package engine;
 
 import li3.Interface;
 
+import static parser.XMLParser.parseFile;
+
+import java.util.List;
 import java.util.ArrayList;
 
 public class QueryEngineImpl implements Interface {
@@ -16,7 +19,7 @@ public class QueryEngineImpl implements Interface {
 
     public void load(int nsnaps, ArrayList<String> snaps_paths) {
         for (String s : snaps_paths) {
-            XMLParser.parseFile(wd, s);
+            parseFile(wd, s);
         }
     }
 
@@ -67,16 +70,18 @@ public class QueryEngineImpl implements Interface {
     }
 
     public ArrayList<Long> top_20_largest_articles() {
+        /*
         Map<Integer, Article> mapeamento = new TreeMap<Integer, Article>(new ComparatorQuery6());
 
-        for (Article a : wd.getArtigos()) {
+        for (Article a : wd.getArtigos().values()) {
             int revSize = a.getRevisions().size();
-            int tamanho = a.getRevisions(revSize - 1).getTextSize();
+            int tamanho = a.getRevisions().get(revSize - 1).getTextSize();
 
             mapeamento.put(tamanho, a);
         }
 
-        return new ArrayList<Long>();
+        return new ArrayList<Long>();*/
+        return null;
     }
 
     public String article_title(long article_id) {

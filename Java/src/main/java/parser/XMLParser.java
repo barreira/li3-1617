@@ -1,15 +1,17 @@
-package engine;
+package parser;
+
+import engine.Article;
+import engine.Contributor;
+import engine.Revision;
+import engine.WikiData;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Iterator;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
@@ -80,7 +82,7 @@ public class XMLParser {
                         else if (startTagName.equalsIgnoreCase("id")) {
                             if (isContributor) isContributorID = true;
                             else if (isRevision) isRevisionID = true;
-                            else if (isPage) isArticleID = true;
+                            else isArticleID = true;
                         }
                         else if (startTagName.equalsIgnoreCase("revision")) {
                             isRevision = true;
@@ -112,10 +114,12 @@ public class XMLParser {
                         if (isRevisionID) {
                             revision.setID(characters.getData());
                             isRevisionID = false;
+                            isRevision = false;
                         }
                         if (isContributorID) {
                             contributor.setID(characters.getData());
                             isContributorID = false;
+                            isContributor = false;
                         }
                         if (isTimestamp) {
                             revision.setTimestamp(characters.getData());
@@ -137,6 +141,8 @@ public class XMLParser {
 
                         if (endTagName.equalsIgnoreCase("page")) {
                             article.addRevision(revision);
+                            //System.out.println("ARTICLE (id): " + article.getID());
+                            //System.out.println("ARTICLE (title): " + article.getRevisions().get(0).getTitle());
                             wd.insertArticle(article);
                             wd.insertContributor(contributor);
                             article = null;

@@ -1,9 +1,9 @@
 package engine;
 
+
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -13,47 +13,83 @@ public class WikiData {
 
     private Map<String, Article> artigos;
     private Map<String, Contributor> contribuidores;
-    // private Map<Contributor> contributorMap; // para q5
-    // private Map<Article> articleMap // para q7 e q10
+
+    /*private Contributor[] query4; // top 10 de contribuidores com mais revisões
+    private Article[] query6;     // top 20 de artigos com maior tamanho
+
+    public static final int q4_size = 10;
+    public static final int q5_size = 20;*/
 
     // Construtores
 
-    public WikiData() {
-        artigos = new TreeMap<String, Article>(new ComparatorArticle());
-        contribuidores = new TreeMap<String, Contributor>(new ComparatorContributor());
+    public WikiData()
+    {
+        artigos = new HashMap<>();
+        contribuidores = new HashMap<>();
+        //query4 = new Contributor[q4_size];
+        //query6 = new Article[q5_size];
     }
 
-    public WikiData(Map<String, Article> artigos, Map<String, Contributor> contribuidores) {
-        setArtigos(artigos);
-        setContribuidores(contribuidores);
+    public WikiData(Map<String, Article> artigos, Map<String, Contributor> contribuidores) //, Contributor[] query4, Article[] query6
+    {
+        this.setArtigos(artigos);
+        this.setContribuidores(contribuidores);
+        //this.setQuery4(query4);
+        //this.setQuery6(query6);
     }
 
-    public WikiData(WikiData wd) {
+    public WikiData(WikiData wd)
+    {
         artigos = wd.getArtigos();
         contribuidores = wd.getContribuidores();
+        //query4 = wd.getQuery4();
+        //query6 = wd.getQuery6();
     }
 
     // Getters e Setters
 
-    public Map<String, Article> getArtigos() {
+    public Map<String, Article> getArtigos()
+    {
         return artigos.values()
                       .stream()
                       .collect(toMap(Article::getID, Article::clone));
     }
 
-    public Map<String, Contributor> getContribuidores() {
+    public Map<String, Contributor> getContribuidores()
+    {
         return contribuidores.values()
                              .stream()
                              .collect(toMap(Contributor::getID, Contributor::clone));
     }
+/*
+    public Contributor[] getQuery4()
+    {
+        Contributor[] res = new Contributor[q4_size];
 
-    public void setArtigos(Map<String, Article> artigos) {
+        int i = 0;
+        for (Contributor c : query4) {
+            res[i] = c.clone();
+            i++;
+        }
+
+        return res;
+    }
+
+    public Article[] getQuery6()
+    {
+
+    }
+    */
+
+    public void setArtigos(Map<String, Article> artigos)
+    {
         this.artigos = artigos.values()
                               .stream()
                               .collect(toMap(Article::getID, Article::clone));
     }
 
-    public void setContribuidores(Map<String, Contributor> contribuidores) {
+    public void setContribuidores(Map<String, Contributor> contribuidores)
+    {
         this.contribuidores = contribuidores.values()
                                             .stream()
                                             .collect(toMap(Contributor::getID, Contributor::clone));
@@ -61,9 +97,10 @@ public class WikiData {
 
     // Outros métodos
 
-    public void insertArticle(Article a) {
+    public void insertArticle(Article a)
+    {
         if (artigos.containsKey(a.getID())) {
-            Article original = artigos.get(a.getID()); // artigo que já estava no TreeMap artigos
+            Article original = artigos.get(a.getID()); // artigo que já estava no HashMap artigos
 
             List<Revision> revisions = original.getRevisions();
 
@@ -71,7 +108,7 @@ public class WikiData {
             Revision rev2 = a.getRevisions().get(0); // artigo que se está a tentar inserir só tem uma revisão
 
             if (rev1.getID().equals(rev2.getID()) == false) {
-                revisions.add(rev2.clone());
+                original.addRevision(rev2.clone());
             }
 
             original.incrementOccurrences();
@@ -81,7 +118,8 @@ public class WikiData {
         }
     }
 
-    public void insertContributor(Contributor c) {
+    public void insertContributor(Contributor c)
+    {
         if (contribuidores.containsKey(c.getID())) {
             contribuidores.get(c.getID()).incrementRevisions();
         }
@@ -89,10 +127,21 @@ public class WikiData {
             contribuidores.put(c.getID(), c.clone());
         }
     }
+/*
+    public void insertContributor_q4(Contributor c)
+    {
+
+    }
+
+    public void insertArticle_q6(Article a)
+    {
+
+    }*/
 
     // Equals, toString, clone e hashCode
 
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (o == this) {
             return true;
         }
@@ -106,7 +155,8 @@ public class WikiData {
         return artigos.equals(wd.getArtigos()) && contribuidores.equals(wd.getContribuidores());
     }
 
-    public String toString() {
+    public String toString()
+    {
         int counter1 = 1, counter2 = 1;
         StringBuilder sb = new StringBuilder("WikiData: { ");
 
@@ -139,11 +189,13 @@ public class WikiData {
         return sb.toString();
     }
 
-    public WikiData clone() {
+    public WikiData clone()
+    {
         return new WikiData(this);
     }
 
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = super.hashCode();
         result = 31 * result + artigos.hashCode();
         result = 31 * result + contribuidores.hashCode();
