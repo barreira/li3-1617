@@ -13,7 +13,7 @@ public class Contributor {
     public Contributor() {
         id = "N/A";
         username = "N/A";
-        revisions = 0;
+        revisions = 1;
     }
 
     public Contributor(String id, String username, int revisions) {
@@ -52,6 +52,12 @@ public class Contributor {
 
     public void setRevisions(int revisions) {
         this.revisions = revisions;
+    }
+
+    // Outros métodos
+
+    public void incrementRevisions() {
+        revisions += 1;
     }
 
     // Equals, toString, clone e hashCode

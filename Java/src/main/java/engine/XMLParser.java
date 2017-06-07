@@ -17,8 +17,30 @@ import javax.xml.stream.events.XMLEvent;
 
 public class XMLParser {
 
-    public void parseFile(WikiData wd, String fileName)
-    {
+    public static int countWords(String s) {
+        int wordCount = 0;
+
+        boolean word = false;
+        int endOfLine = s.length() - 1;
+
+        for (int i = 0; i < s.length(); i++) {
+
+            if (Character.isLetter(s.charAt(i)) && i != endOfLine) {
+                word = true;
+            }
+            else if (!Character.isLetter(s.charAt(i)) && word) {
+                wordCount++;
+                word = false;
+            }
+            else if (Character.isLetter(s.charAt(i)) && i == endOfLine) {
+                wordCount++;
+            }
+        }
+
+        return wordCount;
+    }
+
+    public static void parseFile(WikiData wd, String fileName) {
         Article article = null;
         Revision revision = null;
         Contributor contributor = null;
@@ -104,8 +126,8 @@ public class XMLParser {
                             isUsername = false;
                         }
                         if (isText) {
-                            // contar numero de palavras + revision.setWC()
-                            // calcular tamanho do texto + revision.setTextSize()
+                            revision.setWordCount(countWords(characters.getData()));
+                            revision.setTextSize(characters.getData().length());
                             isText = false;
                         }
                         break;

@@ -16,7 +16,7 @@ public class Article {
 
     public Article() {
         id = "N/A";
-        occurrences = 0;
+        occurrences = 1;
         revisions = new ArrayList<>();
     }
 

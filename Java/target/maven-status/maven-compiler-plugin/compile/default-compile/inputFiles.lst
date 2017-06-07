@@ -1,8 +1,10 @@
 /home/jpb/LI3/grupo52/java_project/src/main/java/li3/Interface.java
 /home/jpb/LI3/grupo52/java_project/src/main/java/engine/Contributor.java
+/home/jpb/LI3/grupo52/java_project/src/main/java/engine/ComparatorArticle.java
 /home/jpb/LI3/grupo52/java_project/src/main/java/common/MyLog.java
 /home/jpb/LI3/grupo52/java_project/src/main/java/engine/Article.java
 /home/jpb/LI3/grupo52/java_project/src/main/java/engine/WikiData.java
+/home/jpb/LI3/grupo52/java_project/src/main/java/engine/ComparatorContributor.java
 /home/jpb/LI3/grupo52/java_project/src/main/java/engine/QueryEngineImpl.java
 /home/jpb/LI3/grupo52/java_project/src/main/java/engine/XMLParser.java
 /home/jpb/LI3/grupo52/java_project/src/main/java/li3/Main.java

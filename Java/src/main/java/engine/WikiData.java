@@ -19,8 +19,8 @@ public class WikiData {
     // Construtores
 
     public WikiData() {
-        artigos = new TreeMap<String, Article>();
-        contribuidores = new TreeMap<String, Contributor>();
+        artigos = new TreeMap<String, Article>(new ComparatorArticle());
+        contribuidores = new TreeMap<String, Contributor>(new ComparatorContributor());
     }
 
     public WikiData(Map<String, Article> artigos, Map<String, Contributor> contribuidores) {
@@ -63,7 +63,7 @@ public class WikiData {
 
     public void insertArticle(Article a) {
         if (artigos.containsKey(a.getID())) {
-            Artigo original = artigos.get(a.getID()); // artigo que já estava no TreeMap artigos
+            Article original = artigos.get(a.getID()); // artigo que já estava no TreeMap artigos
 
             List<Revision> revisions = original.getRevisions();
 
@@ -73,6 +73,8 @@ public class WikiData {
             if (rev1.getID().equals(rev2.getID()) == false) {
                 revisions.add(rev2.clone());
             }
+
+            original.incrementOccurrences();
         }
         else {
             artigos.put(a.getID(), a.clone());
@@ -81,9 +83,7 @@ public class WikiData {
 
     public void insertContributor(Contributor c) {
         if (contribuidores.containsKey(c.getID())) {
-
-            // continuar isto
-
+            contribuidores.get(c.getID()).incrementRevisions();
         }
         else {
             contribuidores.put(c.getID(), c.clone());
