@@ -1,1 +1,10 @@
 snapshot*
+C/*.o
+C/program
+C/snapshot*
+C/.vscode/
+Java/target
+Java/.idea
+Java/*.iml
+Java/results.txt
+Java/times.txt
