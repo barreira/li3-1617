@@ -5,6 +5,6 @@ C/snapshot*
 C/.vscode/
 Java/target
 Java/.idea
-Java/*.iml
+Java/project2.iml
 Java/results.txt
 Java/times.txt
