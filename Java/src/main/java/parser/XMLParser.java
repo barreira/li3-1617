@@ -57,6 +57,7 @@ public class XMLParser {
         boolean isContributorID = false;
         boolean isUsername = false;
         boolean isText = false;
+        int debug = 0;
 
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -108,18 +109,17 @@ public class XMLParser {
                             isTitle = false;
                         }
                         if (isArticleID) {
+                            debug++;
                             article.setID(characters.getData());
                             isArticleID = false;
                         }
                         if (isRevisionID) {
                             revision.setID(characters.getData());
                             isRevisionID = false;
-                            isRevision = false;
                         }
                         if (isContributorID) {
                             contributor.setID(characters.getData());
                             isContributorID = false;
-                            isContributor = false;
                         }
                         if (isTimestamp) {
                             revision.setTimestamp(characters.getData());
@@ -139,12 +139,30 @@ public class XMLParser {
                         EndElement endElement = event.asEndElement();
                         String endTagName = endElement.getName().getLocalPart();
 
+                        if (endTagName.equalsIgnoreCase("contributor")) {
+                            isContributor = false;
+                        }
+
+                        if (endTagName.equalsIgnoreCase("revision")) {
+                            isRevision = false;
+                        }
+
                         if (endTagName.equalsIgnoreCase("page")) {
+                            //debug++;
+                            /*if (debug > 19800) {
+                                System.out.println(debug + " - " + article.getID() + " - " + fileName);
+                            }*/
                             article.addRevision(revision);
                             //System.out.println("ARTICLE (id): " + article.getID());
                             //System.out.println("ARTICLE (title): " + article.getRevisions().get(0).getTitle());
                             wd.insertArticle(article);
                             wd.insertContributor(contributor);
+
+                            /*int size = wd.getArtigos().size();
+                            if (size > 18400) {
+                                System.out.println(size + " - " + fileName);
+                            }*/
+
                             article = null;
                             revision = null;
                             contributor = null;
@@ -152,6 +170,9 @@ public class XMLParser {
                         break;
                 }
             }
+            System.out.println(debug + " - " + fileName);
+            /*int size = wd.getArtigos().size();
+            System.out.println(size + " - " + fileName);*/
         }
         catch (FileNotFoundException | XMLStreamException e) {
             e.printStackTrace();
