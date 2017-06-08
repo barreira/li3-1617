@@ -72,6 +72,21 @@ public class Article {
         occurrences += 1;
     }
 
+    public int compare(Article a) {
+        int last1 = this.getRevisions().size() - 1;
+        int last2 = a.getRevisions().size() - 1;
+
+        if (this.getRevisions().get(last1).getTextSize() > a.getRevisions().get(last2).getTextSize()) {
+            return 1;
+        }
+        else if (this.getRevisions().get(last1).getTextSize() < a.getRevisions().get(last2).getTextSize()) {
+            return -1;
+        }
+        else {
+            return Integer.valueOf(this.getID()).compareTo(Integer.valueOf(a.getID()));
+        }
+    }
+
     // Equals, toString, clone e hashCode
 
     public boolean equals(Object o) {

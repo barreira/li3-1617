@@ -4,8 +4,10 @@ import li3.Interface;
 
 import static parser.XMLParser.parseFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class QueryEngineImpl implements Interface {
 
@@ -54,8 +56,25 @@ public class QueryEngineImpl implements Interface {
     }
 
     public ArrayList<Long> top_10_contributors() {
+        List<Contributor> top = wd.getQ4();
 
-        return new ArrayList<Long>();
+        //Collections.sort(top, new ComparatorContributor());
+
+        ArrayList<Long> res = new ArrayList<>();
+
+        int i = 0;
+        for (Contributor c : top) {
+            //System.out.println(c.getRevisions());
+            res.add(Long.valueOf(c.getID()));
+            System.out.println(i + " - " + c.getID() + " - " + c.getRevisions());
+            i++;
+        }
+
+        return res;
+/*
+        return top.stream().map(Contributor::getID)
+                           .map(Long::valueOf)
+                           .collect(Collectors.toCollection(ArrayList::new));*/
     }
 
     public String contributor_name(long contributor_id) {
@@ -81,7 +100,7 @@ public class QueryEngineImpl implements Interface {
         }
 
         return new ArrayList<Long>();*/
-        return null;
+        return new ArrayList<Long>();
     }
 
     public String article_title(long article_id) {

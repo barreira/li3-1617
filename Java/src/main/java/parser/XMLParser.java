@@ -155,7 +155,15 @@ public class XMLParser {
                             article.addRevision(revision);
                             //System.out.println("ARTICLE (id): " + article.getID());
                             //System.out.println("ARTICLE (title): " + article.getRevisions().get(0).getTitle());
+
                             wd.insertArticle(article);
+                            //wd.insertArticleQ6(article);
+
+                            /*
+                            if (fileName.compareTo("../snapshot_fev17") == 0) {
+                                System.out.println(contributor.getRevisions() + " - " + fileName);
+                            }*/
+
                             wd.insertContributor(contributor);
 
                             /*int size = wd.getArtigos().size();
@@ -170,8 +178,10 @@ public class XMLParser {
                         break;
                 }
             }
-            System.out.println(debug + " - " + fileName);
-            /*int size = wd.getArtigos().size();
+            //System.out.println(wd.getContribuidores().get("7611264").getRevisions() + " - " + fileName);
+            System.out.println(wd.getContribuidores().get("14508071").getRevisions() + " - " + fileName);
+            /*System.out.println(debug + " - " + fileName);
+            int size = wd.getArtigos().size();
             System.out.println(size + " - " + fileName);*/
         }
         catch (FileNotFoundException | XMLStreamException e) {

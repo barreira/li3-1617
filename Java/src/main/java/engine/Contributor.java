@@ -4,9 +4,9 @@ public class Contributor {
 
     // Variáveis de instância
 
-    private String id; //
+    private String id;
     private String username;
-    private int revisions; //
+    private int revisions;
 
     // Construtores
 
@@ -58,6 +58,18 @@ public class Contributor {
 
     public void incrementRevisions() {
         revisions += 1;
+    }
+
+    public int compare(Contributor c) {
+        if (this.getRevisions() > c.getRevisions()) {
+            return 1;
+        }
+        else if (this.getRevisions() < c.getRevisions()) {
+            return -1;
+        }
+        else {
+            return Integer.valueOf(c.getID()).compareTo(Integer.valueOf(this.getID()));
+        }
     }
 
     // Equals, toString, clone e hashCode

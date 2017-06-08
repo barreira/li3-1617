@@ -1,11 +1,13 @@
 package engine;
 
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
+//import static java.util.stream.Collectors.toMap;
 
 public class WikiData {
 
@@ -14,11 +16,11 @@ public class WikiData {
     private Map<String, Article> artigos;
     private Map<String, Contributor> contribuidores;
 
-    /*private Contributor[] query4; // top 10 de contribuidores com mais revisões
-    private Article[] query6;     // top 20 de artigos com maior tamanho
+    private List<Contributor> q4; // top 10 de contribuidores com mais revisões
+    private List<Article> q6;     // top 20 de artigos com maior tamanho
 
     public static final int q4_size = 10;
-    public static final int q5_size = 20;*/
+    public static final int q6_size = 20;
 
     // Construtores
 
@@ -26,24 +28,25 @@ public class WikiData {
     {
         artigos = new HashMap<>();
         contribuidores = new HashMap<>();
-        //query4 = new Contributor[q4_size];
-        //query6 = new Article[q5_size];
+        q4 = new ArrayList<Contributor>(q4_size);
+        q6 = new ArrayList<Article>(q6_size);
     }
 
-    public WikiData(Map<String, Article> artigos, Map<String, Contributor> contribuidores) //, Contributor[] query4, Article[] query6
+    public WikiData(Map<String, Article> artigos, Map<String, Contributor> contribuidores, List<Contributor> q4,
+                    List<Article> q6)
     {
         this.setArtigos(artigos);
         this.setContribuidores(contribuidores);
-        //this.setQuery4(query4);
-        //this.setQuery6(query6);
+        this.setQ4(q4);
+        this.setQ6(q6);
     }
 
     public WikiData(WikiData wd)
     {
         artigos = wd.getArtigos();
         contribuidores = wd.getContribuidores();
-        //query4 = wd.getQuery4();
-        //query6 = wd.getQuery6();
+        q4 = wd.getQ4();
+        q6 = wd.getQ6();
     }
 
     // Getters e Setters
@@ -52,47 +55,57 @@ public class WikiData {
     {
         return artigos.values()
                       .stream()
-                      .collect(toMap(Article::getID, Article::clone));
+                      .collect(Collectors.toMap(Article::getID, Article::clone));
     }
 
     public Map<String, Contributor> getContribuidores()
     {
         return contribuidores.values()
                              .stream()
-                             .collect(toMap(Contributor::getID, Contributor::clone));
+                             .collect(Collectors.toMap(Contributor::getID, Contributor::clone));
     }
-/*
-    public Contributor[] getQuery4()
+
+    public List<Contributor> getQ4()
     {
-        Contributor[] res = new Contributor[q4_size];
-
-        int i = 0;
-        for (Contributor c : query4) {
-            res[i] = c.clone();
-            i++;
-        }
-
-        return res;
+        return q4.stream()
+                 .map(Contributor::clone)
+                 .collect(Collectors.toList());
     }
 
-    public Article[] getQuery6()
+    public List<Article> getQ6()
     {
-
+        return q6.stream()
+                 .map(Article::clone)
+                 .collect(Collectors.toList());
     }
-    */
+
 
     public void setArtigos(Map<String, Article> artigos)
     {
         this.artigos = artigos.values()
                               .stream()
-                              .collect(toMap(Article::getID, Article::clone));
+                              .collect(Collectors.toMap(Article::getID, Article::clone));
     }
 
     public void setContribuidores(Map<String, Contributor> contribuidores)
     {
         this.contribuidores = contribuidores.values()
                                             .stream()
-                                            .collect(toMap(Contributor::getID, Contributor::clone));
+                                            .collect(Collectors.toMap(Contributor::getID, Contributor::clone));
+    }
+
+    public void setQ4(List<Contributor> q4)
+    {
+        this.q4 = q4.stream()
+                    .map(Contributor::clone)
+                    .collect(Collectors.toList());
+    }
+
+    public void setQ6(List<Article> q6)
+    {
+        this.q6 = q6.stream()
+                    .map(Article::clone)
+                    .collect(Collectors.toList());
     }
 
     // Outros métodos
@@ -120,23 +133,93 @@ public class WikiData {
 
     public void insertContributor(Contributor c)
     {
-        if (contribuidores.containsKey(c.getID())) {
+        if (contribuidores.containsKey(c.getID())) { // podemos melhorar isto
             contribuidores.get(c.getID()).incrementRevisions();
+            if (c.getID().equals("2")) {
+                //System.out.println("OLA" + contribuidores.get("2").getRevisions());
+            }
         }
         else {
             contribuidores.put(c.getID(), c.clone());
         }
+
+        if (c.getID().compareTo("N/A") != 0) {
+            insertContributorQ4(contribuidores.get(c.getID()).clone());
+        }
     }
-/*
-    public void insertContributor_q4(Contributor c)
-    {
 
+    private int getLeastIndexQ4(List<Contributor> l) {
+        Contributor menor = l.get(0);
+        int index = 0;
+
+        for (int i = 1; i < l.size(); i++) {
+            if (l.get(i).compare(menor) == -1) {
+                menor = l.get(i);
+                index = i;
+            }
+        }
+
+        return index;
     }
 
-    public void insertArticle_q6(Article a)
-    {
+    private int getLeastIndexQ6(List<Article> l) {
+        Article menor = l.get(0);
+        int index = 0;
 
-    }*/
+        for (int i = 1; i < l.size(); i++) {
+            if (l.get(i).compare(menor) == -1) {
+                menor = l.get(i);
+                index = i;
+            }
+        }
+
+        return index;
+    }
+
+    public void insertContributorQ4(Contributor c)
+    {
+        //System.out.println("Entrei");
+        if (q4.stream().map(Contributor::getID).anyMatch(id -> id.equals(c.getID()))) {
+            //System.out.println("Já la tem");
+
+            int index = 0;
+
+            for (int i = 0; i < q4.size(); i++) {
+                if (q4.get(i).getID().equals(c.getID())) {
+                    index = i;
+                }
+            }
+
+            // int index = q4.indexOf(c);
+            q4.set(index, c.clone());
+        }
+        else {
+            if (q4.size() < q4_size) {
+                q4.add(c.clone());
+            }
+            else {
+                int index = getLeastIndexQ4(q4);
+
+                if (q4.get(index).compare(c) == -1) {
+                    q4.set(index, c.clone());
+                }
+            }
+        }
+    }
+
+    public void insertArticleQ6(Article a)
+    {
+        if (q6.size() < q6_size) {
+            q6.add(a.clone());
+        }
+        else {
+            int index = getLeastIndexQ6(q6);
+
+            if (q6.get(index).compare(a) == -1) {
+                q6.set(index, a.clone());
+            }
+        }
+    }
 
     // Equals, toString, clone e hashCode
 
