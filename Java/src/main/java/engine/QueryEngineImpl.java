@@ -58,23 +58,11 @@ public class QueryEngineImpl implements Interface {
     public ArrayList<Long> top_10_contributors() {
         List<Contributor> top = wd.getQ4();
 
-        //Collections.sort(top, new ComparatorContributor());
+        Collections.sort(top, new ComparatorContributor());
 
-        ArrayList<Long> res = new ArrayList<>();
-
-        int i = 0;
-        for (Contributor c : top) {
-            //System.out.println(c.getRevisions());
-            res.add(Long.valueOf(c.getID()));
-            System.out.println(i + " - " + c.getID() + " - " + c.getRevisions());
-            i++;
-        }
-
-        return res;
-/*
         return top.stream().map(Contributor::getID)
                            .map(Long::valueOf)
-                           .collect(Collectors.toCollection(ArrayList::new));*/
+                           .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String contributor_name(long contributor_id) {
@@ -89,18 +77,18 @@ public class QueryEngineImpl implements Interface {
     }
 
     public ArrayList<Long> top_20_largest_articles() {
-        /*
-        Map<Integer, Article> mapeamento = new TreeMap<Integer, Article>(new ComparatorQuery6());
+        List<Article> top = wd.getQ6();
 
-        for (Article a : wd.getArtigos().values()) {
-            int revSize = a.getRevisions().size();
-            int tamanho = a.getRevisions().get(revSize - 1).getTextSize();
+        Collections.sort(top, new ComparatorArticle());
 
-            mapeamento.put(tamanho, a);
-        }
+        /*for (int i = 0, j = 1; i < 20; i++, j++) {
+            int last = top.get(i).getRevisions().size() - 1;
+            System.out.println(j + " - " + top.get(i).getRevisions().get(last).getTextSize());
+        }*/
 
-        return new ArrayList<Long>();*/
-        return new ArrayList<Long>();
+        return top.stream().map(Article::getID)
+                           .map(Long::valueOf)
+                           .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String article_title(long article_id) {

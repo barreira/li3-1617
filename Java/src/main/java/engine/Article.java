@@ -72,18 +72,27 @@ public class Article {
         occurrences += 1;
     }
 
-    public int compare(Article a) {
-        int last1 = this.getRevisions().size() - 1;
-        int last2 = a.getRevisions().size() - 1;
+    public Revision getBiggestRevision() {
+        Revision maior = getRevisions().get(0);
 
-        if (this.getRevisions().get(last1).getTextSize() > a.getRevisions().get(last2).getTextSize()) {
+        for (Revision r : getRevisions()) {
+            if (r.compare(maior) == 1) {
+                maior = r.clone();
+            }
+        }
+
+        return maior;
+    }
+
+    public int compare(Article a) {
+        if (this.getBiggestRevision().getTextSize() > a.getBiggestRevision().getTextSize()) {
             return 1;
         }
-        else if (this.getRevisions().get(last1).getTextSize() < a.getRevisions().get(last2).getTextSize()) {
+        else if (this.getBiggestRevision().getTextSize() < a.getBiggestRevision().getTextSize()) {
             return -1;
         }
         else {
-            return Integer.valueOf(this.getID()).compareTo(Integer.valueOf(a.getID()));
+            return Integer.valueOf(a.getID()).compareTo(Integer.valueOf(this.getID()));
         }
     }
 

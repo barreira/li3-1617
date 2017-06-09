@@ -86,7 +86,7 @@ public class Main {
 
         /*
            Query 6
-        *//*
+        */
         before = System.currentTimeMillis();
         ArrayList<Long> top_20_largest_articles = qe.top_20_largest_articles();
         after = System.currentTimeMillis();
@@ -95,7 +95,7 @@ public class Main {
         for(Long l : top_20_largest_articles) {
             top_20_larticles = top_20_larticles + l + " ";
         }
-        log.writeLog("top_20_largest_articles() -> " + top_20_larticles);*/
+        log.writeLog("top_20_largest_articles() -> " + top_20_larticles);
 
         /*
            Query 7

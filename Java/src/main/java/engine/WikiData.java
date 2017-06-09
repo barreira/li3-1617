@@ -110,7 +110,7 @@ public class WikiData {
 
     // Outros métodos
 
-    public void insertArticle(Article a)
+    public int insertArticle(Article a)
     {
         if (artigos.containsKey(a.getID())) {
             Article original = artigos.get(a.getID()); // artigo que já estava no HashMap artigos
@@ -123,21 +123,25 @@ public class WikiData {
             if (rev1.getID().equals(rev2.getID()) == false) {
                 original.addRevision(rev2.clone());
             }
+            else {
+                return 1; // não foi inserido nada (i.e. não se trata de uma nova contribuição)
+            }
 
             original.incrementOccurrences();
         }
         else {
             artigos.put(a.getID(), a.clone());
         }
+
+        insertArticleQ6(a);
+
+        return 0;
     }
 
     public void insertContributor(Contributor c)
     {
         if (contribuidores.containsKey(c.getID())) { // podemos melhorar isto
             contribuidores.get(c.getID()).incrementRevisions();
-            if (c.getID().equals("2")) {
-                //System.out.println("OLA" + contribuidores.get("2").getRevisions());
-            }
         }
         else {
             contribuidores.put(c.getID(), c.clone());
@@ -178,10 +182,7 @@ public class WikiData {
 
     public void insertContributorQ4(Contributor c)
     {
-        //System.out.println("Entrei");
         if (q4.stream().map(Contributor::getID).anyMatch(id -> id.equals(c.getID()))) {
-            //System.out.println("Já la tem");
-
             int index = 0;
 
             for (int i = 0; i < q4.size(); i++) {
@@ -190,7 +191,6 @@ public class WikiData {
                 }
             }
 
-            // int index = q4.indexOf(c);
             q4.set(index, c.clone());
         }
         else {
@@ -209,14 +209,27 @@ public class WikiData {
 
     public void insertArticleQ6(Article a)
     {
-        if (q6.size() < q6_size) {
-            q6.add(a.clone());
+        if (q6.stream().map(Article::getID).anyMatch(id -> id.equals(a.getID()))) {
+            int index = 0;
+
+            for (int i = 0; i < q6.size(); i++) {
+                if (q6.get(i).getID().equals(a.getID())) {
+                    index = i;
+                }
+            }
+
+            q6.set(index, a.clone());
         }
         else {
-            int index = getLeastIndexQ6(q6);
+            if (q6.size() < q6_size) {
+                q6.add(a.clone());
+            }
+            else {
+                int index = getLeastIndexQ6(q6);
 
-            if (q6.get(index).compare(a) == -1) {
-                q6.set(index, a.clone());
+                if (q6.get(index).compare(a) == -1) {
+                    q6.set(index, a.clone());
+                }
             }
         }
     }
