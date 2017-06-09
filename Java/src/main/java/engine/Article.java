@@ -1,5 +1,6 @@
 package engine;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -72,28 +73,52 @@ public class Article {
         occurrences += 1;
     }
 
-    public Revision getBiggestRevision() {
-        Revision maior = getRevisions().get(0);
+    public int getMaxTextSize() {
+        int maxTextSize = 0;
 
-        for (Revision r : getRevisions()) {
-            if (r.compare(maior) == 1) {
-                maior = r.clone();
-            }
+        for (Revision rev : this.revisions) {
+            if (rev.getTextSize() > maxTextSize)
+                maxTextSize = rev.getTextSize();
         }
 
-        return maior;
+        return maxTextSize;
     }
 
-    public int compare(Article a) {
-        if (this.getBiggestRevision().getTextSize() > a.getBiggestRevision().getTextSize()) {
-            return 1;
+    public int getMaxWordCount() {
+        int maxWordCount = 0;
+
+        for (Revision rev : this.revisions) {
+            if (rev.getWordCount() > maxWordCount)
+                maxWordCount = rev.getWordCount();
         }
-        else if (this.getBiggestRevision().getTextSize() < a.getBiggestRevision().getTextSize()) {
-            return -1;
+
+        return maxWordCount;
+    }
+
+    public String getLatestTitle() {
+        String latestTitle = "";
+        long id = 0;
+
+        for (Revision rev : this.revisions) {
+            if (Long.parseLong(rev.getID()) > id)   // se o id for maior, é mais recente
+                latestTitle = rev.getTitle();
         }
-        else {
-            return Integer.valueOf(a.getID()).compareTo(Integer.valueOf(this.getID()));
+
+        return latestTitle;
+    }
+
+    public boolean containsRevision(Revision revision) {
+        Iterator<Revision> it = revisions.iterator();
+        boolean found = false;
+        String revID = revision.getID();
+
+        while(!found && it.hasNext()){
+            Revision rev = it.next();
+            if (rev.getID().equals(revID))
+                found = true;
         }
+
+        return found;
     }
 
     // Equals, toString, clone e hashCode

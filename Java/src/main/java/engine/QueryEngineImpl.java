@@ -4,7 +4,6 @@ import li3.Interface;
 
 import static parser.XMLParser.parseFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -56,13 +55,12 @@ public class QueryEngineImpl implements Interface {
     }
 
     public ArrayList<Long> top_10_contributors() {
-        List<Contributor> top = wd.getQ4();
-
-        Collections.sort(top, new ComparatorContributor());
-
-        return top.stream().map(Contributor::getID)
-                           .map(Long::valueOf)
-                           .collect(Collectors.toCollection(ArrayList::new));
+        return wd.getContribuidores().values()
+                .stream()
+                .sorted(new ComparatorContributor().reversed())
+                .limit(10)
+                .map(cont -> Long.parseLong(cont.getID()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String contributor_name(long contributor_id) {
@@ -77,17 +75,26 @@ public class QueryEngineImpl implements Interface {
     }
 
     public ArrayList<Long> top_20_largest_articles() {
-        List<Article> top = wd.getQ6();
 
-        Collections.sort(top, new ComparatorArticle());
+        return wd.getArtigos().values()
+                .stream()
+                .sorted(new ComparatorLargestArticle().reversed())  // ordena do maior para o menor
+                .limit(20)
+                .map(art -> Long.parseLong(art.getID()))    // converte o id para Long
+                .collect(Collectors.toCollection(ArrayList::new));
 
-        for (int i = 0, j = 1; i < 20; i++, j++) {
-            System.out.println(j + " - " + top.get(i).getID() + " - " + top.get(i).getBiggestRevision().getTextSize());
+        /*
+        Map<Integer, Article> mapeamento = new TreeMap<Integer, Article>(new ComparatorQuery6());
+
+        for (Article a : wd.getArtigos().values()) {
+            int revSize = a.getRevisions().size();
+            int tamanho = a.getRevisions().get(revSize - 1).getTextSize();
+
+            mapeamento.put(tamanho, a);
         }
 
-        return top.stream().map(Article::getID)
-                           .map(Long::valueOf)
-                           .collect(Collectors.toCollection(ArrayList::new));
+        return new ArrayList<Long>();*/
+        //return null;
     }
 
     public String article_title(long article_id) {
@@ -105,12 +112,22 @@ public class QueryEngineImpl implements Interface {
 
     public ArrayList<Long> top_N_articles_with_more_words(int n) {
 
-        return new ArrayList<Long>();
+        return wd.getArtigos().values()
+                .stream()
+                .sorted(new ComparatorMoreWordsArticle().reversed())
+                .limit(n)
+                .map(art -> Long.parseLong(art.getID()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<String> titles_with_prefix(String prefix) {
 
-        return new ArrayList<String>();
+        return wd.getArtigos().values()
+                .stream()
+                .map(Article::getLatestTitle)
+                .filter(title -> title.startsWith(prefix))
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String article_timestamp(long article_id, long revision_id) {

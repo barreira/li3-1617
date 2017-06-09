@@ -19,7 +19,7 @@ import javax.xml.stream.events.XMLEvent;
 
 public class XMLParser {
 
-    public static int countWords(String s) {
+    /*public static int countWords(String s) {
         int wordCount = 0;
 
         boolean word = false;
@@ -40,6 +40,27 @@ public class XMLParser {
         }
 
         return wordCount;
+    }*/
+
+    public static int countWords(String s) {
+        int wordCount = 0;
+
+        boolean beginWord = true;
+
+        char[] strChars = s.toCharArray();
+
+        for (char c : strChars){
+            if (c > 32){    // é uma letra
+                if (beginWord){
+                    wordCount++;
+                    beginWord = false;
+                }
+            }
+            else
+                beginWord = true;
+        }
+
+        return wordCount;
     }
 
     public static void parseFile(WikiData wd, String fileName) {
@@ -56,8 +77,8 @@ public class XMLParser {
         boolean isContributor = false;
         boolean isContributorID = false;
         boolean isUsername = false;
-        boolean isText = false;
-        int tamanho = 0;
+        boolean repeatedRevision;
+        int debug = 0;
 
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -98,8 +119,9 @@ public class XMLParser {
                             isUsername = true;
                         }
                         else if (startTagName.equalsIgnoreCase("text")) {
-                            tamanho = 0;
-                            isText = true;
+                            String text = eventReader.getElementText();
+                            revision.setWordCount(countWords(text));
+                            revision.setTextSize(text.getBytes().length);
                         }
                         break;
                     case XMLStreamConstants.CHARACTERS:
@@ -110,6 +132,7 @@ public class XMLParser {
                             isTitle = false;
                         }
                         if (isArticleID) {
+                            debug++;
                             article.setID(characters.getData());
                             isArticleID = false;
                         }
@@ -129,18 +152,6 @@ public class XMLParser {
                             contributor.setUsername(characters.getData());
                             isUsername = false;
                         }
-                        if (isText) {
-                            /*if (debug < 3) {
-                                System.out.println("!!!" + debug + "!!!");
-                                debug++;
-                                System.out.println(characters.getData());
-                            }*/
-
-                            tamanho += characters.getData().length();
-
-                            //revision.setWordCount(countWords(characters.getData()));
-                            //revision.setTextSize(characters.getData().length());
-                        }
                         break;
                     case XMLStreamConstants.END_ELEMENT:
                         EndElement endElement = event.asEndElement();
@@ -154,19 +165,24 @@ public class XMLParser {
                             isRevision = false;
                         }
 
-                        if (endTagName.equalsIgnoreCase("text")) {
-                            revision.setTextSize(tamanho);
-                            isText = false;
-                        }
-
                         if (endTagName.equalsIgnoreCase("page")) {
+                            //debug++;
+                            /*if (debug > 19800) {
+                                System.out.println(debug + " - " + article.getID() + " - " + fileName);
+                            }*/
                             article.addRevision(revision);
+                            //System.out.println("ARTICLE (id): " + article.getID());
+                            //System.out.println("ARTICLE (title): " + article.getRevisions().get(0).getTitle());
+                            repeatedRevision = wd.insertArticle(article);
 
-                            int ret = wd.insertArticle(article);
-
-                            if (ret == 0) {
+                            if (!contributor.getID().equals("N/A") && !repeatedRevision){
                                 wd.insertContributor(contributor);
                             }
+
+                            /*int size = wd.getArtigos().size();
+                            if (size > 18400) {
+                                System.out.println(size + " - " + fileName);
+                            }*/
 
                             article = null;
                             revision = null;
@@ -175,6 +191,9 @@ public class XMLParser {
                         break;
                 }
             }
+            System.out.println(debug + " - " + fileName);
+            /*int size = wd.getArtigos().size();
+            System.out.println(size + " - " + fileName);*/
         }
         catch (FileNotFoundException | XMLStreamException e) {
             e.printStackTrace();

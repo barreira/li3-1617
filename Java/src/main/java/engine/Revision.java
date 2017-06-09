@@ -78,20 +78,6 @@ public class Revision {
         this.wordCount = wordCount;
     }
 
-    // Outros métodos
-
-    public int compare(Revision r) {
-        if (this.getTextSize() > r.getTextSize()) {
-            return 1;
-        }
-        else if (this.getTextSize() < r.getTextSize()) {
-            return -1;
-        }
-        else {
-            return Integer.valueOf(r.getID()).compareTo(Integer.valueOf(this.getID()));
-        }
-    }
-
     // Equals, toString, clone e hashCode()
 
     public boolean equals(Object o) {
