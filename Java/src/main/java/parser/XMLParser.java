@@ -57,6 +57,7 @@ public class XMLParser {
         boolean isContributorID = false;
         boolean isUsername = false;
         boolean isText = false;
+        int tamanho = 0;
 
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -97,6 +98,7 @@ public class XMLParser {
                             isUsername = true;
                         }
                         else if (startTagName.equalsIgnoreCase("text")) {
+                            tamanho = 0;
                             isText = true;
                         }
                         break;
@@ -128,9 +130,16 @@ public class XMLParser {
                             isUsername = false;
                         }
                         if (isText) {
-                            revision.setWordCount(countWords(characters.getData()));
-                            revision.setTextSize(characters.getData().length());
-                            isText = false;
+                            /*if (debug < 3) {
+                                System.out.println("!!!" + debug + "!!!");
+                                debug++;
+                                System.out.println(characters.getData());
+                            }*/
+
+                            tamanho += characters.getData().length();
+
+                            //revision.setWordCount(countWords(characters.getData()));
+                            //revision.setTextSize(characters.getData().length());
                         }
                         break;
                     case XMLStreamConstants.END_ELEMENT:
@@ -143,6 +152,11 @@ public class XMLParser {
 
                         if (endTagName.equalsIgnoreCase("revision")) {
                             isRevision = false;
+                        }
+
+                        if (endTagName.equalsIgnoreCase("text")) {
+                            revision.setTextSize(tamanho);
+                            isText = false;
                         }
 
                         if (endTagName.equalsIgnoreCase("page")) {

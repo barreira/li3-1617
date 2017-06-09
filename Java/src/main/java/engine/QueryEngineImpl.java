@@ -81,10 +81,9 @@ public class QueryEngineImpl implements Interface {
 
         Collections.sort(top, new ComparatorArticle());
 
-        /*for (int i = 0, j = 1; i < 20; i++, j++) {
-            int last = top.get(i).getRevisions().size() - 1;
-            System.out.println(j + " - " + top.get(i).getRevisions().get(last).getTextSize());
-        }*/
+        for (int i = 0, j = 1; i < 20; i++, j++) {
+            System.out.println(j + " - " + top.get(i).getID() + " - " + top.get(i).getBiggestRevision().getTextSize());
+        }
 
         return top.stream().map(Article::getID)
                            .map(Long::valueOf)
