@@ -1,4 +1,5 @@
 snapshot*
+*.txt
 C/*.o
 C/program
 C/snapshot*

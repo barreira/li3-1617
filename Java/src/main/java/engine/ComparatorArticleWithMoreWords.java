@@ -2,15 +2,15 @@ package engine;
 
 import java.util.Comparator;
 
-public class ComparatorLargestArticle implements Comparator<Article> {
+public class ComparatorArticleWithMoreWords implements Comparator<Article> {
 
     @Override
     public int compare(Article a1, Article a2)
     {
-        if (a1.getLargestRevision().getTextSize() > a2.getLargestRevision().getTextSize()) {
+        if (a1.getRevisionWithMoreWords().getWordCount() > a2.getRevisionWithMoreWords().getWordCount()) {
             return 1;
         }
-        else if (a1.getLargestRevision().getTextSize() < a2.getLargestRevision().getTextSize()) {
+        else if (a1.getRevisionWithMoreWords().getWordCount() < a2.getRevisionWithMoreWords().getWordCount()) {
             return -1;
         }
         else {

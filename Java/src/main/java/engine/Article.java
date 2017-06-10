@@ -1,6 +1,5 @@
 package engine;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -15,19 +14,22 @@ public class Article {
 
     // Construtores
 
-    public Article() {
+    public Article()
+    {
         id = "N/A";
         occurrences = 1;
         revisions = new ArrayList<>();
     }
 
-    public Article(String id, int occurrences, List<Revision> revisions) {
+    public Article(String id, int occurrences, List<Revision> revisions)
+    {
         setID(id);
         setOccurrences(occurrences);
         setRevisions(revisions);
     }
 
-    public Article(Article a) {
+    public Article(Article a)
+    {
         id = a.getID();
         occurrences = a.getOccurrences();
         revisions = a.getRevisions();
@@ -35,29 +37,35 @@ public class Article {
 
     // Getters e Setters
 
-    public String getID() {
+    public String getID()
+    {
         return id;
     }
 
-    public int getOccurrences() {
+    public int getOccurrences()
+    {
         return occurrences;
     }
 
-    public List<Revision> getRevisions() {
+    public List<Revision> getRevisions()
+    {
         return revisions.stream()
                         .map(Revision::clone)
                         .collect(Collectors.toList());
     }
 
-    public void setID(String id) {
+    public void setID(String id)
+    {
         this.id = id;
     }
 
-    public void setOccurrences(int occurrences) {
+    public void setOccurrences(int occurrences)
+    {
         this.occurrences = occurrences;
     }
 
-    public void setRevisions(List<Revision> revisions) {
+    public void setRevisions(List<Revision> revisions)
+    {
         this.revisions = revisions.stream()
                                   .map(Revision::clone)
                                   .collect(Collectors.toList());
@@ -65,65 +73,64 @@ public class Article {
 
     // Outros métodos
 
-    public void addRevision(Revision r) {
+    public void addRevision(Revision r)
+    {
         revisions.add(r.clone());
     }
 
-    public void incrementOccurrences() {
+    public void incrementOccurrences()
+    {
         occurrences += 1;
     }
 
-    public int getMaxTextSize() {
-        int maxTextSize = 0;
-
-        for (Revision rev : this.revisions) {
-            if (rev.getTextSize() > maxTextSize)
-                maxTextSize = rev.getTextSize();
-        }
-
-        return maxTextSize;
+    public Revision getLastRevision()
+    {
+        return revisions.get(revisions.size() - 1);
     }
 
-    public int getMaxWordCount() {
-        int maxWordCount = 0;
+    public Revision getRevisionWithMoreWords()
+    {
+        Revision largest = revisions.get(0);
 
-        for (Revision rev : this.revisions) {
-            if (rev.getWordCount() > maxWordCount)
-                maxWordCount = rev.getWordCount();
+        for (Revision r : revisions) {
+            if (r.getWordCount() > largest.getWordCount()) {
+                largest = r.clone();
+            }
         }
 
-        return maxWordCount;
+        return largest;
     }
 
-    public String getLatestTitle() {
-        String latestTitle = "";
-        long id = 0;
+    public Revision getLargestRevision()
+    {
+        Revision largest = revisions.get(0);
 
-        for (Revision rev : this.revisions) {
-            if (Long.parseLong(rev.getID()) > id)   // se o id for maior, é mais recente
-                latestTitle = rev.getTitle();
+        for (Revision r : revisions) {
+            if (r.getTextSize() > largest.getTextSize()) {
+                largest = r.clone();
+            }
         }
 
-        return latestTitle;
+        return largest;
     }
 
-    public boolean containsRevision(Revision revision) {
-        Iterator<Revision> it = revisions.iterator();
-        boolean found = false;
-        String revID = revision.getID();
-
-        while(!found && it.hasNext()){
-            Revision rev = it.next();
-            if (rev.getID().equals(revID))
-                found = true;
+    public int compareByTextSize(Article a)
+    {
+        if (this.getLargestRevision().getTextSize() > a.getLargestRevision().getTextSize()) {
+            return 1;
         }
-
-        return found;
+        else if (this.getLargestRevision().getTextSize() < a.getLargestRevision().getTextSize()) {
+            return -1;
+        }
+        else {
+            return Integer.valueOf(a.getID()).compareTo(Integer.valueOf(this.getID()));
+        }
     }
 
     // Equals, toString, clone e hashCode
 
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (o == this) {
             return true;
         }
@@ -137,7 +144,8 @@ public class Article {
         return id.equals(a.getID()) && occurrences == a.getOccurrences() && revisions.equals(a.getRevisions());
     }
 
-    public String toString() {
+    public String toString()
+    {
         int counter = 1;
         StringBuilder sb = new StringBuilder("Article: { ");
 
@@ -162,11 +170,13 @@ public class Article {
         return sb.toString();
     }
 
-    public Article clone() {
+    public Article clone()
+    {
         return new Article(this);
     }
 
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = super.hashCode();
         result = 31 * result + id.hashCode();
         result = 31 * result + occurrences;

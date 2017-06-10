@@ -4,15 +4,16 @@ public class Revision {
 
     // Variáveis de instância
 
-    private String id; //
+    private String id;
     private String timestamp;
-    private String title; //
-    private int textSize; //
-    private int wordCount; //
+    private String title;
+    private int textSize;
+    private int wordCount;
 
     // Construtores
 
-    public Revision() {
+    public Revision()
+    {
         id = "N/A";
         timestamp = "N/A";
         title = "N/A";
@@ -20,7 +21,8 @@ public class Revision {
         wordCount = 0;
     }
 
-    public Revision(String id, String timestamp, String title, int textSize, int wordCount) {
+    public Revision(String id, String timestamp, String title, int textSize, int wordCount)
+    {
         this.id = id;
         this.timestamp = timestamp;
         this.title = title;
@@ -28,7 +30,8 @@ public class Revision {
         this.wordCount = wordCount;
     }
 
-    public Revision(Revision r) {
+    public Revision(Revision r)
+    {
         id = r.getID();
         timestamp = r.getTimestamp();
         title = r.getTitle();
@@ -38,49 +41,60 @@ public class Revision {
 
     // Getters e Setters
 
-    public String getID() {
+    public String getID()
+    {
         return id;
     }
 
-    public String getTimestamp() {
+    public String getTimestamp()
+    {
         return timestamp;
     }
 
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
 
-    public int getTextSize() {
+    public int getTextSize()
+    {
         return textSize;
     }
 
-    public int getWordCount() {
+    public int getWordCount()
+    {
         return wordCount;
     }
 
-    public void setID(String id) {
+    public void setID(String id)
+    {
         this.id = id;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(String timestamp)
+    {
         this.timestamp = timestamp;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(String title)
+    {
         this.title = title;
     }
 
-    public void setTextSize(int textSize) {
+    public void setTextSize(int textSize)
+    {
         this.textSize = textSize;
     }
 
-    public void setWordCount(int wordCount) {
+    public void setWordCount(int wordCount)
+    {
         this.wordCount = wordCount;
     }
 
-    // Equals, toString, clone e hashCode()
+    // Equals, toString, clone e hashCode
 
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (o == this) {
             return true;
         }
@@ -95,7 +109,8 @@ public class Revision {
                 textSize == r.getTextSize() && wordCount == r.getWordCount();
     }
 
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder("Revision: { ");
 
         sb.append(id);
@@ -112,11 +127,13 @@ public class Revision {
         return sb.toString();
     }
 
-    public Revision clone() {
+    public Revision clone()
+    {
         return new Revision(this);
     }
 
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = super.hashCode();
         result = 31 * result + id.hashCode();
         result = 31 * result + timestamp.hashCode();
