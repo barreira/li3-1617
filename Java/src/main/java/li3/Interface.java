@@ -8,25 +8,25 @@ public interface Interface {
 
     void load(int nsnaps, ArrayList<String> snaps_paths);
 
-    long all_articles(); // travessia total. *a_id*, a_ocurrences
+    long all_articles();
 
-    long unique_articles(); // travessia total. artigos (size)
+    long unique_articles();
 
-    long all_revisions(); // travessia total. *a_id*, revisions (size)
+    long all_revisions();
 
-    ArrayList<Long> top_10_contributors(); // travessia total. c_id, *c_revisions*
+    ArrayList<Long> top_10_contributors();
 
-    String contributor_name(long contributor_id); // um só. c_id, c_username
+    String contributor_name(long contributor_id);
 
-    ArrayList<Long> top_20_largest_articles(); // travessia total. a_id, r_id, *r_textsize*
+    ArrayList<Long> top_20_largest_articles();
 
-    String article_title(long article_id); // um só. a_id, r_id, r_title
+    String article_title(long article_id);
 
-    ArrayList<Long> top_N_articles_with_more_words(int n); // travessia total. a_id, r_id, *r_wordcount*
+    ArrayList<Long> top_N_articles_with_more_words(int n);
 
-    ArrayList<String> titles_with_prefix(String prefix); // travessia total. a_id, r_id, *r_title*
+    ArrayList<String> titles_with_prefix(String prefix);
 
-    String article_timestamp(long article_id, long revision_id); // um só. a_id, r_id, r_timestamp
+    String article_timestamp(long article_id, long revision_id);
 
     void clean();
 }
