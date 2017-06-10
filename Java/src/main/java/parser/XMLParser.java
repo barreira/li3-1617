@@ -12,7 +12,6 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
@@ -46,14 +45,8 @@ public class XMLParser {
         Revision revision = null;
         Contributor contributor = null;
 
-        boolean isTitle = false;
-        boolean isArticleID = false;
         boolean isRevision = false;
-        boolean isRevisionID = false;
-        boolean isTimestamp = false;
         boolean isContributor = false;
-        boolean isContributorID = false;
-        boolean isUsername = false;
 
         int repeatedRevision;
 
@@ -75,24 +68,30 @@ public class XMLParser {
                             contributor = new Contributor();
                         }
                         else if (startTagName.equalsIgnoreCase("title")) {
-                            isTitle = true;
+                            revision.setTitle(eventReader.getElementText());
                         }
                         else if (startTagName.equalsIgnoreCase("id")) {
-                            if (isContributor) isContributorID = true;
-                            else if (isRevision) isRevisionID = true;
-                            else isArticleID = true;
+                            if (isContributor) {
+                                contributor.setID(eventReader.getElementText());
+                            }
+                            else if (isRevision) {
+                                revision.setID(eventReader.getElementText());
+                            }
+                            else {
+                                article.setID(eventReader.getElementText());
+                            }
                         }
                         else if (startTagName.equalsIgnoreCase("revision")) {
                             isRevision = true;
                         }
                         else if (startTagName.equalsIgnoreCase("timestamp")) {
-                            isTimestamp = true;
+                            revision.setTimestamp(eventReader.getElementText());
                         }
                         else if (startTagName.equalsIgnoreCase("contributor")) {
                             isContributor = true;
                         }
                         else if (startTagName.equalsIgnoreCase("username")) {
-                            isUsername = true;
+                            contributor.setUsername(eventReader.getElementText());
                         }
                         else if (startTagName.equalsIgnoreCase("text")) {
                             String text = eventReader.getElementText();
@@ -100,35 +99,6 @@ public class XMLParser {
                             revision.setTextSize(text.getBytes().length);
                         }
 
-                        break;
-
-                    case XMLStreamConstants.CHARACTERS:
-                        Characters characters = event.asCharacters();
-
-                        if (isTitle) {
-                            revision.setTitle(characters.getData());
-                            isTitle = false;
-                        }
-                        else if (isArticleID) {
-                            article.setID(characters.getData());
-                            isArticleID = false;
-                        }
-                        else if (isRevisionID) {
-                            revision.setID(characters.getData());
-                            isRevisionID = false;
-                        }
-                        else if (isContributorID) {
-                            contributor.setID(characters.getData());
-                            isContributorID = false;
-                        }
-                        else if (isTimestamp) {
-                            revision.setTimestamp(characters.getData());
-                            isTimestamp = false;
-                        }
-                        else if (isUsername) {
-                            contributor.setUsername(characters.getData());
-                            isUsername = false;
-                        }
                         break;
 
                     case XMLStreamConstants.END_ELEMENT:
@@ -152,6 +122,7 @@ public class XMLParser {
                                 wd.insertContributor(contributor);
                             }
                         }
+
                         break;
                 }
             }
