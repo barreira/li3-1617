@@ -17,7 +17,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 /**
- * @brief Classe responsável pelo parsing dos ficheiro XML relativos às snapshots da wikipédia
+ * Classe responsável pelo parsing dos ficheiro XML relativos às snapshots da wikipédia
  *
  * @author Ana Paula Carvalho
  * @author Joana Arantes
@@ -29,7 +29,9 @@ import javax.xml.stream.events.XMLEvent;
 public class XMLParser {
 
     /**
-     * @brief Cálcula o número de palavras de uma string
+     * Cálcula o número de palavras de uma string
+     *
+     * @param s String
      */
     public static int countWords(String s)
     {
@@ -53,7 +55,7 @@ public class XMLParser {
     }
 
     /**
-     * @brief Faz o parsing de um ficheiro XML
+     * Faz o parsing de um ficheiro XML
      *
      * @param wd       Variável do tipo WikiData para onde serão lidos os dados
      * @param fileName Nome do ficheiro XML
