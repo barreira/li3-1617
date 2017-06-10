@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
- * @brief Classe responsável por codificar a estrutura de um artigo da wikipédia
+ * Classe responsável por codificar a estrutura de um artigo da wikipédia
  *
  * @author Ana Paula Carvalho
  * @author Joana Arantes
@@ -25,7 +25,7 @@ public class Article {
     // Construtores
 
     /**
-     * @brief Construtor vazio
+     * Construtor vazio
      */
     public Article()
     {
@@ -35,7 +35,7 @@ public class Article {
     }
 
     /**
-     * @brief Construtor por partes
+     * Construtor por partes
      *
      * @param id          ID do artigo
      * @param occurrences Número de ocorrências do artigo nas snapshots
@@ -49,7 +49,7 @@ public class Article {
     }
 
     /**
-     * @brief Construtor por cópia
+     * Construtor por cópia
      *
      * @param a Artigo a copiar
      */
@@ -63,7 +63,7 @@ public class Article {
     // Getters e Setters
 
     /**
-     * @brief Devolve o ID do artigo
+     * Devolve o ID do artigo
      */
     public String getID()
     {
@@ -71,7 +71,7 @@ public class Article {
     }
 
     /**
-     * @brief Devolve o número de ocorrências do artigo nas snapshots
+     * Devolve o número de ocorrências do artigo nas snapshots
      */
     public int getOccurrences()
     {
@@ -79,8 +79,7 @@ public class Article {
     }
 
     /**
-     * @brief Devolve a lista das revisões do artigo
-     *
+     * Devolve a lista das revisões do artigo
      */
     public List<Revision> getRevisions()
     {
@@ -90,7 +89,7 @@ public class Article {
     }
 
     /**
-     * @brief Altera o ID do artigo
+     * Altera o ID do artigo
      */
     public void setID(String id)
     {
@@ -98,7 +97,7 @@ public class Article {
     }
 
     /**
-     * @brief Altera o valor do número de ocorrências do artigo nas snapshots
+     * Altera o valor do número de ocorrências do artigo nas snapshots
      */
     public void setOccurrences(int occurrences)
     {
@@ -106,7 +105,7 @@ public class Article {
     }
 
     /**
-     * @brief Altera a lista das revisões do artigo
+     * Altera a lista das revisões do artigo
      */
     public void setRevisions(List<Revision> revisions)
     {
@@ -118,7 +117,7 @@ public class Article {
     // Outros métodos
 
     /**
-     * @brief Adiciona uma revisão à lista das revisões de um Artigo
+     * Adiciona uma revisão à lista das revisões de um Artigo
      *
      * @param r Revisão a ser adicionada à lista
      */
@@ -128,7 +127,7 @@ public class Article {
     }
 
     /**
-     * @brief Incrementa o número de ocorrências do artigo nas snapshots
+     * Incrementa o número de ocorrências do artigo nas snapshots
      */
     public void incrementOccurrences()
     {
@@ -136,7 +135,7 @@ public class Article {
     }
 
     /**
-     * @brief Devolve a última revisão de um artigo
+     * Devolve a última revisão de um artigo
      */
     public Revision getLastRevision()
     {
@@ -144,7 +143,7 @@ public class Article {
     }
 
     /**
-     * @brief Devolve a revisão com mais palavras de um artigo
+     * Devolve a revisão com mais palavras de um artigo
      */
     public Revision getRevisionWithMoreWords()
     {
@@ -160,7 +159,7 @@ public class Article {
     }
 
     /**
-     * @brief Devolve a revisão com um maior texto de um artigo
+     * Devolve a revisão com um maior texto de um artigo
      */
     public Revision getLargestRevision()
     {
@@ -176,9 +175,10 @@ public class Article {
     }
 
     /**
-     * @brief Efetua a comparação com outro artigo pelo tamanho do texto da sua maior revisão
+     * Efetua a comparação com outro artigo pelo tamanho do texto da sua maior revisão
      *
-     * Caso a maior revisão de ambos os artigos tenha o mesmo tamanho, faz-se uma comparação pelo valor dos seus IDs.
+     * Nota: Caso a maior revisão de ambos os artigos tenha o mesmo tamanho, faz-se uma comparação pelo valor dos seus
+     *       IDs.
      *
      * @param a Artigo a comparar
      *
@@ -202,7 +202,7 @@ public class Article {
     // Métodos complementares comuns
 
     /**
-     * @brief Compara o artigo com um Object
+     * Compara o artigo com um Object
      *
      * @param o Objeto a comparar
      *
@@ -226,7 +226,7 @@ public class Article {
     }
 
     /**
-     * @brief Devolve uma string com a representação textual de um artigo
+     * Devolve uma string com a representação textual de um artigo
      */
     @Override
     public String toString()
@@ -256,7 +256,7 @@ public class Article {
     }
 
     /**
-     * @brief Faz uma cópia de um artigo
+     * Faz uma cópia de um artigo
      *
      * @return Cópia do artigo
      */
@@ -267,7 +267,7 @@ public class Article {
     }
 
     /**
-     * @brief Gera um código de hash para um artigo a partir das suas variáveis de instância
+     * Gera um código de hash para um artigo a partir das suas variáveis de instância
      */
     @Override
     public int hashCode()
