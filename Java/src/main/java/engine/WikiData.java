@@ -280,7 +280,7 @@ public class WikiData {
         }
     }
 
-    // Equals, toString, clone e hashCode
+    // Métodos complementares comuns
 
     public boolean equals(Object o)
     {

@@ -83,7 +83,7 @@ public class Contributor {
         }
     }
 
-    // Equals, toString, clone e hashCode
+    // Métodos complementares comuns
 
     public boolean equals(Object o)
     {

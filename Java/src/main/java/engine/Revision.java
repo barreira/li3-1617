@@ -91,7 +91,7 @@ public class Revision {
         this.wordCount = wordCount;
     }
 
-    // Equals, toString, clone e hashCode
+    // Métodos complementares comuns
 
     public boolean equals(Object o)
     {
