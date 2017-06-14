@@ -9,3 +9,5 @@ Grupo 52:
 * João Pires Barreira (@jpiresbarreira)
 * Joana Arantes (@joanaarantes)
 * Miguel Cunha (@miguelcunha12)
+
+**Nota**: Trata-se de um único projeto que foi feito primeiro em C e depois em Java.
